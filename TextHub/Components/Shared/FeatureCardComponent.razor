@@ -1,0 +1,28 @@
+@using Microsoft.AspNetCore.Components
+
+<div class="group tool-card relative overflow-hidden animate-fade-in" style="animation-delay: @(AnimationDelay)ms;">
+    <div class="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/10 opacity-50 group-hover:opacity-70 transition-opacity"></div>
+    <div class="relative z-10 p-6">
+        <div class="text-center mb-4">
+            <div class="w-16 h-16 mx-auto mb-4 bg-background/80 rounded-xl flex items-center justify-center group-hover:animate-glow-pulse">
+                @((MarkupString)Icon)
+            </div>
+            <h3 class="text-lg sm:text-xl font-semibold mb-3 group-hover:text-primary transition-colors">@Title</h3>
+        </div>
+        <p class="text-sm sm:text-base text-muted-foreground text-center leading-relaxed">@Description</p>
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public string Title { get; set; } = string.Empty;
+
+    [Parameter, EditorRequired]
+    public string Description { get; set; } = string.Empty;
+
+    [Parameter, EditorRequired]
+    public string Icon { get; set; } = string.Empty;
+
+    [Parameter]
+    public int AnimationDelay { get; set; } = 0;
+}
