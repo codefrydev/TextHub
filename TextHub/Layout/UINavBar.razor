@@ -1,0 +1,84 @@
+
+@inject IJSRuntime JsRuntime
+   <nav class="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
+        <div class="container mx-auto px-4 py-3 md:py-4">
+            <div class="flex items-center justify-between">
+                <a class="text-xl md:text-2xl font-bold text-gradient hover:opacity-80 transition-opacity" href="/">Text Hub</a>
+
+                @* --- Desktop Menu --- *@
+                <div class="hidden md:flex items-center gap-6">
+                    <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">Home</NavLink>
+                    <div class="relative">
+                        <button @onclick="() => _isToolsDropdownOpen = !_isToolsDropdownOpen" type="button" class="flex items-center gap-1 font-medium hover:text-primary transition-colors cursor-pointer">
+                            Tools
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down w-4 h-4 transition-transform @(_isToolsDropdownOpen ? "rotate-180" : "")">
+                                <path d="m6 9 6 6 6-6"></path>
+                            </svg>
+                        </button>
+                        @if (_isToolsDropdownOpen)
+                        {
+                            <div class="absolute top-full mt-2 w-48 bg-background border rounded-md shadow-lg py-1">
+                                <a href="/uppercase" class="block px-4 py-2 text-sm hover:bg-muted">Uppercase</a>
+                                <a href="/lowercase" class="block px-4 py-2 text-sm hover:bg-muted">Lowercase</a>
+                                <a href="/word-counter" class="block px-4 py-2 text-sm hover:bg-muted">Word Counter</a>
+                            </div>
+                        }
+                    </div>
+                    <button @onclick="ToggleTheme" class="p-2 rounded-lg hover:bg-muted transition-colors" aria-label="Toggle dark mode">
+                        @if (_isDarkMode)
+                        {
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun w-5 h-5 text-primary"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
+                        }
+                        else
+                        {
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon w-5 h-5 text-primary"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
+                        }
+                    </button>
+                </div>
+
+                @* --- Mobile Menu Button --- *@
+                <div class="flex md:hidden items-center gap-2">
+                    <button @onclick="ToggleTheme" class="p-2 rounded-lg hover:bg-muted transition-colors" aria-label="Toggle dark mode">
+                        @if (_isDarkMode)
+                        {
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun w-5 h-5 text-primary"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
+                        }
+                        else
+                        {
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon w-5 h-5 text-primary"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
+                        }
+                    </button>
+                    <button @onclick="ToggleMobileMenu" class="p-2 rounded-lg hover:bg-muted transition-colors" aria-label="Open menu" type="button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu w-5 h-5"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg>
+                    </button>
+                </div>
+            </div>
+             @* --- Mobile Menu Panel (hidden by default) --- *@
+            @if (_isMobileMenuOpen)
+            {
+                <div class="md:hidden mt-4">
+                    <a href="/" class="block py-2 text-lg nav-link">Home</a>
+                    <a href="/tools" class="block py-2 text-lg nav-link">Tools</a>
+                </div>
+            }
+        </div>
+    </nav>
+
+@code
+{
+    private bool _isMobileMenuOpen;
+    private bool _isToolsDropdownOpen;
+    private bool _isDarkMode = true; // Start with dark mode
+
+    private void ToggleMobileMenu()
+    {
+        _isMobileMenuOpen = !_isMobileMenuOpen;
+    }
+    
+    private async Task ToggleTheme()
+    {
+        _isDarkMode = !_isDarkMode;
+        await JsRuntime.InvokeVoidAsync("toggleTheme", _isDarkMode);
+        StateHasChanged();
+    }
+}

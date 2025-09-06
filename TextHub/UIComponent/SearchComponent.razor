@@ -1,0 +1,90 @@
+@using TextHub.Models
+
+<div class="relative max-w-2xl mx-auto mb-12">
+    <div class="relative">
+        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search text-muted-foreground">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.35-4.35"></path>
+            </svg>
+        </div>
+        <input 
+            @bind="SearchTerm" 
+            @bind:event="oninput"
+            type="text" 
+            placeholder="Search tools..." 
+            class="w-full pl-12 pr-4 py-4 bg-background/50 backdrop-blur-sm border border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300 search-input"
+        />
+        @if (!string.IsNullOrEmpty(SearchTerm))
+        {
+            <button 
+                @onclick="ClearSearch" 
+                class="absolute inset-y-0 right-0 pr-4 flex items-center text-muted-foreground hover:text-foreground transition-colors"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x">
+                    <path d="M18 6 6 18"></path>
+                    <path d="M6 6l12 12"></path>
+                </svg>
+            </button>
+        }
+    </div>
+    
+    @if (!string.IsNullOrEmpty(SearchTerm))
+    {
+        <div class="mt-4 text-center">
+            <span class="text-sm text-muted-foreground">
+                Found @FilteredTools.Count() tool@(FilteredTools.Count() == 1 ? "" : "s") for "<span class="text-primary font-medium">@SearchTerm</span>"
+            </span>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public List<ToolCategory> ToolCategories { get; set; } = new();
+    [Parameter] public EventCallback<List<Tool>> OnToolsFiltered { get; set; }
+    
+    private string _searchTerm = string.Empty;
+    private List<Tool> _allTools = new();
+    private List<Tool> _filteredTools = new();
+
+    public string SearchTerm
+    {
+        get => _searchTerm;
+        set
+        {
+            _searchTerm = value;
+            FilterTools();
+        }
+    }
+
+    public IEnumerable<Tool> FilteredTools => _filteredTools;
+
+    protected override void OnInitialized()
+    {
+        _allTools = ToolCategories.SelectMany(cat => cat.Tools).ToList();
+        _filteredTools = _allTools;
+    }
+
+    private void FilterTools()
+    {
+        if (string.IsNullOrWhiteSpace(_searchTerm))
+        {
+            _filteredTools = _allTools;
+        }
+        else
+        {
+            var searchLower = _searchTerm.ToLowerInvariant();
+            _filteredTools = _allTools.Where(tool => 
+                tool.Title.ToLowerInvariant().Contains(searchLower) ||
+                tool.Description.ToLowerInvariant().Contains(searchLower)
+            ).ToList();
+        }
+        
+        OnToolsFiltered.InvokeAsync(_filteredTools);
+    }
+
+    private void ClearSearch()
+    {
+        SearchTerm = string.Empty;
+    }
+}
