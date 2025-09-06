@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Text Hub - Quick & Simple Text Utilities</title>
+    <base href="/" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script type="text/tailwindcss-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                container: {
+                    center: true,
+                    padding: '2rem',
+                    screens: {
+                        '2xl': '1400px'
+                    }
+                },
+                extend: {
+                    fontFamily: {
+                        'poppins': ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        border: 'hsl(var(--border))',
+                        input: 'hsl(var(--input))',
+                        ring: 'hsl(var(--ring))',
+                        background: 'hsl(var(--background))',
+                        foreground: 'hsl(var(--foreground))',
+                        primary: {
+                            DEFAULT: 'hsl(var(--primary))',
+                            hover: 'hsl(var(--primary-hover))',
+                            foreground: 'hsl(var(--primary-foreground))',
+                            glow: 'hsl(var(--primary-glow))'
+                        },
+                        secondary: {
+                            DEFAULT: 'hsl(var(--secondary))',
+                            hover: 'hsl(var(--secondary-hover))',
+                            foreground: 'hsl(var(--secondary-foreground))'
+                        },
+                        destructive: {
+                            DEFAULT: 'hsl(var(--destructive))',
+                            foreground: 'hsl(var(--destructive-foreground))'
+                        },
+                        muted: {
+                            DEFAULT: 'hsl(var(--muted))',
+                            foreground: 'hsl(var(--muted-foreground))'
+                        },
+                        accent: {
+                            DEFAULT: 'hsl(var(--accent))',
+                            foreground: 'hsl(var(--accent-foreground))'
+                        },
+                        popover: {
+                            DEFAULT: 'hsl(var(--popover))',
+                            foreground: 'hsl(var(--popover-foreground))'
+                        },
+                        card: {
+                            DEFAULT: 'hsl(var(--card))',
+                            foreground: 'hsl(var(--card-foreground))'
+                        }
+                    },
+                    backgroundImage: {
+                        'gradient-primary': 'var(--background-gradient)',
+                        'tool-gradient': 'var(--tool-gradient)',
+                    },
+                    boxShadow: {
+                        'card': 'var(--card-shadow)',
+                        'card-hover': 'var(--card-hover-shadow)',
+                    },
+                    transitionDuration: {
+                        'fast': 'var(--transition-fast)',
+                        'base': 'var(--transition-base)',
+                        'slow': 'var(--transition-slow)',
+                    },
+                    borderRadius: {
+                        lg: 'var(--radius)',
+                        md: 'calc(var(--radius) - 2px)',
+                        sm: 'calc(var(--radius) - 4px)'
+                    },
+                    keyframes: {
+                        'fade-in': {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        'scale-in': {
+                            '0%': { transform: 'scale(0.95)', opacity: '0' },
+                            '100%': { transform: 'scale(1)', opacity: '1' }
+                        },
+                        'slide-down': {
+                            '0%': { transform: 'translateY(-10px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' }
+                        },
+                        'glow-pulse': {
+                            '0%, 100%': { boxShadow: '0 0 20px hsl(var(--primary-glow))' },
+                            '50%': { boxShadow: '0 0 30px hsl(var(--primary-glow))' }
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fade-in 0.5s ease-out',
+                        'scale-in': 'scale-in 0.3s ease-out',
+                        'slide-down': 'slide-down 0.3s ease-out',
+                        'glow-pulse': 'glow-pulse 2s infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="app.css" />
+    <link href="manifest.webmanifest" rel="manifest" />
+    <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png" />
+    
+    <!-- Google Analytics -->
+    <script>
+        var dnt, doNotTrack = !1;
+        if (!1 && (dnt = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack, doNotTrack = dnt == "1" || dnt == "yes"), !doNotTrack) {
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments) }
+            gtag("js", new Date), gtag("config", "G-VM01Q3R43D")
+        }
+    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VM01Q3R43D"></script>
+</head>
+
+<body class="bg-background text-foreground font-poppins">
+    <div id="app">
+        <svg class="loading-progress">
+            <circle r="40%" cx="50%" cy="50%" />
+            <circle r="40%" cx="50%" cy="50%" />
+        </svg>
+        <div class="loading-progress-text"></div>
+    </div>
+    
+    <script src="_framework/blazor.webassembly.js"></script>
+    <script>
+        window.toggleTheme = (isDarkMode) => {
+            const html = document.documentElement;
+            if (isDarkMode) {
+                html.classList.add('dark');
+            } else {
+                html.classList.remove('dark');
+            }
+        };
+    </script>
+<!--    <script>navigator.serviceWorker.register('service-worker.js');</script>-->
+</body>
+
+</html>
