@@ -5,7 +5,7 @@ namespace TextHub.Services.Data;
 
 public class JsonLdService
 {
-    private const string BaseUrl = "https://texthub.codefrydev.in";
+    private const string BaseUrl = "https://codefrydev.in/TextHub";
     
     public string GenerateHomePageJsonLd()
     {
@@ -335,6 +335,88 @@ public class JsonLdService
                         ]
                     }},
                     ""inLanguage"": ""en-US""
+                }}
+            ]
+        }}";
+
+        return json;
+    }
+
+    public string GenerateDocumentationPageJsonLd()
+    {
+        var docUrl = $"{BaseUrl}/documentation";
+        var docId = $"{BaseUrl}/documentation#documentation";
+        
+        var json = $@"{{
+            ""@context"": ""https://schema.org"",
+            ""@graph"": [
+                {{
+                    ""@type"": ""WebPage"",
+                    ""@id"": ""{docId}"",
+                    ""url"": ""{docUrl}"",
+                    ""name"": ""Documentation - How to Contribute to TextHub"",
+                    ""description"": ""Learn how to contribute to TextHub and help improve our text utilities. Complete guide covering installation, project structure, adding new tools, and deployment."",
+                    ""isPartOf"": {{
+                        ""@id"": ""{BaseUrl}/#website""
+                    }},
+                    ""about"": {{
+                        ""@id"": ""{BaseUrl}/#software""
+                    }},
+                    ""breadcrumb"": {{
+                        ""@type"": ""BreadcrumbList"",
+                        ""itemListElement"": [
+                            {{
+                                ""@type"": ""ListItem"",
+                                ""position"": 1,
+                                ""name"": ""Home"",
+                                ""item"": ""{BaseUrl}/""
+                            }},
+                            {{
+                                ""@type"": ""ListItem"",
+                                ""position"": 2,
+                                ""name"": ""Documentation"",
+                                ""item"": ""{docUrl}""
+                            }}
+                        ]
+                    }},
+                    ""inLanguage"": ""en-US"",
+                    ""dateModified"": ""{DateTime.Now:yyyy-MM-dd}"",
+                    ""author"": {{
+                        ""@id"": ""{BaseUrl}/#organization""
+                    }},
+                    ""publisher"": {{
+                        ""@id"": ""{BaseUrl}/#organization""
+                    }}
+                }},
+                {{
+                    ""@type"": ""TechArticle"",
+                    ""@id"": ""{docId}#techarticle"",
+                    ""headline"": ""How to Contribute to TextHub"",
+                    ""description"": ""Complete documentation for contributing to the TextHub project, including setup instructions, project structure, and development guidelines."",
+                    ""url"": ""{docUrl}"",
+                    ""datePublished"": ""2024-01-01"",
+                    ""dateModified"": ""{DateTime.Now:yyyy-MM-dd}"",
+                    ""author"": {{
+                        ""@id"": ""{BaseUrl}/#organization""
+                    }},
+                    ""publisher"": {{
+                        ""@id"": ""{BaseUrl}/#organization""
+                    }},
+                    ""about"": {{
+                        ""@id"": ""{BaseUrl}/#software""
+                    }},
+                    ""isPartOf"": {{
+                        ""@id"": ""{BaseUrl}/#website""
+                    }},
+                    ""inLanguage"": ""en-US"",
+                    ""proficiencyLevel"": ""Beginner"",
+                    ""dependencies"": [
+                        "".NET 9.0 SDK"",
+                        ""Visual Studio 2022 or VS Code"",
+                        ""Git""
+                    ],
+                    ""programmingLanguage"": ""C#"",
+                    ""framework"": ""Blazor WebAssembly""
                 }}
             ]
         }}";

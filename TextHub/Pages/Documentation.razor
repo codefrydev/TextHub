@@ -1,0 +1,1033 @@
+@page "/documentation"
+@using TextHub.Components.Shared
+@using TextHub.Services.Data
+@inject JsonLdService JsonLdService
+
+<PageTitle>Documentation - How to Contribute to TextHub</PageTitle>
+
+<DynamicJsonLd JsonLdContent="@_jsonLdContent" Id="documentation-jsonld" />
+
+<div class="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <!-- Header -->
+        <div class="text-center mb-16">
+            <div class="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                </svg>
+                Developer Documentation
+            </div>
+            <h1 class="text-5xl md:text-6xl font-bold text-gradient mb-6">Documentation</h1>
+            <p class="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+                Learn how to contribute to TextHub and help improve our text utilities. 
+                Everything you need to get started with development.
+            </p>
+        </div>
+
+        <!-- Table of Contents -->
+        <div class="bg-gradient-to-r from-primary/5 to-primary/10 border border-primary/20 rounded-2xl p-8 mb-12 shadow-lg">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list text-primary">
+                        <line x1="8" x2="21" y1="6" y2="6"></line>
+                        <line x1="8" x2="21" y1="12" y2="12"></line>
+                        <line x1="8" x2="21" y1="18" y2="18"></line>
+                        <line x1="3" x2="3.01" y1="6" y2="6"></line>
+                        <line x1="3" x2="3.01" y1="12" y2="12"></line>
+                        <line x1="3" x2="3.01" y1="18" y2="18"></line>
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-bold text-foreground">Table of Contents</h2>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <a href="documentation/#getting-started" class="group flex items-center gap-3 p-3 rounded-lg hover:bg-primary/10 transition-all duration-200">
+                    <div class="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rocket text-blue-600">
+                            <path d="M4.5 16.5c-1.5 1.5-1.5 3.5 0 5s3.5 1.5 5 0L12 17l-2.5-2.5L4.5 16.5z"></path>
+                            <path d="m12 15 8.5-8.5a2.12 2.12 0 0 0 0-3L18 2.5a2.12 2.12 0 0 0-3 0L6.5 11 12 15z"></path>
+                        </svg>
+                    </div>
+                    <span class="text-sm font-medium group-hover:text-primary transition-colors">Getting Started</span>
+                </a>
+                <a href="#prerequisites" class="group flex items-center gap-3 p-3 rounded-lg hover:bg-primary/10 transition-all duration-200">
+                    <div class="w-8 h-8 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-circle text-green-600">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22,4 12,14.01 9,11.01"></polyline>
+                        </svg>
+                    </div>
+                    <span class="text-sm font-medium group-hover:text-primary transition-colors">Prerequisites</span>
+                </a>
+                <a href="#installation" class="group flex items-center gap-3 p-3 rounded-lg hover:bg-primary/10 transition-all duration-200">
+                    <div class="w-8 h-8 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download text-purple-600">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7,10 12,15 17,10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                    </div>
+                    <span class="text-sm font-medium group-hover:text-primary transition-colors">Installation</span>
+                </a>
+                <a href="#project-structure" class="group flex items-center gap-3 p-3 rounded-lg hover:bg-primary/10 transition-all duration-200">
+                    <div class="w-8 h-8 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-folder-tree text-orange-600">
+                            <path d="M20 10a1 1 0 0 0 1-1V7a2 2 0 0 0-2-2h-2.5a2 2 0 0 1-2-2 2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2 2 2 0 0 1-2 2H5a2 2 0 0 0-2 2v2a1 1 0 0 0 1 1"></path>
+                            <path d="M14 2H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2h-2z"></path>
+                        </svg>
+                    </div>
+                    <span class="text-sm font-medium group-hover:text-primary transition-colors">Project Structure</span>
+                </a>
+                <a href="#adding-new-tools" class="group flex items-center gap-3 p-3 rounded-lg hover:bg-primary/10 transition-all duration-200">
+                    <div class="w-8 h-8 bg-pink-100 dark:bg-pink-900/30 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus-circle text-pink-600">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="16"></line>
+                            <line x1="8" y1="12" x2="16" y2="12"></line>
+                        </svg>
+                    </div>
+                    <span class="text-sm font-medium group-hover:text-primary transition-colors">Adding New Tools</span>
+                </a>
+                <a href="#customization" class="group flex items-center gap-3 p-3 rounded-lg hover:bg-primary/10 transition-all duration-200">
+                    <div class="w-8 h-8 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-palette text-indigo-600">
+                            <circle cx="13.5" cy="6.5" r=".5"></circle>
+                            <circle cx="17.5" cy="10.5" r=".5"></circle>
+                            <circle cx="8.5" cy="7.5" r=".5"></circle>
+                            <circle cx="6.5" cy="12.5" r=".5"></circle>
+                            <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path>
+                        </svg>
+                    </div>
+                    <span class="text-sm font-medium group-hover:text-primary transition-colors">Customization</span>
+                </a>
+                <a href="#common-issues" class="group flex items-center gap-3 p-3 rounded-lg hover:bg-primary/10 transition-all duration-200">
+                    <div class="w-8 h-8 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-alert-triangle text-red-600">
+                            <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path>
+                            <line x1="12" y1="9" x2="12" y2="13"></line>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                    </div>
+                    <span class="text-sm font-medium group-hover:text-primary transition-colors">Common Issues</span>
+                </a>
+                <a href="#deployment" class="group flex items-center gap-3 p-3 rounded-lg hover:bg-primary/10 transition-all duration-200">
+                    <div class="w-8 h-8 bg-cyan-100 dark:bg-cyan-900/30 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-upload text-cyan-600">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17,8 12,3 7,8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                    </div>
+                    <span class="text-sm font-medium group-hover:text-primary transition-colors">Deployment</span>
+                </a>
+                <a href="#contributing" class="group flex items-center gap-3 p-3 rounded-lg hover:bg-primary/10 transition-all duration-200">
+                    <div class="w-8 h-8 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-git-pull-request text-emerald-600">
+                            <circle cx="18" cy="18" r="3"></circle>
+                            <circle cx="6" cy="6" r="3"></circle>
+                            <path d="m6 9 12 12"></path>
+                        </svg>
+                    </div>
+                    <span class="text-sm font-medium group-hover:text-primary transition-colors">Contributing</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Getting Started -->
+        <section id="getting-started" class="mb-16">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rocket text-blue-600">
+                        <path d="M4.5 16.5c-1.5 1.5-1.5 3.5 0 5s3.5 1.5 5 0L12 17l-2.5-2.5L4.5 16.5z"></path>
+                        <path d="m12 15 8.5-8.5a2.12 2.12 0 0 0 0-3L18 2.5a2.12 2.12 0 0 0-3 0L6.5 11 12 15z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="text-4xl font-bold text-foreground">Getting Started</h2>
+                    <p class="text-muted-foreground mt-2">Everything you need to know to begin contributing</p>
+                </div>
+            </div>
+            
+            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 border border-blue-200 dark:border-blue-800 rounded-2xl p-8 mb-8 shadow-lg">
+                <div class="flex items-start gap-4">
+                    <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-external-link text-white">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                            <polyline points="15,3 21,3 21,9"></polyline>
+                            <line x1="10" y1="14" x2="21" y2="3"></line>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-blue-900 dark:text-blue-100 mb-3">🚀 Live Demo</h3>
+                        <p class="text-blue-800 dark:text-blue-200 mb-4 text-lg">
+                            Experience TextHub in action before diving into development
+                        </p>
+                        <a href="https://codefrydev.in/TextHub/" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors" target="_blank" rel="noopener noreferrer">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-external-link">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                <polyline points="15,3 21,3 21,9"></polyline>
+                                <line x1="10" y1="14" x2="21" y2="3"></line>
+                            </svg>
+                            Visit Live Demo
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="prose prose-lg max-w-none">
+                <p class="text-lg text-muted-foreground leading-relaxed">
+                    TextHub is a modern, responsive web application built with Blazor WebAssembly that provides quick and simple text utilities. 
+                    It offers a comprehensive suite of text manipulation tools including case conversion, word counting, and text formatting.
+                </p>
+            </div>
+        </section>
+
+        <!-- Technology Stack -->
+        <section class="mb-16">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layers text-purple-600">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                        <path d="M2 17l10 5 10-5"></path>
+                        <path d="M2 12l10 5 10-5"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="text-4xl font-bold text-foreground">Technology Stack</h2>
+                    <p class="text-muted-foreground mt-2">Modern technologies powering TextHub</p>
+                </div>
+            </div>
+            
+            <div class="grid lg:grid-cols-2 gap-8">
+                <div class="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/20 dark:to-pink-950/20 border border-purple-200 dark:border-purple-800 rounded-2xl p-8 shadow-lg">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-code text-white">
+                                <polyline points="16,18 22,12 16,6"></polyline>
+                                <polyline points="8,6 2,12 8,18"></polyline>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-purple-900 dark:text-purple-100">Frontend Technologies</h3>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4 p-4 bg-white/50 dark:bg-black/20 rounded-xl">
+                            <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+                                <span class="text-blue-600 font-bold text-lg">B</span>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-lg">Blazor WebAssembly</h4>
+                                <p class="text-sm text-muted-foreground">.NET 9.0 - Full-stack C# development</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 p-4 bg-white/50 dark:bg-black/20 rounded-xl">
+                            <div class="w-12 h-12 bg-cyan-100 dark:bg-cyan-900/30 rounded-lg flex items-center justify-center">
+                                <span class="text-cyan-600 font-bold text-lg">T</span>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-lg">Tailwind CSS</h4>
+                                <p class="text-sm text-muted-foreground">Utility-first CSS framework</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 p-4 bg-white/50 dark:bg-black/20 rounded-xl">
+                            <div class="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart text-orange-600">
+                                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-lg">Lucide Icons</h4>
+                                <p class="text-sm text-muted-foreground">Beautiful, customizable icons</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border border-green-200 dark:border-green-800 rounded-2xl p-8 shadow-lg">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rocket text-white">
+                                <path d="M4.5 16.5c-1.5 1.5-1.5 3.5 0 5s3.5 1.5 5 0L12 17l-2.5-2.5L4.5 16.5z"></path>
+                                <path d="m12 15 8.5-8.5a2.12 2.12 0 0 0 0-3L18 2.5a2.12 2.12 0 0 0-3 0L6.5 11 12 15z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-green-900 dark:text-green-100">Deployment & CI/CD</h3>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4 p-4 bg-white/50 dark:bg-black/20 rounded-xl">
+                            <div class="w-12 h-12 bg-gray-100 dark:bg-gray-900/30 rounded-lg flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-github text-gray-600">
+                                    <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path>
+                                    <path d="M9 18c-4.51 2-5-2-7-2"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-lg">GitHub Pages</h4>
+                                <p class="text-sm text-muted-foreground">Free static site hosting</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 p-4 bg-white/50 dark:bg-black/20 rounded-xl">
+                            <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-git-branch text-blue-600">
+                                    <line x1="6" x2="6" y1="3" y2="15"></line>
+                                    <circle cx="18" cy="6" r="3"></circle>
+                                    <circle cx="6" cy="18" r="3"></circle>
+                                    <path d="m18 9-9 9"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-lg">GitHub Actions</h4>
+                                <p class="text-sm text-muted-foreground">Automated CI/CD pipeline</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Prerequisites -->
+        <section id="prerequisites" class="mb-16">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-circle text-green-600">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22,4 12,14.01 9,11.01"></polyline>
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="text-4xl font-bold text-foreground">Prerequisites</h2>
+                    <p class="text-muted-foreground mt-2">What you need before getting started</p>
+                </div>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/20 dark:to-cyan-950/20 border border-blue-200 dark:border-blue-800 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center">
+                            <span class="text-white font-bold text-xl">.NET</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-blue-900 dark:text-blue-100">.NET 9.0 SDK</h3>
+                            <p class="text-sm text-blue-700 dark:text-blue-300">Required runtime</p>
+                        </div>
+                    </div>
+                    <p class="text-blue-800 dark:text-blue-200 mb-4">
+                        Download the latest .NET 9.0 SDK from Microsoft's official website
+                    </p>
+                    <a href="https://dotnet.microsoft.com/download" class="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium" target="_blank" rel="noopener noreferrer">
+                        Download SDK
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-external-link">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                            <polyline points="15,3 21,3 21,9"></polyline>
+                            <line x1="10" y1="14" x2="21" y2="3"></line>
+                        </svg>
+                    </a>
+                </div>
+                
+                <div class="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/20 dark:to-pink-950/20 border border-purple-200 dark:border-purple-800 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-code text-white">
+                                <polyline points="16,18 22,12 16,6"></polyline>
+                                <polyline points="8,6 2,12 8,18"></polyline>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-purple-900 dark:text-purple-100">IDE</h3>
+                            <p class="text-sm text-purple-700 dark:text-purple-300">Development environment</p>
+                        </div>
+                    </div>
+                    <p class="text-purple-800 dark:text-purple-200 mb-4">
+                        Visual Studio 2022 or VS Code with C# extension
+                    </p>
+                    <div class="space-y-2">
+                        <div class="flex items-center gap-2 text-sm text-purple-700 dark:text-purple-300">
+                            <div class="w-2 h-2 bg-purple-500 rounded-full"></div>
+                            Visual Studio 2022
+                        </div>
+                        <div class="flex items-center gap-2 text-sm text-purple-700 dark:text-purple-300">
+                            <div class="w-2 h-2 bg-purple-500 rounded-full"></div>
+                            VS Code + C# Extension
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-gradient-to-br from-emerald-50 to-green-50 dark:from-emerald-950/20 dark:to-green-950/20 border border-emerald-200 dark:border-emerald-800 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-12 h-12 bg-emerald-500 rounded-xl flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-git-branch text-white">
+                                <line x1="6" x2="6" y1="3" y2="15"></line>
+                                <circle cx="18" cy="6" r="3"></circle>
+                                <circle cx="6" cy="18" r="3"></circle>
+                                <path d="m18 9-9 9"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-emerald-900 dark:text-emerald-100">Git</h3>
+                            <p class="text-sm text-emerald-700 dark:text-emerald-300">Version control</p>
+                        </div>
+                    </div>
+                    <p class="text-emerald-800 dark:text-emerald-200 mb-4">
+                        For version control and collaboration
+                    </p>
+                    <div class="flex items-center gap-2 text-sm text-emerald-700 dark:text-emerald-300">
+                        <div class="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                        Required for contributing
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Installation -->
+        <section id="installation" class="mb-16">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download text-purple-600">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7,10 12,15 17,10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="text-4xl font-bold text-foreground">Installation</h2>
+                    <p class="text-muted-foreground mt-2">Get TextHub running on your local machine</p>
+                </div>
+            </div>
+            
+            <div class="space-y-8">
+                <!-- Step 1: Clone Repository -->
+                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 border border-blue-200 dark:border-blue-800 rounded-2xl p-8 shadow-lg">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center text-white font-bold text-lg">1</div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-blue-900 dark:text-blue-100">Clone the Repository</h3>
+                            <p class="text-blue-700 dark:text-blue-300">Get the source code from GitHub</p>
+                        </div>
+                    </div>
+                    <div class="bg-gray-900 rounded-xl p-6 font-mono text-sm overflow-x-auto">
+                        <div class="text-gray-400 mb-2"># Clone the repository</div>
+                        <div class="text-green-400">git clone https://github.com/codefrydev/TextHub.git</div>
+                        <div class="text-white">cd TextHub</div>
+                    </div>
+                    <div class="mt-4 p-4 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                        <p class="text-sm text-blue-800 dark:text-blue-200">
+                            <strong>💡 Tip:</strong> Make sure you have Git installed on your system. If you don't have Git, 
+                            <a href="https://git-scm.com/downloads" class="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">download it here</a>.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Step 2: Restore Dependencies -->
+                <div class="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border border-green-200 dark:border-green-800 rounded-2xl p-8 shadow-lg">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center text-white font-bold text-lg">2</div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-green-900 dark:text-green-100">Restore Dependencies</h3>
+                            <p class="text-green-700 dark:text-green-300">Install all required NuGet packages</p>
+                        </div>
+                    </div>
+                    <div class="bg-gray-900 rounded-xl p-6 font-mono text-sm">
+                        <div class="text-gray-400 mb-2"># Restore NuGet packages</div>
+                        <div class="text-green-400">dotnet restore</div>
+                    </div>
+                    <div class="mt-4 p-4 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                        <p class="text-sm text-green-800 dark:text-green-200">
+                            <strong>📦 What this does:</strong> Downloads all the required NuGet packages and dependencies listed in the project file.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Step 3: Run Application -->
+                <div class="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-950/20 dark:to-pink-950/20 border border-purple-200 dark:border-purple-800 rounded-2xl p-8 shadow-lg">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-10 h-10 bg-purple-500 rounded-xl flex items-center justify-center text-white font-bold text-lg">3</div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-purple-900 dark:text-purple-100">Run the Application</h3>
+                            <p class="text-purple-700 dark:text-purple-300">Start the development server</p>
+                        </div>
+                    </div>
+                    <div class="bg-gray-900 rounded-xl p-6 font-mono text-sm">
+                        <div class="text-gray-400 mb-2"># Start the development server</div>
+                        <div class="text-green-400">dotnet run --project TextHub/TextHub.csproj</div>
+                    </div>
+                    <div class="mt-4 p-4 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+                        <p class="text-sm text-purple-800 dark:text-purple-200">
+                            <strong>🚀 Alternative:</strong> You can also use <code class="bg-purple-200 dark:bg-purple-800 px-2 py-1 rounded">dotnet watch</code> 
+                            for automatic reloading when you make changes.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Step 4: Open Browser -->
+                <div class="bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-950/20 dark:to-red-950/20 border border-orange-200 dark:border-orange-800 rounded-2xl p-8 shadow-lg">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center text-white font-bold text-lg">4</div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-orange-900 dark:text-orange-100">Open Your Browser</h3>
+                            <p class="text-orange-700 dark:text-orange-300">Access the application in your browser</p>
+                        </div>
+                    </div>
+                    <div class="bg-gray-900 rounded-xl p-6 font-mono text-sm mb-4">
+                        <div class="text-gray-400 mb-2"># The application will be available at:</div>
+                        <div class="text-blue-400">https://localhost:5001</div>
+                        <div class="text-gray-400 mt-2"># or</div>
+                        <div class="text-blue-400">https://localhost:5000</div>
+                    </div>
+                    <div class="flex items-center gap-4 p-4 bg-orange-100 dark:bg-orange-900/30 rounded-lg">
+                        <div class="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check text-white">
+                                <path d="M20 6 9 17l-5-5"></path>
+                            </svg>
+                        </div>
+                        <p class="text-sm text-orange-800 dark:text-orange-200">
+                            <strong>Success!</strong> You should see the TextHub homepage with all the text utilities available.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Project Structure -->
+        <section id="project-structure" class="mb-16">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-xl flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-folder-tree text-orange-600">
+                        <path d="M20 10a1 1 0 0 0 1-1V7a2 2 0 0 0-2-2h-2.5a2 2 0 0 1-2-2 2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2 2 2 0 0 1-2 2H5a2 2 0 0 0-2 2v2a1 1 0 0 0 1 1"></path>
+                        <path d="M14 2H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2h-2z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="text-4xl font-bold text-foreground">Project Structure</h2>
+                    <p class="text-muted-foreground mt-2">Understanding the codebase organization</p>
+                </div>
+            </div>
+            
+            <div class="grid lg:grid-cols-2 gap-8">
+                <!-- File Tree -->
+                <div class="bg-gradient-to-br from-gray-50 to-slate-50 dark:from-gray-950/20 dark:to-slate-950/20 border border-gray-200 dark:border-gray-800 rounded-2xl p-8 shadow-lg">
+                    <h3 class="text-xl font-bold mb-6 text-gray-900 dark:text-gray-100">📁 Directory Structure</h3>
+                    <div class="bg-gray-900 rounded-xl p-6 font-mono text-sm overflow-x-auto">
+                        <div class="text-green-400">TextHub/</div>
+                        <div class="text-blue-400 ml-4">├── Components/</div>
+                        <div class="text-gray-300 ml-8">├── Forms/</div>
+                        <div class="text-gray-300 ml-8">├── Layout/</div>
+                        <div class="text-gray-300 ml-8">└── Shared/</div>
+                        <div class="text-blue-400 ml-4">├── Features/</div>
+                        <div class="text-gray-300 ml-8">├── TextAnalysis/</div>
+                        <div class="text-gray-300 ml-8">├── TextCase/</div>
+                        <div class="text-gray-300 ml-8">└── TextFormatting/</div>
+                        <div class="text-blue-400 ml-4">├── Models/</div>
+                        <div class="text-blue-400 ml-4">├── Pages/</div>
+                        <div class="text-blue-400 ml-4">├── Services/</div>
+                        <div class="text-gray-300 ml-8">├── Converters/</div>
+                        <div class="text-gray-300 ml-8">└── Data/</div>
+                        <div class="text-blue-400 ml-4">└── wwwroot/</div>
+                    </div>
+                </div>
+                
+                <!-- Folder Descriptions -->
+                <div class="space-y-6">
+                    <div class="bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950/20 dark:to-cyan-950/20 border border-blue-200 dark:border-blue-800 rounded-xl p-6">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-puzzle text-white">
+                                    <path d="M19.439 7.85c-.049.322.059.648.289.878l1.568 1.568c.47.47.706 1.087.706 1.704s-.235 1.233-.706 1.704l-1.611 1.611a.98.98 0 0 1-.837.276c-.47-.07-.802-.48-.968-.925a2.501 2.501 0 1 0-3.522 3.355c.446.166.855.498.925.968a.979.979 0 0 1-.276.837l-1.61 1.61a2.404 2.404 0 0 1-1.705.707 2.404 2.404 0 0 1-1.704-.706l-1.568-1.568a.985.985 0 0 1-.878-.29 2.501 2.501 0 1 0-3.355 3.522c.07.47.48.802.925.968a.98.98 0 0 1 .276.837l-1.61 1.61a2.404 2.404 0 0 1-1.705.707 2.404 2.404 0 0 1-1.704-.706l-1.568-1.568a.985.985 0 0 1-.29-.878 2.501 2.501 0 1 0-3.522-3.355c-.47.07-.802.48-.968.925a.98.98 0 0 1-.837.276l-1.61-1.61a2.404 2.404 0 0 1-.707-1.705c0-.617.236-1.234.706-1.704L4.278 8.728c.24-.24.556-.338.878-.29 1.282.19 2.64.19 3.922 0 .322-.048.648.05.878.29l1.568 1.568c.47.47 1.087.706 1.704.706s1.233-.235 1.704-.706l1.611-1.611a.98.98 0 0 1 .837-.276c.47.07.802.48.968.925a2.501 2.501 0 1 0 3.522-3.355c-.07-.47-.48-.802-.925-.968a.98.98 0 0 1-.276-.837l1.61-1.61a2.404 2.404 0 0 1 1.705-.707c.617 0 1.234.236 1.704.706l1.568 1.568c.23.23.338.556.29.878Z"></path>
+                                </svg>
+                            </div>
+                            <h4 class="font-bold text-blue-900 dark:text-blue-100">Components/</h4>
+                        </div>
+                        <p class="text-sm text-blue-800 dark:text-blue-200">Reusable UI components including forms, layout, and shared components</p>
+                    </div>
+                    
+                    <div class="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border border-green-200 dark:border-green-800 rounded-xl p-6">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wrench text-white">
+                                    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+                                </svg>
+                            </div>
+                            <h4 class="font-bold text-green-900 dark:text-green-100">Features/</h4>
+                        </div>
+                        <p class="text-sm text-green-800 dark:text-green-200">Individual text utility tools organized by category (TextCase, TextAnalysis, TextFormatting)</p>
+                    </div>
+                    
+                    <div class="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-950/20 dark:to-pink-950/20 border border-purple-200 dark:border-purple-800 rounded-xl p-6">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cog text-white">
+                                    <path d="M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z"></path>
+                                    <path d="M12 6v6l4 2"></path>
+                                </svg>
+                            </div>
+                            <h4 class="font-bold text-purple-900 dark:text-purple-100">Services/</h4>
+                        </div>
+                        <p class="text-sm text-purple-800 dark:text-purple-200">Business logic, data services, and utility functions</p>
+                    </div>
+                    
+                    <div class="bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-950/20 dark:to-red-950/20 border border-orange-200 dark:border-orange-800 rounded-xl p-6">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text text-white">
+                                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+                                    <polyline points="14,2 14,8 20,8"></polyline>
+                                </svg>
+                            </div>
+                            <h4 class="font-bold text-orange-900 dark:text-orange-100">Pages/</h4>
+                        </div>
+                        <p class="text-sm text-orange-800 dark:text-orange-200">Main application pages and routing</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Adding New Tools -->
+        <section id="adding-new-tools" class="mb-16">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-12 h-12 bg-pink-100 dark:bg-pink-900/30 rounded-xl flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus-circle text-pink-600">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="16"></line>
+                        <line x1="8" y1="12" x2="16" y2="12"></line>
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="text-4xl font-bold text-foreground">Adding New Tools</h2>
+                    <p class="text-muted-foreground mt-2">Step-by-step guide to create custom text utilities</p>
+                </div>
+            </div>
+            
+            <div class="space-y-8">
+                <!-- Step-by-Step Guide -->
+                <div class="bg-gradient-to-r from-pink-50 to-rose-50 dark:from-pink-950/20 dark:to-rose-950/20 border border-pink-200 dark:border-pink-800 rounded-2xl p-8 shadow-lg">
+                    <h3 class="text-2xl font-bold mb-6 text-pink-900 dark:text-pink-100">🚀 Step-by-Step Guide</h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="space-y-6">
+                            <div class="flex items-start gap-4 p-4 bg-white/50 dark:bg-black/20 rounded-xl">
+                                <div class="w-10 h-10 bg-pink-500 rounded-xl flex items-center justify-center text-white font-bold text-lg flex-shrink-0">1</div>
+                                <div>
+                                    <h4 class="font-bold text-pink-900 dark:text-pink-100 mb-2">Create Razor Component</h4>
+                                    <p class="text-sm text-pink-800 dark:text-pink-200">Create a new .razor file in the appropriate <code class="bg-pink-200 dark:bg-pink-800 px-2 py-1 rounded text-xs">Features/</code> folder</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start gap-4 p-4 bg-white/50 dark:bg-black/20 rounded-xl">
+                                <div class="w-10 h-10 bg-pink-500 rounded-xl flex items-center justify-center text-white font-bold text-lg flex-shrink-0">2</div>
+                                <div>
+                                    <h4 class="font-bold text-pink-900 dark:text-pink-100 mb-2">Add Route</h4>
+                                    <p class="text-sm text-pink-800 dark:text-pink-200">Use <code class="bg-pink-200 dark:bg-pink-800 px-2 py-1 rounded text-xs">@@page "/tool-name"</code> directive</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div class="flex items-start gap-4 p-4 bg-white/50 dark:bg-black/20 rounded-xl">
+                                <div class="w-10 h-10 bg-pink-500 rounded-xl flex items-center justify-center text-white font-bold text-lg flex-shrink-0">3</div>
+                                <div>
+                                    <h4 class="font-bold text-pink-900 dark:text-pink-100 mb-2">Update Service</h4>
+                                    <p class="text-sm text-pink-800 dark:text-pink-200">Add tool to <code class="bg-pink-200 dark:bg-pink-800 px-2 py-1 rounded text-xs">ToolDataService.cs</code></p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start gap-4 p-4 bg-white/50 dark:bg-black/20 rounded-xl">
+                                <div class="w-10 h-10 bg-pink-500 rounded-xl flex items-center justify-center text-white font-bold text-lg flex-shrink-0">4</div>
+                                <div>
+                                    <h4 class="font-bold text-pink-900 dark:text-pink-100 mb-2">Add to Section</h4>
+                                    <p class="text-sm text-pink-800 dark:text-pink-200">Include in appropriate category (TextCase, TextAnalysis, or TextFormatting)</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Example Implementation -->
+                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 border border-blue-200 dark:border-blue-800 rounded-2xl p-8 shadow-lg">
+                    <h3 class="text-2xl font-bold mb-6 text-blue-900 dark:text-blue-100">💻 Example Implementation</h3>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="font-semibold text-blue-800 dark:text-blue-200 mb-3">1. Create the Razor Component</h4>
+                            <div class="bg-gray-900 rounded-xl p-6 font-mono text-sm overflow-x-auto">
+                                <div class="text-gray-400">// Features/TextCase/NewTool.razor</div>
+                                <div class="text-blue-400">@@page "/new-tool"</div>
+                                <div class="text-white">@@using TextHub.Components.Forms</div>
+                                <div class="text-white"></div>
+                                <div class="text-white">&lt;TextCaseLayout Title="New Tool" Description="Your tool description"&gt;</div>
+                                <div class="text-white">    &lt;!-- Your tool implementation --&gt;</div>
+                                <div class="text-white">&lt;/TextCaseLayout&gt;</div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-semibold text-blue-800 dark:text-blue-200 mb-3">2. Add to ToolDataService.cs</h4>
+                            <div class="bg-gray-900 rounded-xl p-6 font-mono text-sm overflow-x-auto">
+                                <div class="text-gray-400">// In ToolDataService.cs</div>
+                                <div class="text-green-400">new Tool(</div>
+                                <div class="text-white">    "New Tool",</div>
+                                <div class="text-white">    "Description of the new tool",</div>
+                                <div class="text-white">    "new-tool",</div>
+                                <div class="text-white">    "&lt;svg&gt;...&lt;/svg&gt;"</div>
+                                <div class="text-green-400">)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Best Practices -->
+                <div class="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border border-green-200 dark:border-green-800 rounded-2xl p-8 shadow-lg">
+                    <h3 class="text-2xl font-bold mb-6 text-green-900 dark:text-green-100">✨ Best Practices</h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <div class="flex items-start gap-3">
+                                <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check text-white">
+                                        <path d="M20 6 9 17l-5-5"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-green-900 dark:text-green-100">Use TextCaseLayout</h4>
+                                    <p class="text-sm text-green-800 dark:text-green-200">Leverage the existing layout component for consistency</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start gap-3">
+                                <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check text-white">
+                                        <path d="M20 6 9 17l-5-5"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-green-900 dark:text-green-100">Follow Naming Conventions</h4>
+                                    <p class="text-sm text-green-800 dark:text-green-200">Use kebab-case for routes and PascalCase for components</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-start gap-3">
+                                <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check text-white">
+                                        <path d="M20 6 9 17l-5-5"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-green-900 dark:text-green-100">Add Proper Icons</h4>
+                                    <p class="text-sm text-green-800 dark:text-green-200">Use Lucide icons that match your tool's functionality</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start gap-3">
+                                <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check text-white">
+                                        <path d="M20 6 9 17l-5-5"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-green-900 dark:text-green-100">Test Your Tool</h4>
+                                    <p class="text-sm text-green-800 dark:text-green-200">Ensure it works correctly before submitting a PR</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Customization -->
+        <section id="customization" class="mb-16">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-palette text-indigo-600">
+                        <circle cx="13.5" cy="6.5" r=".5"></circle>
+                        <circle cx="17.5" cy="10.5" r=".5"></circle>
+                        <circle cx="8.5" cy="7.5" r=".5"></circle>
+                        <circle cx="6.5" cy="12.5" r=".5"></circle>
+                        <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="text-4xl font-bold text-foreground">Customization</h2>
+                    <p class="text-muted-foreground mt-2">Personalize TextHub to match your preferences</p>
+                </div>
+            </div>
+            
+            <div class="grid lg:grid-cols-2 gap-8">
+                <!-- Styling -->
+                <div class="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-950/20 dark:to-purple-950/20 border border-indigo-200 dark:border-indigo-800 rounded-2xl p-8 shadow-lg">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 bg-indigo-500 rounded-lg flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-paintbrush text-white">
+                                <path d="M18.37 2.63 14 7l-1.59-1.59a2 2 0 0 0-2.82 0L8 7.5l-4-4 1.41-1.41a2 2 0 0 1 2.82 0L9 4l1.59-1.59a2 2 0 0 1 2.82 0L14 4l4.37-4.37a2.12 2.12 0 0 1 3 3L14 7l4.37 4.37a2.12 2.12 0 0 1-3 3L14 10l-1.59 1.59a2 2 0 0 1-2.82 0L8 10.5l-4 4 1.41 1.41a2 2 0 0 0 2.82 0L9 14l1.59 1.59a2 2 0 0 0 2.82 0L14 14l4.37 4.37a2.12 2.12 0 0 0 3-3L14 14l4.37-4.37a2.12 2.12 0 0 0-3-3Z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-indigo-900 dark:text-indigo-100">Styling & Theming</h3>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="p-4 bg-white/50 dark:bg-black/20 rounded-xl">
+                            <h4 class="font-semibold text-indigo-900 dark:text-indigo-100 mb-2">🎨 Color Customization</h4>
+                            <p class="text-sm text-indigo-800 dark:text-indigo-200 mb-2">Modify the color scheme in the Tailwind config:</p>
+                            <div class="bg-gray-900 rounded-lg p-3 font-mono text-xs">
+                                <div class="text-gray-400">// wwwroot/index.html</div>
+                                <div class="text-blue-400">theme: {</div>
+                                <div class="text-white">  colors: {</div>
+                                <div class="text-green-400">    primary: '#your-color'</div>
+                                <div class="text-white">  }</div>
+                                <div class="text-blue-400">}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="p-4 bg-white/50 dark:bg-black/20 rounded-xl">
+                            <h4 class="font-semibold text-indigo-900 dark:text-indigo-100 mb-2">🔧 Component Styling</h4>
+                            <p class="text-sm text-indigo-800 dark:text-indigo-200">All components use Tailwind classes for easy customization</p>
+                        </div>
+                        
+                        <div class="p-4 bg-white/50 dark:bg-black/20 rounded-xl">
+                            <h4 class="font-semibold text-indigo-900 dark:text-indigo-100 mb-2">✨ Animations</h4>
+                            <p class="text-sm text-indigo-800 dark:text-indigo-200">Custom animations defined in <code class="bg-indigo-200 dark:bg-indigo-800 px-2 py-1 rounded text-xs">app.css</code></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Configuration -->
+                <div class="bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-cyan-950/20 dark:to-blue-950/20 border border-cyan-200 dark:border-cyan-800 rounded-2xl p-8 shadow-lg">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 bg-cyan-500 rounded-lg flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings text-white">
+                                <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-cyan-900 dark:text-cyan-100">Configuration</h3>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="p-4 bg-white/50 dark:bg-black/20 rounded-xl">
+                            <h4 class="font-semibold text-cyan-900 dark:text-cyan-100 mb-2">⚙️ App Settings</h4>
+                            <p class="text-sm text-cyan-800 dark:text-cyan-200">Configure application settings in <code class="bg-cyan-200 dark:bg-cyan-800 px-2 py-1 rounded text-xs">appsettings.json</code></p>
+                        </div>
+                        
+                        <div class="p-4 bg-white/50 dark:bg-black/20 rounded-xl">
+                            <h4 class="font-semibold text-cyan-900 dark:text-cyan-100 mb-2">🔗 Service Registration</h4>
+                            <p class="text-sm text-cyan-800 dark:text-cyan-200">Add new services in <code class="bg-cyan-200 dark:bg-cyan-800 px-2 py-1 rounded text-xs">Program.cs</code></p>
+                        </div>
+                        
+                        <div class="p-4 bg-white/50 dark:bg-black/20 rounded-xl">
+                            <h4 class="font-semibold text-cyan-900 dark:text-cyan-100 mb-2">📱 PWA Settings</h4>
+                            <p class="text-sm text-cyan-800 dark:text-cyan-200">Configure Progressive Web App features in <code class="bg-cyan-200 dark:bg-cyan-800 px-2 py-1 rounded text-xs">manifest.webmanifest</code></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Common Issues -->
+        <section id="common-issues" class="mb-12">
+            <h2 class="text-3xl font-bold mb-6">Common Issues & Solutions</h2>
+            <div class="space-y-6">
+                <div class="bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-lg p-6">
+                    <h3 class="text-xl font-semibold text-red-900 dark:text-red-100 mb-4">Issue: 404 Errors on Direct URL Access</h3>
+                    <div class="text-red-800 dark:text-red-200 space-y-4">
+                        <p><strong>Problem:</strong> When you use <code class="bg-red-100 dark:bg-red-900 px-2 py-1 rounded text-sm">/uppercase</code> for navigation, it doesn't work as expected.</p>
+                        
+                        <div class="bg-red-100 dark:bg-red-900 rounded-lg p-4">
+                            <p class="font-semibold mb-2">Example:</p>
+                            <p>Website is hosted on <code class="bg-red-200 dark:bg-red-800 px-2 py-1 rounded text-sm">codefrydev.in/TextHub</code></p>
+                            <p>❌ With <code class="bg-red-200 dark:bg-red-800 px-2 py-1 rounded text-sm">/uppercase</code> → goes to <code class="bg-red-200 dark:bg-red-800 px-2 py-1 rounded text-sm">codefrydev.in/uppercase</code> (causes 404)</p>
+                            <p>✅ With <code class="bg-red-200 dark:bg-red-800 px-2 py-1 rounded text-sm">uppercase</code> → goes to <code class="bg-red-200 dark:bg-red-800 px-2 py-1 rounded text-sm">codefrydev.in/TextHub/uppercase</code> (works correctly)</p>
+                        </div>
+
+                        <div class="space-y-3">
+                            <h4 class="font-semibold">Solution:</h4>
+                            <div class="bg-red-100 dark:bg-red-900 rounded-lg p-4">
+                                <p class="font-semibold mb-2">1. Fixed Navigation Links:</p>
+                                <p class="text-sm mb-2">Removed leading slashes from all tool links in <code class="bg-red-200 dark:bg-red-800 px-2 py-1 rounded text-sm">ToolDataService.cs</code></p>
+                                <div class="font-mono text-xs">
+                                    <div class="text-red-600 dark:text-red-400">// Before (causing 404s)</div>
+                                    <div>new Tool("Uppercase Converter", "Convert any text to UPPERCASE instantly", "/uppercase", "...")</div>
+                                    <div class="text-green-600 dark:text-green-400 mt-2">// After (working correctly)</div>
+                                    <div>new Tool("Uppercase Converter", "Convert any text to UPPERCASE instantly", "uppercase", "...")</div>
+                                </div>
+                            </div>
+
+                            <div class="bg-red-100 dark:bg-red-900 rounded-lg p-4">
+                                <p class="font-semibold mb-2">2. Fixed Navigation Bar:</p>
+                                <p class="text-sm mb-2">Updated all navigation links to use relative paths</p>
+                                <div class="font-mono text-xs">
+                                    <div class="text-red-600 dark:text-red-400">// Before</div>
+                                    <div>&lt;a href="/"&gt;Text Hub&lt;/a&gt;</div>
+                                    <div>&lt;a href="/uppercase"&gt;Uppercase&lt;/a&gt;</div>
+                                    <div class="text-green-600 dark:text-green-400 mt-2">// After</div>
+                                    <div>&lt;a href=""&gt;Text Hub&lt;/a&gt;</div>
+                                    <div>&lt;a href="uppercase"&gt;Uppercase&lt;/a&gt;</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-yellow-50 dark:bg-yellow-950/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6">
+                    <h3 class="text-xl font-semibold text-yellow-900 dark:text-yellow-100 mb-4">Issue: Links Not Working After Deployment</h3>
+                    <div class="text-yellow-800 dark:text-yellow-200">
+                        <p><strong>Problem:</strong> Tool cards and navigation links don't work after deploying to GitHub Pages.</p>
+                        <p class="mt-2"><strong>Solution:</strong> Ensure all links use relative paths instead of absolute paths. The base href configuration in the deployment handles the rest.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Deployment -->
+        <section id="deployment" class="mb-12">
+            <h2 class="text-3xl font-bold mb-6">Deployment</h2>
+            <div class="space-y-6">
+                <div class="bg-muted/50 rounded-lg p-6">
+                    <h3 class="text-xl font-semibold mb-4">Automatic Deployment</h3>
+                    <p class="text-muted-foreground mb-4">The application is automatically deployed to GitHub Pages using GitHub Actions. The deployment workflow:</p>
+                    <ol class="space-y-2 list-decimal list-inside">
+                        <li>Builds the Blazor WebAssembly application</li>
+                        <li>Changes the base href from <code class="bg-background px-2 py-1 rounded text-sm">/</code> to <code class="bg-background px-2 py-1 rounded text-sm">/TextHub/</code> for GitHub Pages</li>
+                        <li>Creates a 404.html file for SPA fallback</li>
+                        <li>Deploys to the <code class="bg-background px-2 py-1 rounded text-sm">gh-pages</code> branch</li>
+                    </ol>
+                </div>
+
+                <div class="bg-muted/50 rounded-lg p-6">
+                    <h3 class="text-xl font-semibold mb-4">Manual Deployment</h3>
+                    <p class="text-muted-foreground mb-4">To deploy manually:</p>
+                    <div class="bg-background rounded-lg p-4 font-mono text-sm">
+                        <div class="text-foreground">dotnet publish TextHub/TextHub.csproj -c Release -o release</div>
+                        <div class="text-muted-foreground"># The release folder contains the deployable files</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contributing Guidelines -->
+        <section id="contributing" class="mb-12">
+            <h2 class="text-3xl font-bold mb-6">Contributing Guidelines</h2>
+            <div class="space-y-6">
+                <div class="bg-muted/50 rounded-lg p-6">
+                    <h3 class="text-xl font-semibold mb-4">How to Contribute</h3>
+                    <ol class="space-y-4">
+                        <li class="flex items-start gap-3">
+                            <span class="bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">1</span>
+                            <div>
+                                <strong>Fork the repository</strong>
+                                <p class="text-sm text-muted-foreground">Click the "Fork" button on the GitHub repository page</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">2</span>
+                            <div>
+                                <strong>Create a feature branch</strong>
+                                <div class="bg-background rounded-lg p-2 mt-2 font-mono text-sm">
+                                    <div class="text-foreground">git checkout -b feature/amazing-feature</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">3</span>
+                            <div>
+                                <strong>Commit your changes</strong>
+                                <div class="bg-background rounded-lg p-2 mt-2 font-mono text-sm">
+                                    <div class="text-foreground">git commit -m 'Add some amazing feature'</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">4</span>
+                            <div>
+                                <strong>Push to the branch</strong>
+                                <div class="bg-background rounded-lg p-2 mt-2 font-mono text-sm">
+                                    <div class="text-foreground">git push origin feature/amazing-feature</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">5</span>
+                            <div>
+                                <strong>Open a Pull Request</strong>
+                                <p class="text-sm text-muted-foreground">Go to your forked repository and click "New Pull Request"</p>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="bg-muted/50 rounded-lg p-6">
+                    <h3 class="text-xl font-semibold mb-4">Code Style Guidelines</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-start gap-2">
+                            <span class="text-primary font-bold">•</span>
+                            <div>Follow C# naming conventions (PascalCase for classes, camelCase for methods)</div>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-primary font-bold">•</span>
+                            <div>Use meaningful variable and method names</div>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-primary font-bold">•</span>
+                            <div>Add comments for complex logic</div>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-primary font-bold">•</span>
+                            <div>Test your changes locally before submitting a PR</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Support -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6">Support</h2>
+            <div class="bg-muted/50 rounded-lg p-6">
+                <p class="text-muted-foreground mb-4">If you encounter any issues or have questions, please:</p>
+                <ol class="space-y-2 list-decimal list-inside">
+                    <li>Check the <a href="#common-issues" class="text-primary hover:underline">Common Issues & Solutions</a> section above</li>
+                    <li>Search existing <a href="https://github.com/codefrydev/TextHub/issues" class="text-primary hover:underline" target="_blank" rel="noopener noreferrer">GitHub Issues</a></li>
+                    <li>Create a new issue if your problem isn't already documented</li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- License -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6">License</h2>
+            <div class="bg-muted/50 rounded-lg p-6">
+                <p class="text-muted-foreground">This project is licensed under the MIT License - see the <a href="https://github.com/codefrydev/TextHub/blob/master/LICENSE" class="text-primary hover:underline" target="_blank" rel="noopener noreferrer">LICENSE</a> file for details.</p>
+            </div>
+        </section>
+
+        <!-- Acknowledgments -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6">Acknowledgments</h2>
+            <div class="bg-muted/50 rounded-lg p-6">
+                <ul class="space-y-2">
+                    <li class="flex items-start gap-2">
+                        <span class="text-primary font-bold">•</span>
+                        <div><a href="https://blazor.net/" class="text-primary hover:underline" target="_blank" rel="noopener noreferrer">Blazor</a> for the web framework</div>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-primary font-bold">•</span>
+                        <div><a href="https://tailwindcss.com/" class="text-primary hover:underline" target="_blank" rel="noopener noreferrer">Tailwind CSS</a> for styling</div>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-primary font-bold">•</span>
+                        <div><a href="https://lucide.dev/" class="text-primary hover:underline" target="_blank" rel="noopener noreferrer">Lucide Icons</a> for beautiful icons</div>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-primary font-bold">•</span>
+                        <div><a href="https://pages.github.com/" class="text-primary hover:underline" target="_blank" rel="noopener noreferrer">GitHub Pages</a> for hosting</div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+    </div>
+</div>
+
+@code {
+    private string _jsonLdContent = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        _jsonLdContent = JsonLdService.GenerateDocumentationPageJsonLd();
+    }
+}
