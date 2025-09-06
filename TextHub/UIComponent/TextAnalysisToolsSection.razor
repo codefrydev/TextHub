@@ -1,0 +1,28 @@
+@using TextHub.Services
+@inject ToolDataService ToolDataService
+
+<section class="py-16 md:py-24 px-4 bg-muted/5">
+    <div class="container mx-auto max-w-7xl">
+        <div class="mb-16 md:mb-20 animate-fade-in" style="animation-delay: 150ms;">
+            <SectionHeader 
+                Title="Text Analysis" 
+                Description="Analyze and count text properties"
+                Icon="&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;28&quot; height=&quot;28&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; class=&quot;text-primary&quot;&gt;&lt;path d=&quot;M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z&quot;&gt;&lt;/path&gt;&lt;path d=&quot;M14 2v4a2 2 0 0 0 2 2h4&quot;&gt;&lt;/path&gt;&lt;path d=&quot;M10 9H8&quot;&gt;&lt;/path&gt;&lt;path d=&quot;M16 13H8&quot;&gt;&lt;/path&gt;&lt;path d=&quot;M16 17H8&quot;&gt;&lt;/path&gt;&lt;/svg&gt;" />
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                @foreach (var (tool, index) in _availableTextAnalysisTools.Select((t, i) => (t, i)))
+                {
+                    <ToolCardComponent Tool="tool" AnimationDelay="@(150 + index * 100)" />
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+@code {
+    private List<TextHub.Models.Tool> _availableTextAnalysisTools = new();
+
+    protected override void OnInitialized()
+    {
+        _availableTextAnalysisTools = ToolDataService.GetTextAnalysisTools();
+    }
+}

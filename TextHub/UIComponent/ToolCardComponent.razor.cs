@@ -11,8 +11,8 @@ public partial class ToolCardComponent : ComponentBase
     [Parameter]
     public int AnimationDelay { get; set; } = 150;
 
-    private static int _cardIndex = 0;
-    private readonly string[] _gradientClasses = 
+    private static int _currentCardIndex = 0;
+    private readonly string[] _availableGradientClasses = 
     [
         "bg-gradient-to-br from-primary/20 to-secondary/5",
         "bg-gradient-to-br from-secondary/20 to-primary/5", 
@@ -22,8 +22,8 @@ public partial class ToolCardComponent : ComponentBase
 
     private string GetGradientClass()
     {
-        var gradientClass = _gradientClasses[_cardIndex % _gradientClasses.Length];
-        _cardIndex++;
-        return gradientClass;
+        var selectedGradientClass = _availableGradientClasses[_currentCardIndex % _availableGradientClasses.Length];
+        _currentCardIndex++;
+        return selectedGradientClass;
     }
 }

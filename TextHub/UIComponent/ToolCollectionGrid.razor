@@ -1,0 +1,17 @@
+@using TextHub.Models
+@using System.Linq
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+    @foreach (var (tool, index) in Tools.Select((t, i) => (t, i)))
+    {
+        <ToolCardComponent Tool="tool" AnimationDelay="@(BaseAnimationDelay + index * 50)" />
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public List<Tool> Tools { get; set; } = new();
+
+    [Parameter]
+    public int BaseAnimationDelay { get; set; } = 0;
+}

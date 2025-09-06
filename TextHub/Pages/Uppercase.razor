@@ -1,0 +1,116 @@
+@page "/uppercase"
+@using TextHub.Services
+@using TextHub.UIComponent
+@using Microsoft.JSInterop
+@inject JsonLdService JsonLdService
+@inject ToolDataService ToolDataService
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Uppercase Converter - Text Hub</PageTitle>
+
+<DynamicJsonLd JsonLdContent="@_jsonLdContent" Id="uppercase-jsonld" />
+
+<div class="min-h-screen flex flex-col">
+    <main class="flex-1 py-8 px-4">
+        <div class="container mx-auto max-w-4xl">
+            <!-- Page Header -->
+            <div class="text-center mb-8">
+                <h1 class="text-4xl font-bold mb-4">Uppercase Converter</h1>
+                <p class="text-xl text-muted-foreground">Convert any text to UPPERCASE instantly</p>
+            </div>
+
+            <!-- Tool Interface -->
+            <div class="bg-card rounded-lg border p-6 mb-8">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Enter your text:</label>
+                        <textarea 
+                            @bind="_inputText" 
+                            @oninput="ConvertToUppercase"
+                            class="w-full h-32 p-3 border rounded-md resize-none"
+                            placeholder="Type or paste your text here..."></textarea>
+                    </div>
+                    
+                    <div class="flex gap-2">
+                        <button @onclick="ConvertToUppercase" 
+                                class="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary-hover">
+                            Convert to UPPERCASE
+                        </button>
+                        <button @onclick="ClearText" 
+                                class="px-4 py-2 border border-border rounded-md hover:bg-muted">
+                            Clear
+                        </button>
+                        <button @onclick="CopyResult" 
+                                class="px-4 py-2 border border-border rounded-md hover:bg-muted">
+                            Copy Result
+                        </button>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Result:</label>
+                        <textarea 
+                            @bind="_outputText"
+                            class="w-full h-32 p-3 border rounded-md resize-none bg-muted"
+                            readonly></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tool Information -->
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-card rounded-lg border p-6">
+                    <h3 class="text-lg font-semibold mb-3">How to use:</h3>
+                    <ol class="list-decimal list-inside space-y-2 text-sm text-muted-foreground">
+                        <li>Enter or paste your text in the input field</li>
+                        <li>Click "Convert to UPPERCASE" or the text will convert automatically</li>
+                        <li>Copy the result using the "Copy Result" button</li>
+                    </ol>
+                </div>
+                
+                <div class="bg-card rounded-lg border p-6">
+                    <h3 class="text-lg font-semibold mb-3">Features:</h3>
+                    <ul class="list-disc list-inside space-y-2 text-sm text-muted-foreground">
+                        <li>Instant conversion to uppercase</li>
+                        <li>Preserves line breaks and formatting</li>
+                        <li>No character limit</li>
+                        <li>Works with any language</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+@code {
+    private string _inputText = string.Empty;
+    private string _outputText = string.Empty;
+    private string _jsonLdContent = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        var tool = ToolDataService.GetTextCaseTools().FirstOrDefault(t => t.Href == "/uppercase");
+        if (tool != null)
+        {
+            _jsonLdContent = JsonLdService.GenerateToolPageJsonLd(tool, "Text Case Tools");
+        }
+    }
+
+    private void ConvertToUppercase()
+    {
+        _outputText = _inputText.ToUpper();
+    }
+
+    private void ClearText()
+    {
+        _inputText = string.Empty;
+        _outputText = string.Empty;
+    }
+
+    private async Task CopyResult()
+    {
+        if (!string.IsNullOrEmpty(_outputText))
+        {
+            await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", _outputText);
+        }
+    }
+}

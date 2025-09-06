@@ -110,10 +110,20 @@
         }
     </script>
     <link rel="stylesheet" href="app.css" />
-    <link href="TextHub.styles.css" rel="stylesheet" />
     <link href="manifest.webmanifest" rel="manifest" />
     <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
     <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png" />
+    
+    <!-- Google Analytics -->
+    <script>
+        var dnt, doNotTrack = !1;
+        if (!1 && (dnt = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack, doNotTrack = dnt == "1" || dnt == "yes"), !doNotTrack) {
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments) }
+            gtag("js", new Date), gtag("config", "G-VM01Q3R43D")
+        }
+    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VM01Q3R43D"></script>
 </head>
 
 <body class="bg-background text-foreground font-poppins">

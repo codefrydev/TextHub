@@ -1,0 +1,16 @@
+@using TextHub.Services
+@inject JsonLdService JsonLdService
+
+@if (!string.IsNullOrEmpty(JsonLdContent))
+{
+    <HeadContent>
+        <script type="application/ld+json" id="@Id">
+            @JsonLdContent
+        </script>
+    </HeadContent>
+}
+
+@code {
+    [Parameter] public string JsonLdContent { get; set; } = string.Empty;
+    [Parameter] public string Id { get; set; } = "dynamic-jsonld";
+}

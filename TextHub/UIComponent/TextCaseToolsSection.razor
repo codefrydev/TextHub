@@ -1,0 +1,23 @@
+@using TextHub.Services
+@inject ToolDataService ToolDataService
+
+<section class="pb-12 md:pb-20 px-4">
+    <div class="container mx-auto max-w-7xl">
+        <div class="mb-12 md:mb-16 animate-fade-in" style="animation-delay: 0ms;">
+            <SectionHeader 
+                Title="Text Case Tools" 
+                Description="Convert text between different cases"
+                Icon="&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;24&quot; height=&quot;24&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; class=&quot;lucide lucide-case-sensitive w-5 h-5 md:w-6 md:h-6 text-primary&quot;&gt;&lt;path d=&quot;m3 15 4-8 4 8&quot;&gt;&lt;/path&gt;&lt;path d=&quot;M4 13h6&quot;&gt;&lt;/path&gt;&lt;circle cx=&quot;18&quot; cy=&quot;12&quot; r=&quot;3&quot;&gt;&lt;/circle&gt;&lt;path d=&quot;M21 9v6&quot;&gt;&lt;/path&gt;&lt;/svg&gt;" />
+            <ToolCollectionGrid Tools="_availableTextCaseTools" BaseAnimationDelay="0" />
+        </div>
+    </div>
+</section>
+
+@code {
+    private List<TextHub.Models.Tool> _availableTextCaseTools = new();
+
+    protected override void OnInitialized()
+    {
+        _availableTextCaseTools = ToolDataService.GetTextCaseTools();
+    }
+}

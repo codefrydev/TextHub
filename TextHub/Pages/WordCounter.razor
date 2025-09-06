@@ -1,0 +1,133 @@
+@page "/word-counter"
+@using TextHub.Services
+@using TextHub.UIComponent
+@using Microsoft.JSInterop
+@inject JsonLdService JsonLdService
+@inject ToolDataService ToolDataService
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Word Counter - Text Hub</PageTitle>
+
+<DynamicJsonLd JsonLdContent="@_jsonLdContent" Id="word-counter-jsonld" />
+
+<div class="min-h-screen flex flex-col">
+    <main class="flex-1 py-8 px-4">
+        <div class="container mx-auto max-w-4xl">
+            <!-- Page Header -->
+            <div class="text-center mb-8">
+                <h1 class="text-4xl font-bold mb-4">Word Counter</h1>
+                <p class="text-xl text-muted-foreground">Count words and characters in your text</p>
+            </div>
+
+            <!-- Tool Interface -->
+            <div class="bg-card rounded-lg border p-6 mb-8">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Enter your text:</label>
+                        <textarea 
+                            @bind="_inputText" 
+                            @oninput="CountText"
+                            class="w-full h-32 p-3 border rounded-md resize-none"
+                            placeholder="Type or paste your text here..."></textarea>
+                    </div>
+                    
+                    <div class="flex gap-2">
+                        <button @onclick="CountText" 
+                                class="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary-hover">
+                            Count Words
+                        </button>
+                        <button @onclick="ClearText" 
+                                class="px-4 py-2 border border-border rounded-md hover:bg-muted">
+                            Clear
+                        </button>
+                    </div>
+                    
+                    <!-- Statistics Display -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-muted rounded-md">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-primary">@_wordCount</div>
+                            <div class="text-sm text-muted-foreground">Words</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-primary">@_characterCount</div>
+                            <div class="text-sm text-muted-foreground">Characters</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-primary">@_characterCountNoSpaces</div>
+                            <div class="text-sm text-muted-foreground">No Spaces</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-primary">@_lineCount</div>
+                            <div class="text-sm text-muted-foreground">Lines</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tool Information -->
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-card rounded-lg border p-6">
+                    <h3 class="text-lg font-semibold mb-3">How to use:</h3>
+                    <ol class="list-decimal list-inside space-y-2 text-sm text-muted-foreground">
+                        <li>Enter or paste your text in the input field</li>
+                        <li>The word count will update automatically as you type</li>
+                        <li>View detailed statistics including characters and lines</li>
+                    </ol>
+                </div>
+                
+                <div class="bg-card rounded-lg border p-6">
+                    <h3 class="text-lg font-semibold mb-3">Features:</h3>
+                    <ul class="list-disc list-inside space-y-2 text-sm text-muted-foreground">
+                        <li>Real-time word counting</li>
+                        <li>Character count with and without spaces</li>
+                        <li>Line count</li>
+                        <li>No character limit</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+@code {
+    private string _inputText = string.Empty;
+    private int _wordCount = 0;
+    private int _characterCount = 0;
+    private int _characterCountNoSpaces = 0;
+    private int _lineCount = 0;
+    private string _jsonLdContent = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        var tool = ToolDataService.GetTextAnalysisTools().FirstOrDefault(t => t.Href == "/word-counter");
+        if (tool != null)
+        {
+            _jsonLdContent = JsonLdService.GenerateToolPageJsonLd(tool, "Text Analysis Tools");
+        }
+    }
+
+    private void CountText()
+    {
+        if (string.IsNullOrWhiteSpace(_inputText))
+        {
+            _wordCount = 0;
+            _characterCount = 0;
+            _characterCountNoSpaces = 0;
+            _lineCount = 0;
+            return;
+        }
+
+        _characterCount = _inputText.Length;
+        _characterCountNoSpaces = _inputText.Replace(" ", "").Replace("\n", "").Replace("\r", "").Length;
+        _lineCount = _inputText.Split('\n').Length;
+        
+        var words = _inputText.Split(new char[] { ' ', '\n', '\r', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+        _wordCount = words.Length;
+    }
+
+    private void ClearText()
+    {
+        _inputText = string.Empty;
+        CountText();
+    }
+}
