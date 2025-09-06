@@ -1,0 +1,171 @@
+@using TextHub.Models
+@using TextHub.Services.Data
+@inject ToolDataService ToolDataService
+@inject NavigationManager Navigation
+
+<div class="relative max-w-4xl mx-auto mb-16 px-4">
+    <div class="text-center mb-8">
+        <h2 class="text-3xl md:text-4xl font-bold text-foreground mb-4">
+            Find the Perfect Tool
+        </h2>
+        <p class="text-lg text-muted-foreground">
+            Search through our collection of text utilities to find exactly what you need
+        </p>
+    </div>
+    
+    <div class="relative">
+        <div class="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search text-muted-foreground">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.35-4.35"></path>
+            </svg>
+        </div>
+        <input 
+            @bind="SearchTerm" 
+            @bind:event="oninput"
+            type="text" 
+            placeholder="Search for text tools... (e.g., 'uppercase', 'word count', 'format')" 
+            class="w-full pl-16 pr-16 py-5 bg-background/80 backdrop-blur-sm border-2 border-border rounded-2xl text-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary transition-all duration-300 search-input shadow-lg"
+        />
+        @if (!string.IsNullOrEmpty(SearchTerm))
+        {
+            <button 
+                @onclick="ClearSearch" 
+                class="absolute inset-y-0 right-0 pr-6 flex items-center text-muted-foreground hover:text-foreground transition-colors"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x">
+                    <path d="M18 6 6 18"></path>
+                    <path d="M6 6l12 12"></path>
+                </svg>
+            </button>
+        }
+    </div>
+    
+    @if (!string.IsNullOrEmpty(SearchTerm))
+    {
+        <div class="mt-6 text-center">
+            <span class="text-sm text-muted-foreground">
+                Found @FilteredTools.Count() tool@(FilteredTools.Count() == 1 ? "" : "s") for "<span class="text-primary font-medium">@SearchTerm</span>"
+            </span>
+        </div>
+        
+        @if (FilteredTools.Any())
+        {
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                @foreach (var tool in FilteredTools.Take(6))
+                {
+                    <div @onclick="() => NavigateToTool(tool.Href)" class="bg-card p-6 rounded-xl border border-border hover:shadow-card-hover transition-all duration-300 cursor-pointer group hover:scale-105">
+                        <div class="flex items-start gap-4">
+                            <div class="flex-shrink-0 p-3 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                                @((MarkupString)tool.Icon.Replace("w-6 h-6", "w-6 h-6"))
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <h3 class="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
+                                    @tool.Title
+                                </h3>
+                                <p class="text-sm text-muted-foreground mt-1 line-clamp-2">
+                                    @tool.Description
+                                </p>
+                                @if (tool.IsComingSoon)
+                                {
+                                    <span class="inline-block mt-2 px-2 py-1 text-xs font-medium bg-muted text-muted-foreground rounded-full">
+                                        Coming Soon
+                                    </span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            
+            @if (FilteredTools.Count() > 6)
+            {
+                <div class="mt-6 text-center">
+                    <button @onclick="ShowAllResults" class="btn-primary">
+                        View All @FilteredTools.Count() Results
+                    </button>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="mt-8 text-center py-12">
+                <div class="inline-flex items-center justify-center p-4 bg-muted/30 rounded-full mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search-x text-muted-foreground">
+                        <path d="M13.5 21c-.83 0-1.5-.67-1.5-1.5v-6c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v6c0 .83-.67 1.5-1.5 1.5z"></path>
+                        <path d="M10.5 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h4.5"></path>
+                        <path d="M2 12h2"></path>
+                        <path d="M5 12h2"></path>
+                        <path d="M8 12h2"></path>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-semibold text-foreground mb-2">No tools found</h3>
+                <p class="text-muted-foreground">Try searching with different keywords or browse our categories below</p>
+            </div>
+        }
+    }
+</div>
+
+@code {
+    private string _searchTerm = string.Empty;
+    private List<Tool> _allTools = new();
+    private List<Tool> _filteredTools = new();
+
+    public string SearchTerm
+    {
+        get => _searchTerm;
+        set
+        {
+            _searchTerm = value;
+            FilterTools();
+        }
+    }
+
+    public IEnumerable<Tool> FilteredTools => _filteredTools;
+
+    protected override void OnInitialized()
+    {
+        // Get all tools from all categories
+        _allTools.AddRange(ToolDataService.GetTextCaseTools());
+        _allTools.AddRange(ToolDataService.GetTextAnalysisTools());
+        _allTools.AddRange(ToolDataService.GetTextFormattingTools());
+        _allTools.AddRange(ToolDataService.GetTextConversionTools());
+        _allTools.AddRange(ToolDataService.GetTextSecurityTools());
+        _allTools.AddRange(ToolDataService.GetTextUtilityTools());
+        
+        _filteredTools = _allTools;
+    }
+
+    private void FilterTools()
+    {
+        if (string.IsNullOrWhiteSpace(_searchTerm))
+        {
+            _filteredTools = _allTools;
+        }
+        else
+        {
+            var searchLower = _searchTerm.ToLowerInvariant();
+            _filteredTools = _allTools.Where(tool => 
+                tool.Title.ToLowerInvariant().Contains(searchLower) ||
+                tool.Description.ToLowerInvariant().Contains(searchLower) ||
+                tool.Href.ToLowerInvariant().Contains(searchLower)
+            ).ToList();
+        }
+    }
+
+    private void ClearSearch()
+    {
+        SearchTerm = string.Empty;
+    }
+
+    private void NavigateToTool(string href)
+    {
+        Navigation.NavigateTo(href);
+    }
+
+    private void ShowAllResults()
+    {
+        // For now, just show more results in the current view
+        // In the future, this could navigate to a dedicated search results page
+    }
+}

@@ -166,6 +166,24 @@
             const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
             return savedTheme === 'dark' || (savedTheme === null && prefersDark);
         };
+
+        // Click outside handler for dropdown menus
+        window.setupClickOutside = (elementId, dotNetReference) => {
+            const element = document.getElementById(elementId);
+            if (!element) return;
+
+            const handleClickOutside = (event) => {
+                if (!element.contains(event.target)) {
+                    dotNetReference.invokeMethodAsync('CloseDropdown');
+                }
+            };
+
+            // Remove existing listener if any
+            document.removeEventListener('click', handleClickOutside);
+            
+            // Add new listener
+            document.addEventListener('click', handleClickOutside);
+        };
     </script>
 <!--    <script>navigator.serviceWorker.register('service-worker.js');</script>-->
 </body>

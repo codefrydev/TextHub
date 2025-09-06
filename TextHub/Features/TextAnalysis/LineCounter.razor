@@ -1,0 +1,235 @@
+@page "/line-counter"
+@using TextHub.Services.Data
+@using TextHub.Components.Shared
+@using Microsoft.JSInterop
+@inject JsonLdService JsonLdService
+@inject ToolDataService ToolDataService
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Line Counter - Text Hub</PageTitle>
+
+<DynamicJsonLd JsonLdContent="@_jsonLdContent" Id="line-counter-jsonld" />
+
+<main class="flex-1">
+    <div class="container mx-auto px-4 py-8 md:py-12 animate-fade-in">
+        <div class="max-w-5xl mx-auto">
+            <div class="text-center mb-8 md:mb-10">
+                <div class="inline-flex items-center justify-center p-2.5 sm:p-3 bg-primary/10 rounded-lg mb-3 md:mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text w-6 h-6 sm:w-8 sm:h-8 text-primary">
+                        <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path>
+                        <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
+                        <path d="M10 9H8"></path>
+                        <path d="M16 13H8"></path>
+                        <path d="M16 17H8"></path>
+                    </svg>
+                </div>
+                <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 md:mb-4">
+                    <span class="text-gradient">Line Counter</span>
+                </h1>
+                <p class="text-base sm:text-lg text-muted-foreground px-4">Count lines, paragraphs, and analyze text structure instantly</p>
+            </div>
+            
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3 md:gap-4 mb-6 md:mb-8 animate-fade-in" style="animation-delay: 100ms;">
+                <div class="bg-card p-4 rounded-lg border border-border hover:shadow-card-hover transition-all">
+                    <div class="flex items-center gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-align-left w-5 h-5 text-primary">
+                            <path d="M15 12H3"></path>
+                            <path d="M17 18H3"></path>
+                            <path d="M21 6H3"></path>
+                        </svg>
+                        <div>
+                            <p class="text-sm text-muted-foreground">Total Lines</p>
+                            <p class="text-2xl font-bold">@_totalLines</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-card p-4 rounded-lg border border-border hover:shadow-card-hover transition-all">
+                    <div class="flex items-center gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text w-5 h-5 text-secondary">
+                            <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path>
+                            <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
+                            <path d="M10 9H8"></path>
+                            <path d="M16 13H8"></path>
+                            <path d="M16 17H8"></path>
+                        </svg>
+                        <div>
+                            <p class="text-sm text-muted-foreground">Paragraphs</p>
+                            <p class="text-2xl font-bold">@_paragraphCount</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-card p-4 rounded-lg border border-border hover:shadow-card-hover transition-all">
+                    <div class="flex items-center gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-hash w-5 h-5 text-primary">
+                            <line x1="4" x2="20" y1="9" y2="9"></line>
+                            <line x1="4" x2="20" y1="15" y2="15"></line>
+                            <line x1="10" x2="8" y1="3" y2="21"></line>
+                            <line x1="16" x2="14" y1="3" y2="21"></line>
+                        </svg>
+                        <div>
+                            <p class="text-sm text-muted-foreground">Non-empty Lines</p>
+                            <p class="text-2xl font-bold">@_nonEmptyLines</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-card p-4 rounded-lg border border-border hover:shadow-card-hover transition-all">
+                    <div class="flex items-center gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-hash w-5 h-5 text-secondary">
+                            <line x1="4" x2="20" y1="9" y2="9"></line>
+                            <line x1="4" x2="20" y1="15" y2="15"></line>
+                            <line x1="10" x2="8" y1="3" y2="21"></line>
+                            <line x1="16" x2="14" y1="3" y2="21"></line>
+                        </svg>
+                        <div>
+                            <p class="text-sm text-muted-foreground">Empty Lines</p>
+                            <p class="text-2xl font-bold">@_emptyLines</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-card p-4 rounded-lg border border-border hover:shadow-card-hover transition-all">
+                    <div class="flex items-center gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-type w-5 h-5 text-primary">
+                            <polyline points="4 7 4 4 20 4 20 7"></polyline>
+                            <line x1="9" x2="15" y1="20" y2="20"></line>
+                            <line x1="12" x2="12" y1="4" y2="20"></line>
+                        </svg>
+                        <div>
+                            <p class="text-sm text-muted-foreground">Words</p>
+                            <p class="text-2xl font-bold">@_wordCount</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-card p-4 rounded-lg border border-border hover:shadow-card-hover transition-all">
+                    <div class="flex items-center gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-hash w-5 h-5 text-secondary">
+                            <line x1="4" x2="20" y1="9" y2="9"></line>
+                            <line x1="4" x2="20" y1="15" y2="15"></line>
+                            <line x1="10" x2="8" y1="3" y2="21"></line>
+                            <line x1="16" x2="14" y1="3" y2="21"></line>
+                        </svg>
+                        <div>
+                            <p class="text-sm text-muted-foreground">Characters</p>
+                            <p class="text-2xl font-bold">@_characterCount</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="animate-fade-in" style="animation-delay: 200ms;">
+                <label class="block text-sm font-medium mb-2">Enter your text</label>
+                <textarea 
+                    @bind="InputText" 
+                    @bind:event="oninput"
+                    placeholder="Start typing or paste your text here to see line statistics..." 
+                    class="input-area min-h-[200px] sm:min-h-[250px] md:min-h-[300px] text-sm sm:text-base"></textarea>
+            </div>
+            
+            <div class="mt-8 md:mt-12 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                <div class="p-4 md:p-6 bg-muted/30 rounded-lg animate-fade-in" style="animation-delay: 300ms;">
+                    <h2 class="text-lg md:text-xl font-semibold mb-2 md:mb-3">How it works</h2>
+                    <ul class="space-y-1.5 md:space-y-2 text-sm md:text-base text-muted-foreground">
+                        <li>• Type or paste your text in the box above</li>
+                        <li>• Line counts update in real-time as you type</li>
+                        <li>• Perfect for code, poetry, and structured text</li>
+                        <li>• Distinguishes between empty and non-empty lines</li>
+                    </ul>
+                </div>
+                <div class="p-4 md:p-6 bg-muted/30 rounded-lg animate-fade-in" style="animation-delay: 400ms;">
+                    <h2 class="text-lg md:text-xl font-semibold mb-2 md:mb-3">Use cases</h2>
+                    <ul class="space-y-1.5 md:space-y-2 text-sm md:text-base text-muted-foreground">
+                        <li>• Count lines of code in programming</li>
+                        <li>• Analyze poetry and verse structure</li>
+                        <li>• Check document formatting and layout</li>
+                        <li>• Measure text density and readability</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@code {
+    private string _inputTextValue = "Hello\nWorld\n\nThis is a test";
+    private int _totalLines = 4;
+    private int _paragraphCount = 2;
+    private int _nonEmptyLines = 3;
+    private int _emptyLines = 1;
+    private int _wordCount = 6;
+    private int _characterCount = 25;
+    private string _jsonLdContent = string.Empty;
+
+    private string InputText
+    {
+        get => _inputTextValue;
+        set
+        {
+            _inputTextValue = value;
+            CountLines();
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        var tool = ToolDataService.GetTextAnalysisTools().FirstOrDefault(t => t.Href == "/line-counter");
+        if (tool != null)
+        {
+            _jsonLdContent = JsonLdService.GenerateToolPageJsonLd(tool, "Text Analysis Tools");
+        }
+    }
+
+    private void CountLines()
+    {
+        if (string.IsNullOrEmpty(_inputTextValue))
+        {
+            _totalLines = 0;
+            _paragraphCount = 0;
+            _nonEmptyLines = 0;
+            _emptyLines = 0;
+            _wordCount = 0;
+            _characterCount = 0;
+            return;
+        }
+
+        // Split by newlines to get individual lines
+        var lines = _inputTextValue.Split(new char[] { '\n' }, StringSplitOptions.None);
+        _totalLines = lines.Length;
+        
+        // Count non-empty lines (lines with content after trimming whitespace)
+        _nonEmptyLines = lines.Count(line => !string.IsNullOrWhiteSpace(line));
+        _emptyLines = _totalLines - _nonEmptyLines;
+        
+        // Count paragraphs (groups of non-empty lines separated by empty lines)
+        _paragraphCount = CountParagraphs(lines);
+        
+        // Count words and characters
+        var words = _inputTextValue.Split(new char[] { ' ', '\n', '\r', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+        _wordCount = words.Length;
+        _characterCount = _inputTextValue.Length;
+    }
+
+    private int CountParagraphs(string[] lines)
+    {
+        if (lines.Length == 0) return 0;
+        
+        int paragraphCount = 0;
+        bool inParagraph = false;
+        
+        foreach (var line in lines)
+        {
+            if (!string.IsNullOrWhiteSpace(line))
+            {
+                if (!inParagraph)
+                {
+                    paragraphCount++;
+                    inParagraph = true;
+                }
+            }
+            else
+            {
+                inParagraph = false;
+            }
+        }
+        
+        return paragraphCount;
+    }
+}

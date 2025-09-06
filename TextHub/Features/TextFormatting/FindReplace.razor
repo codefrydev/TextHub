@@ -1,0 +1,469 @@
+@page "/find-replace"
+@using TextHub.Services.Data
+@using TextHub.Components.Shared
+@using Microsoft.JSInterop
+@inject JsonLdService JsonLdService
+@inject ToolDataService ToolDataService
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Find & Replace - Text Hub</PageTitle>
+
+<DynamicJsonLd JsonLdContent="@_jsonLdContent" Id="find-replace-jsonld" />
+
+<main class="flex-1">
+    <div class="container mx-auto px-4 py-8 md:py-12 animate-fade-in">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-8 md:mb-10">
+                <div class="inline-flex items-center justify-center p-2.5 sm:p-3 bg-secondary/10 rounded-lg mb-3 md:mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-replace w-6 h-6 sm:w-8 sm:h-8 text-secondary">
+                        <path d="M14 4a2 2 0 0 1 2-2"></path>
+                        <path d="M16 10a2 2 0 0 1-2-2"></path>
+                        <path d="M20 2a2 2 0 0 1 2 2"></path>
+                        <path d="M22 8a2 2 0 0 1-2 2"></path>
+                        <path d="m3 7 3 3 3-3"></path>
+                        <path d="M6 10V5a3 3 0 0 1 3-3h1"></path>
+                        <rect x="2" y="14" width="8" height="8" rx="2"></rect>
+                    </svg>
+                </div>
+                <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 md:mb-4">
+                    <span class="text-gradient">Find & Replace</span>
+                </h1>
+                <p class="text-base sm:text-lg text-muted-foreground px-4">Search for text patterns and replace them with new content</p>
+            </div>
+            
+            <div class="mb-4 md:mb-6 p-3 md:p-4 bg-muted/30 rounded-lg animate-fade-in" style="animation-delay: 100ms;">
+                <h3 class="font-semibold mb-2 md:mb-3 text-sm md:text-base">Search Options</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-3">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" @bind="CaseSensitive" class="w-4 h-4 text-primary rounded focus:ring-primary">
+                        <span class="text-xs sm:text-sm">Case sensitive</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" @bind="WholeWord" class="w-4 h-4 text-primary rounded focus:ring-primary">
+                        <span class="text-xs sm:text-sm">Whole word only</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" @bind="UseRegex" class="w-4 h-4 text-primary rounded focus:ring-primary">
+                        <span class="text-xs sm:text-sm">Use regex</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" @bind="ReplaceAll" class="w-4 h-4 text-primary rounded focus:ring-primary">
+                        <span class="text-xs sm:text-sm">Replace all occurrences</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" @bind="TrimWhitespace" class="w-4 h-4 text-primary rounded focus:ring-primary">
+                        <span class="text-xs sm:text-sm">Trim whitespace</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="grid gap-4 md:gap-6">
+                <div class="animate-fade-in" style="animation-delay: 200ms;">
+                    <label class="block text-sm font-medium mb-2">Input Text</label>
+                    <textarea 
+                        @bind="InputText" 
+                        @bind:event="oninput"
+                        placeholder="Enter or paste your text here..." 
+                        class="input-area min-h-[150px] sm:min-h-[200px] text-sm sm:text-base"></textarea>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in" style="animation-delay: 250ms;">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Find</label>
+                        <input 
+                            @bind="FindText" 
+                            @bind:event="oninput"
+                            type="text" 
+                            placeholder="Text to find..." 
+                            class="input-area h-12 text-sm sm:text-base">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Replace with</label>
+                        <input 
+                            @bind="ReplaceText" 
+                            @bind:event="oninput"
+                            type="text" 
+                            placeholder="Replacement text..." 
+                            class="input-area h-12 text-sm sm:text-base">
+                    </div>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center animate-fade-in" style="animation-delay: 300ms;">
+                    <button @onclick="FindTextAction" class="btn-secondary w-full sm:w-auto text-sm sm:text-base">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search w-4 h-4 mr-2 inline">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        Find
+                    </button>
+                    <button @onclick="ReplaceTextAction" class="btn-primary w-full sm:w-auto text-sm sm:text-base">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-replace w-4 h-4 mr-2 inline">
+                            <path d="M14 4a2 2 0 0 1 2-2"></path>
+                            <path d="M16 10a2 2 0 0 1-2-2"></path>
+                            <path d="M20 2a2 2 0 0 1 2 2"></path>
+                            <path d="M22 8a2 2 0 0 1-2 2"></path>
+                            <path d="m3 7 3 3 3-3"></path>
+                            <path d="M6 10V5a3 3 0 0 1 3-3h1"></path>
+                            <rect x="2" y="14" width="8" height="8" rx="2"></rect>
+                        </svg>
+                        Replace
+                    </button>
+                    <button @onclick="ResetText" class="btn-secondary w-full sm:w-auto text-sm sm:text-base">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rotate-ccw w-4 h-4 mr-2 inline">
+                            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                            <path d="M3 3v5h5"></path>
+                        </svg>
+                        Reset
+                    </button>
+                </div>
+                
+                <div class="animate-scale-in">
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-2">
+                        <label class="block text-sm font-medium">Result</label>
+                        <div class="flex items-center gap-4">
+                            <span class="text-xs sm:text-sm text-muted-foreground">Found: @_foundCount occurrences</span>
+                            <button @onclick="CopyToClipboard" class="flex items-center gap-2 text-xs sm:text-sm text-primary hover:text-primary-hover transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy w-3 h-3 sm:w-4 sm:h-4">
+                                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                                </svg>
+                                Copy to Clipboard
+                            </button>
+                        </div>
+                    </div>
+                    <div class="input-area min-h-[150px] sm:min-h-[200px] text-sm sm:text-base bg-muted/50 border-muted p-3 overflow-auto">
+                        @if (string.IsNullOrEmpty(_resultText))
+                        {
+                            <span class="text-muted-foreground">Result will appear here...</span>
+                        }
+                        else
+                        {
+                            @((MarkupString)_highlightedText)
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 md:mt-12 p-4 md:p-6 bg-muted/30 rounded-lg animate-fade-in" style="animation-delay: 400ms;">
+                <h2 class="text-lg md:text-xl font-semibold mb-2 md:mb-3">How it works</h2>
+                <ul class="space-y-1.5 md:space-y-2 text-sm md:text-base text-muted-foreground">
+                    <li>• Enter text to find and replacement text</li>
+                    <li>• Use options to customize search behavior</li>
+                    <li>• Supports regular expressions for advanced patterns</li>
+                    <li>• Perfect for bulk text editing and formatting</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</main>
+
+@code {
+    private string _inputTextValue = "Hello world! This is a test. Hello again!";
+    private string _resultText = "Hello world! This is a test. Hello again!";
+    private string _highlightedText = "Hello world! This is a test. Hello again!";
+    private string _findText = "Hello";
+    private string _replaceText = "Hi";
+    private int _foundCount = 0;
+    private bool CaseSensitive = false;
+    private bool WholeWord = false;
+    private bool UseRegex = false;
+    private bool ReplaceAll = true;
+    private bool TrimWhitespace = false;
+    private string _jsonLdContent = string.Empty;
+
+    private string InputText
+    {
+        get => _inputTextValue;
+        set
+        {
+            _inputTextValue = value;
+            StateHasChanged();
+        }
+    }
+
+    private string FindText
+    {
+        get => _findText;
+        set
+        {
+            _findText = value;
+            StateHasChanged();
+        }
+    }
+
+    private string ReplaceText
+    {
+        get => _replaceText;
+        set
+        {
+            _replaceText = value;
+            StateHasChanged();
+        }
+    }
+
+    private string ResultText
+    {
+        get => _resultText;
+        set
+        {
+            _resultText = value;
+            StateHasChanged();
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        var tool = ToolDataService.GetTextFormattingTools().FirstOrDefault(t => t.Href == "/find-replace");
+        if (tool != null)
+        {
+            _jsonLdContent = JsonLdService.GenerateToolPageJsonLd(tool, "Text Formatting Tools");
+        }
+    }
+
+    private void FindTextAction()
+    {
+        if (string.IsNullOrEmpty(_inputTextValue) || string.IsNullOrEmpty(_findText))
+        {
+            _foundCount = 0;
+            ResultText = _inputTextValue;
+            return;
+        }
+
+        var searchText = _findText;
+        var inputText = _inputTextValue;
+
+        if (!CaseSensitive)
+        {
+            searchText = searchText.ToLower();
+            inputText = inputText.ToLower();
+        }
+
+        if (UseRegex)
+        {
+            try
+            {
+                var regex = new System.Text.RegularExpressions.Regex(searchText, CaseSensitive ? System.Text.RegularExpressions.RegexOptions.None : System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                var matches = regex.Matches(_inputTextValue);
+                _foundCount = matches.Count;
+            }
+            catch
+            {
+                _foundCount = 0;
+            }
+        }
+        else
+        {
+            if (WholeWord)
+            {
+                var words = _inputTextValue.Split(new char[] { ' ', '\n', '\r', '\t', '.', ',', '!', '?', ';', ':', '(', ')', '[', ']', '{', '}', '"', '\'' }, StringSplitOptions.RemoveEmptyEntries);
+                _foundCount = words.Count(w => string.Equals(w, _findText, CaseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase));
+            }
+            else
+            {
+                _foundCount = inputText.Split(new string[] { searchText }, StringSplitOptions.None).Length - 1;
+            }
+        }
+
+        ResultText = _inputTextValue;
+        _highlightedText = GenerateHighlightedText(_inputTextValue, _findText);
+        StateHasChanged();
+    }
+
+    private void ReplaceTextAction()
+    {
+        if (string.IsNullOrEmpty(_inputTextValue) || string.IsNullOrEmpty(_findText))
+        {
+            _foundCount = 0;
+            ResultText = _inputTextValue;
+            return;
+        }
+
+        var result = _inputTextValue;
+        var searchText = _findText;
+        var replaceText = _replaceText;
+
+        if (UseRegex)
+        {
+            try
+            {
+                var regex = new System.Text.RegularExpressions.Regex(searchText, CaseSensitive ? System.Text.RegularExpressions.RegexOptions.None : System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                if (ReplaceAll)
+                {
+                    result = regex.Replace(_inputTextValue, replaceText);
+                }
+                else
+                {
+                    result = regex.Replace(_inputTextValue, replaceText, 1);
+                }
+                _foundCount = regex.Matches(_inputTextValue).Count;
+            }
+            catch
+            {
+                _foundCount = 0;
+                result = _inputTextValue;
+            }
+        }
+        else
+        {
+            var comparison = CaseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
+            
+            if (WholeWord)
+            {
+                var words = result.Split(new char[] { ' ', '\n', '\r', '\t', '.', ',', '!', '?', ';', ':', '(', ')', '[', ']', '{', '}', '"', '\'' }, StringSplitOptions.RemoveEmptyEntries);
+                _foundCount = words.Count(w => string.Equals(w, _findText, comparison));
+                
+                // Simple whole word replacement
+                var wordBoundary = @"\b";
+                var pattern = wordBoundary + System.Text.RegularExpressions.Regex.Escape(_findText) + wordBoundary;
+                var regex = new System.Text.RegularExpressions.Regex(pattern, CaseSensitive ? System.Text.RegularExpressions.RegexOptions.None : System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                
+                if (ReplaceAll)
+                {
+                    result = regex.Replace(_inputTextValue, replaceText);
+                }
+                else
+                {
+                    result = regex.Replace(_inputTextValue, replaceText, 1);
+                }
+            }
+            else
+            {
+                if (ReplaceAll)
+                {
+                    result = ReplaceAllOccurrences(_inputTextValue, _findText, replaceText, comparison);
+                }
+                else
+                {
+                    var index = _inputTextValue.IndexOf(_findText, comparison);
+                    if (index >= 0)
+                    {
+                        result = _inputTextValue.Substring(0, index) + replaceText + _inputTextValue.Substring(index + _findText.Length);
+                    }
+                }
+                _foundCount = CountOccurrences(_inputTextValue, _findText, comparison);
+            }
+        }
+
+        if (TrimWhitespace)
+        {
+            result = result.Trim();
+        }
+
+        ResultText = result;
+        _highlightedText = GenerateHighlightedText(result, _findText);
+        StateHasChanged();
+    }
+
+    private string ReplaceAllOccurrences(string input, string find, string replace, StringComparison comparison)
+    {
+        var result = input;
+        var index = 0;
+        
+        while ((index = result.IndexOf(find, index, comparison)) >= 0)
+        {
+            result = result.Substring(0, index) + replace + result.Substring(index + find.Length);
+            index += replace.Length;
+        }
+        
+        return result;
+    }
+
+    private int CountOccurrences(string input, string find, StringComparison comparison)
+    {
+        var count = 0;
+        var index = 0;
+        
+        while ((index = input.IndexOf(find, index, comparison)) >= 0)
+        {
+            count++;
+            index += find.Length;
+        }
+        
+        return count;
+    }
+
+    private void ResetText()
+    {
+        InputText = string.Empty;
+        FindText = string.Empty;
+        ReplaceText = string.Empty;
+        ResultText = string.Empty;
+        _highlightedText = string.Empty;
+        _foundCount = 0;
+    }
+
+    private string GenerateHighlightedText(string text, string searchText)
+    {
+        if (string.IsNullOrEmpty(text) || string.IsNullOrEmpty(searchText))
+        {
+            return text;
+        }
+
+        var comparison = CaseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
+        var result = text;
+        var highlightStart = "<mark class=\"bg-yellow-200 text-yellow-900 px-1 rounded\">";
+        var highlightEnd = "</mark>";
+
+        if (UseRegex)
+        {
+            try
+            {
+                var regex = new System.Text.RegularExpressions.Regex(searchText, CaseSensitive ? System.Text.RegularExpressions.RegexOptions.None : System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                result = regex.Replace(text, highlightStart + "$0" + highlightEnd);
+            }
+            catch
+            {
+                // If regex fails, fall back to simple highlighting
+                result = HighlightSimpleText(text, searchText, comparison, highlightStart, highlightEnd);
+            }
+        }
+        else if (WholeWord)
+        {
+            var words = text.Split(new char[] { ' ', '\n', '\r', '\t', '.', ',', '!', '?', ';', ':', '(', ')', '[', ']', '{', '}', '"', '\'' }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var word in words)
+            {
+                if (string.Equals(word, searchText, comparison))
+                {
+                    result = result.Replace(word, highlightStart + word + highlightEnd);
+                }
+            }
+        }
+        else
+        {
+            result = HighlightSimpleText(text, searchText, comparison, highlightStart, highlightEnd);
+        }
+
+        return result;
+    }
+
+    private string HighlightSimpleText(string text, string searchText, StringComparison comparison, string highlightStart, string highlightEnd)
+    {
+        var result = text;
+        var index = 0;
+        
+        while ((index = result.IndexOf(searchText, index, comparison)) >= 0)
+        {
+            var before = result.Substring(0, index);
+            var match = result.Substring(index, searchText.Length);
+            var after = result.Substring(index + searchText.Length);
+            
+            result = before + highlightStart + match + highlightEnd + after;
+            index += highlightStart.Length + match.Length + highlightEnd.Length;
+        }
+        
+        return result;
+    }
+
+    private async Task CopyToClipboard()
+    {
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", _resultText);
+        }
+        catch
+        {
+            // Fallback for older browsers
+            await JSRuntime.InvokeVoidAsync("eval", $"navigator.clipboard.writeText('{_resultText.Replace("'", "\\'")}')");
+        }
+    }
+}

@@ -1,5 +1,8 @@
 
 @inject IJSRuntime JsRuntime
+@inject TextHub.Services.Data.ToolDataService ToolDataService
+@inject NavigationManager Navigation
+@using Microsoft.AspNetCore.Components.Web
    <nav class="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
         <div class="container mx-auto px-4 py-3 md:py-4">
             <div class="flex items-center justify-between">
@@ -9,7 +12,7 @@
                 <div class="hidden md:flex items-center gap-6">
                     <NavLink class="nav-link" href="" Match="NavLinkMatch.All">Home</NavLink>
                     <div class="relative">
-                        <button @onclick="() => _isToolsDropdownOpen = !_isToolsDropdownOpen" type="button" class="flex items-center gap-1 font-medium hover:text-primary transition-colors cursor-pointer">
+                        <button @onclick="() => _isToolsDropdownOpen = !_isToolsDropdownOpen" @onclick:stopPropagation="true" type="button" class="flex items-center gap-1 font-medium hover:text-primary transition-colors cursor-pointer">
                             Tools
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down w-4 h-4 transition-transform @(_isToolsDropdownOpen ? "rotate-180" : "")">
                                 <path d="m6 9 6 6 6-6"></path>
@@ -17,10 +20,72 @@
                         </button>
                         @if (_isToolsDropdownOpen)
                         {
-                            <div class="absolute top-full mt-2 w-48 dropdown-menu rounded-md py-1">
-                                <a href="uppercase" class="block px-4 py-2 text-sm dropdown-item">Uppercase</a>
-                                <a href="lowercase" class="block px-4 py-2 text-sm dropdown-item">Lowercase</a>
-                                <a href="word-counter" class="block px-4 py-2 text-sm dropdown-item">Word Counter</a>
+                            <div id="tools-dropdown" @onclick:stopPropagation="true" @onclick:preventDefault="true" class="absolute top-full mt-2 w-72 p-2 bg-popover text-popover-foreground border border-border rounded-md shadow-md z-50">
+                                @* Text Case Tools Section *@
+                                <div class="mb-1">
+                                    <button @onclick="() => ToggleTextCaseSection()" type="button" class="flex items-center justify-between w-full px-2 py-1.5 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors rounded hover:bg-muted/50">
+                                        Text Case Tools
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down w-4 h-4 transition-transform @(_isTextCaseOpen ? "rotate-180" : "")">
+                                            <path d="m6 9 6 6 6-6"></path>
+                                        </svg>
+                                    </button>
+                                    @if (_isTextCaseOpen)
+                                    {
+                                        <div class="ml-2 mt-1">
+                                            @foreach (var tool in ToolDataService.GetTextCaseTools().Where(t => !t.IsComingSoon).Take(8))
+                                            {
+                                                <a @onclick="() => NavigateToTool(tool.Href)" class="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground flex items-center gap-3 cursor-pointer">
+                                                    @((MarkupString)tool.Icon.Replace("w-6 h-6", "w-4 h-4"))
+                                                    @tool.Title
+                                                </a>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+
+                                @* Text Analysis Section *@
+                                <div class="mb-1">
+                                    <button @onclick="() => ToggleTextAnalysisSection()" type="button" class="flex items-center justify-between w-full px-2 py-1.5 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors rounded hover:bg-muted/50">
+                                        Text Analysis
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down w-4 h-4 transition-transform @(_isTextAnalysisOpen ? "rotate-180" : "")">
+                                            <path d="m6 9 6 6 6-6"></path>
+                                        </svg>
+                                    </button>
+                                    @if (_isTextAnalysisOpen)
+                                    {
+                                        <div class="ml-2 mt-1">
+                                            @foreach (var tool in ToolDataService.GetTextAnalysisTools().Where(t => !t.IsComingSoon).Take(3))
+                                            {
+                                                <a @onclick="() => NavigateToTool(tool.Href)" class="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground flex items-center gap-3 cursor-pointer">
+                                                    @((MarkupString)tool.Icon.Replace("w-6 h-6", "w-4 h-4"))
+                                                    @tool.Title
+                                                </a>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+
+                                @* Text Formatting Section *@
+                                <div class="mb-1">
+                                    <button @onclick="() => ToggleTextFormattingSection()" type="button" class="flex items-center justify-between w-full px-2 py-1.5 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors rounded hover:bg-muted/50">
+                                        Text Formatting
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down w-4 h-4 transition-transform @(_isTextFormattingOpen ? "rotate-180" : "")">
+                                            <path d="m6 9 6 6 6-6"></path>
+                                        </svg>
+                                    </button>
+                                    @if (_isTextFormattingOpen)
+                                    {
+                                        <div class="ml-2 mt-1">
+                                            @foreach (var tool in ToolDataService.GetTextFormattingTools().Where(t => !t.IsComingSoon).Take(4))
+                                            {
+                                                <a @onclick="() => NavigateToTool(tool.Href)" class="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground flex items-center gap-3 cursor-pointer">
+                                                    @((MarkupString)tool.Icon.Replace("w-6 h-6", "w-4 h-4"))
+                                                    @tool.Title
+                                                </a>
+                                            }
+                                        </div>
+                                    }
+                                </div>
                             </div>
                         }
                     </div>
@@ -70,6 +135,9 @@
 {
     private bool _isMobileMenuOpen;
     private bool _isToolsDropdownOpen;
+    private bool _isTextCaseOpen = false;
+    private bool _isTextAnalysisOpen = false;
+    private bool _isTextFormattingOpen = false;
     private bool _isDarkMode = false; // Will be initialized from localStorage
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -78,6 +146,10 @@
         {
             // Initialize theme from localStorage or system preference
             _isDarkMode = await JsRuntime.InvokeAsync<bool>("getTheme");
+            
+            // Setup click outside handler for dropdown
+            await JsRuntime.InvokeVoidAsync("setupClickOutside", "tools-dropdown", DotNetObjectReference.Create(this));
+            
             StateHasChanged();
         }
     }
@@ -91,6 +163,52 @@
     {
         _isDarkMode = !_isDarkMode;
         await JsRuntime.InvokeVoidAsync("toggleTheme", _isDarkMode);
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public void CloseDropdown()
+    {
+        _isToolsDropdownOpen = false;
+        _isTextCaseOpen = false;
+        _isTextAnalysisOpen = false;
+        _isTextFormattingOpen = false;
+        StateHasChanged();
+    }
+
+    private void NavigateToTool(string href)
+    {
+        // Close the dropdown first
+        CloseDropdown();
+        
+        // Navigate to the tool
+        Navigation.NavigateTo(href);
+    }
+
+    private void ToggleTextCaseSection()
+    {
+        // Close other sections and toggle this one
+        _isTextAnalysisOpen = false;
+        _isTextFormattingOpen = false;
+        _isTextCaseOpen = !_isTextCaseOpen;
+        StateHasChanged();
+    }
+
+    private void ToggleTextAnalysisSection()
+    {
+        // Close other sections and toggle this one
+        _isTextCaseOpen = false;
+        _isTextFormattingOpen = false;
+        _isTextAnalysisOpen = !_isTextAnalysisOpen;
+        StateHasChanged();
+    }
+
+    private void ToggleTextFormattingSection()
+    {
+        // Close other sections and toggle this one
+        _isTextCaseOpen = false;
+        _isTextAnalysisOpen = false;
+        _isTextFormattingOpen = !_isTextFormattingOpen;
         StateHasChanged();
     }
 }

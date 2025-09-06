@@ -1,0 +1,211 @@
+@page "/remove-spaces"
+@using TextHub.Services.Data
+@using TextHub.Components.Shared
+@using Microsoft.JSInterop
+@inject JsonLdService JsonLdService
+@inject ToolDataService ToolDataService
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Remove Extra Spaces - Text Hub</PageTitle>
+
+<DynamicJsonLd JsonLdContent="@_jsonLdContent" Id="remove-spaces-jsonld" />
+
+<main class="flex-1">
+    <div class="container mx-auto px-4 py-8 md:py-12 animate-fade-in">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-8 md:mb-10">
+                <div class="inline-flex items-center justify-center p-2.5 sm:p-3 bg-secondary/10 rounded-lg mb-3 md:mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-space w-6 h-6 sm:w-8 sm:h-8 text-secondary">
+                        <path d="M22 17v1c0 .5-.5 1-1 1H3c-.5 0-1-.5-1-1v-1"></path>
+                    </svg>
+                </div>
+                <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 md:mb-4">
+                    <span class="text-gradient">Remove Extra Spaces</span>
+                </h1>
+                <p class="text-base sm:text-lg text-muted-foreground px-4">Clean up unnecessary spaces and whitespace from your text</p>
+            </div>
+            
+            <div class="mb-4 md:mb-6 p-3 md:p-4 bg-muted/30 rounded-lg animate-fade-in" style="animation-delay: 100ms;">
+                <h3 class="font-semibold mb-2 md:mb-3 text-sm md:text-base">Options</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-3">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" @bind="RemoveExtraSpaces" class="w-4 h-4 text-primary rounded focus:ring-primary">
+                        <span class="text-xs sm:text-sm">Remove extra spaces</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" @bind="TrimStart" class="w-4 h-4 text-primary rounded focus:ring-primary">
+                        <span class="text-xs sm:text-sm">Trim start</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" @bind="TrimEnd" class="w-4 h-4 text-primary rounded focus:ring-primary">
+                        <span class="text-xs sm:text-sm">Trim end</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" @bind="ReplaceTabsWithSpaces" class="w-4 h-4 text-primary rounded focus:ring-primary">
+                        <span class="text-xs sm:text-sm">Replace tabs with spaces</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" @bind="RemoveLineBreaks" class="w-4 h-4 text-primary rounded focus:ring-primary">
+                        <span class="text-xs sm:text-sm">Remove line breaks</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="grid gap-4 md:gap-6">
+                <div class="animate-fade-in" style="animation-delay: 200ms;">
+                    <label class="block text-sm font-medium mb-2">Input Text</label>
+                    <textarea 
+                        @bind="InputText" 
+                        @bind:event="oninput"
+                        placeholder="Enter or paste your text with extra spaces here..." 
+                        class="input-area min-h-[150px] sm:min-h-[200px] text-sm sm:text-base"></textarea>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center animate-fade-in" style="animation-delay: 300ms;">
+                    <button @onclick="CleanSpaces" class="btn-primary w-full sm:w-auto text-sm sm:text-base">Clean Spaces</button>
+                    <button @onclick="ResetText" class="btn-secondary w-full sm:w-auto text-sm sm:text-base">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rotate-ccw w-4 h-4 mr-2 inline">
+                            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                            <path d="M3 3v5h5"></path>
+                        </svg>
+                        Reset
+                    </button>
+                </div>
+                
+                <div class="animate-scale-in">
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-2">
+                        <label class="block text-sm font-medium">Cleaned Text</label>
+                        <button @onclick="CopyToClipboard" class="flex items-center gap-2 text-xs sm:text-sm text-primary hover:text-primary-hover transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy w-3 h-3 sm:w-4 sm:h-4">
+                                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                            </svg>
+                            Copy to Clipboard
+                        </button>
+                    </div>
+                    <textarea 
+                        @bind="CleanedText" 
+                        readonly 
+                        class="input-area min-h-[150px] sm:min-h-[200px] text-sm sm:text-base bg-muted/50 border-muted"
+                        placeholder="Cleaned text will appear here..."></textarea>
+                </div>
+            </div>
+            
+            <div class="mt-8 md:mt-12 p-4 md:p-6 bg-muted/30 rounded-lg animate-fade-in" style="animation-delay: 400ms;">
+                <h2 class="text-lg md:text-xl font-semibold mb-2 md:mb-3">How it works</h2>
+                <ul class="space-y-1.5 md:space-y-2 text-sm md:text-base text-muted-foreground">
+                    <li>• Removes multiple consecutive spaces</li>
+                    <li>• Trims whitespace from beginning and end</li>
+                    <li>• Optionally removes tabs and line breaks</li>
+                    <li>• Perfect for cleaning copied text from PDFs or websites</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</main>
+
+@code {
+    private string _inputTextValue = "sudo dotnet workload install wasm-tools";
+    private string _cleanedText = "sudo dotnet workload install wasm-tools";
+    private bool RemoveExtraSpaces = true;
+    private bool TrimStart = true;
+    private bool TrimEnd = true;
+    private bool ReplaceTabsWithSpaces = true;
+    private bool RemoveLineBreaks = false;
+    private string _jsonLdContent = string.Empty;
+
+    private string InputText
+    {
+        get => _inputTextValue;
+        set
+        {
+            _inputTextValue = value;
+            StateHasChanged();
+        }
+    }
+
+    private string CleanedText
+    {
+        get => _cleanedText;
+        set
+        {
+            _cleanedText = value;
+            StateHasChanged();
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        var tool = ToolDataService.GetTextFormattingTools().FirstOrDefault(t => t.Href == "/remove-spaces");
+        if (tool != null)
+        {
+            _jsonLdContent = JsonLdService.GenerateToolPageJsonLd(tool, "Text Formatting Tools");
+        }
+    }
+
+    private void CleanSpaces()
+    {
+        if (string.IsNullOrEmpty(_inputTextValue))
+        {
+            _cleanedText = string.Empty;
+            return;
+        }
+
+        var result = _inputTextValue;
+
+        // Replace tabs with spaces if enabled
+        if (ReplaceTabsWithSpaces)
+        {
+            result = result.Replace("\t", " ");
+        }
+
+        // Remove line breaks if enabled
+        if (RemoveLineBreaks)
+        {
+            result = result.Replace("\n", " ").Replace("\r", " ");
+        }
+
+        // Remove extra spaces if enabled
+        if (RemoveExtraSpaces)
+        {
+            // Replace multiple consecutive spaces with single space
+            while (result.Contains("  "))
+            {
+                result = result.Replace("  ", " ");
+            }
+        }
+
+        // Trim start if enabled
+        if (TrimStart)
+        {
+            result = result.TrimStart();
+        }
+
+        // Trim end if enabled
+        if (TrimEnd)
+        {
+            result = result.TrimEnd();
+        }
+
+        CleanedText = result;
+    }
+
+    private void ResetText()
+    {
+        InputText = string.Empty;
+        CleanedText = string.Empty;
+    }
+
+    private async Task CopyToClipboard()
+    {
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", _cleanedText);
+        }
+        catch
+        {
+            // Fallback for older browsers
+            await JSRuntime.InvokeVoidAsync("eval", $"navigator.clipboard.writeText('{_cleanedText.Replace("'", "\\'")}')");
+        }
+    }
+}

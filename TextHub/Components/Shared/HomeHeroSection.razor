@@ -1,3 +1,6 @@
+@using TextHub.Services.Data
+@inject ToolDataService ToolDataService
+
 <section class="relative py-16 md:py-24 px-4 overflow-hidden">
     <!-- Background decoration -->
     <div class="absolute inset-0 -z-10">
@@ -14,7 +17,7 @@
                 <path d="m14.063 8.5 2.937 3-2.937 3"></path>
                 <path d="M12 17.5v-3a2 2 0 0 0-2-2H7"></path>
             </svg>
-            <span>20+ Free Text Tools</span>
+            <span>@TotalActiveTools+ Free Text Tools</span>
         </div>
         
         <!-- Main heading -->
@@ -51,19 +54,25 @@
         </div>
         
         <!-- Stats -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-2xl mx-auto animate-fade-in" style="animation-delay: 0.8s;">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-2xl mx-auto animate-fade-in" style="animation-delay: 0.8s;">
             <div class="text-center">
-                <div class="text-3xl md:text-4xl font-bold text-primary mb-2">20+</div>
+                <div class="text-3xl md:text-4xl font-bold text-primary mb-2">@TotalActiveTools+</div>
                 <div class="text-sm text-muted-foreground">Text Tools</div>
             </div>
             <div class="text-center">
                 <div class="text-3xl md:text-4xl font-bold text-primary mb-2">100%</div>
                 <div class="text-sm text-muted-foreground">Free to Use</div>
             </div>
-            <div class="text-center">
-                <div class="text-3xl md:text-4xl font-bold text-primary mb-2">0</div>
-                <div class="text-sm text-muted-foreground">Registration</div>
-            </div>
+
         </div>
     </div>
 </section>
+
+@code {
+    private int TotalActiveTools { get; set; }
+
+    protected override void OnInitialized()
+    {
+        TotalActiveTools = ToolDataService.GetTotalActiveToolsCount();
+    }
+}
