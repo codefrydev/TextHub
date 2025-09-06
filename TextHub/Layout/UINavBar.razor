@@ -17,10 +17,10 @@
                         </button>
                         @if (_isToolsDropdownOpen)
                         {
-                            <div class="absolute top-full mt-2 w-48 bg-background border rounded-md shadow-lg py-1">
-                                <a href="/uppercase" class="block px-4 py-2 text-sm hover:bg-muted">Uppercase</a>
-                                <a href="/lowercase" class="block px-4 py-2 text-sm hover:bg-muted">Lowercase</a>
-                                <a href="/word-counter" class="block px-4 py-2 text-sm hover:bg-muted">Word Counter</a>
+                            <div class="absolute top-full mt-2 w-48 dropdown-menu rounded-md py-1">
+                                <a href="/uppercase" class="block px-4 py-2 text-sm dropdown-item">Uppercase</a>
+                                <a href="/lowercase" class="block px-4 py-2 text-sm dropdown-item">Lowercase</a>
+                                <a href="/word-counter" class="block px-4 py-2 text-sm dropdown-item">Word Counter</a>
                             </div>
                         }
                     </div>
@@ -68,7 +68,7 @@
 {
     private bool _isMobileMenuOpen;
     private bool _isToolsDropdownOpen;
-    private bool _isDarkMode = true; // Start with dark mode
+    private bool _isDarkMode = false; // Start with light mode
 
     private void ToggleMobileMenu()
     {
