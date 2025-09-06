@@ -3,11 +3,11 @@
    <nav class="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
         <div class="container mx-auto px-4 py-3 md:py-4">
             <div class="flex items-center justify-between">
-                <a class="text-xl md:text-2xl font-bold text-gradient hover:opacity-80 transition-opacity" href="/">Text Hub</a>
+                <a class="text-xl md:text-2xl font-bold text-gradient hover:opacity-80 transition-opacity" href="">Text Hub</a>
 
                 @* --- Desktop Menu --- *@
                 <div class="hidden md:flex items-center gap-6">
-                    <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">Home</NavLink>
+                    <NavLink class="nav-link" href="" Match="NavLinkMatch.All">Home</NavLink>
                     <div class="relative">
                         <button @onclick="() => _isToolsDropdownOpen = !_isToolsDropdownOpen" type="button" class="flex items-center gap-1 font-medium hover:text-primary transition-colors cursor-pointer">
                             Tools
@@ -18,9 +18,9 @@
                         @if (_isToolsDropdownOpen)
                         {
                             <div class="absolute top-full mt-2 w-48 dropdown-menu rounded-md py-1">
-                                <a href="/uppercase" class="block px-4 py-2 text-sm dropdown-item">Uppercase</a>
-                                <a href="/lowercase" class="block px-4 py-2 text-sm dropdown-item">Lowercase</a>
-                                <a href="/word-counter" class="block px-4 py-2 text-sm dropdown-item">Word Counter</a>
+                                <a href="uppercase" class="block px-4 py-2 text-sm dropdown-item">Uppercase</a>
+                                <a href="lowercase" class="block px-4 py-2 text-sm dropdown-item">Lowercase</a>
+                                <a href="word-counter" class="block px-4 py-2 text-sm dropdown-item">Word Counter</a>
                             </div>
                         }
                     </div>
@@ -57,8 +57,8 @@
             @if (_isMobileMenuOpen)
             {
                 <div class="md:hidden mt-4">
-                    <a href="/" class="block py-2 text-lg nav-link">Home</a>
-                    <a href="/tools" class="block py-2 text-lg nav-link">Tools</a>
+                    <a href="" class="block py-2 text-lg nav-link">Home</a>
+                    <a href="#tools" class="block py-2 text-lg nav-link">Tools</a>
                 </div>
             }
         </div>
