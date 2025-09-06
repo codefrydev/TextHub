@@ -1,6 +1,101 @@
 @* --- UIFooter --- *@
-<footer class="bg-muted/30 border-t border-border mt-auto">
-    <div class="container mx-auto px-4 py-4 md:py-6 text-center">
-                <p class="text-sm md:text-base text-muted-foreground">© @DateTime.Now.Year Text Hub. Quick and simple text utilities in one place.</p>
+<footer class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white mt-auto">
+    <div class="container mx-auto px-4 py-12">
+        <!-- Main Footer Content -->
+        <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-8 mb-8">
+            <!-- Brand Section -->
+            <div class="lg:col-span-1">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-type text-white">
+                            <polyline points="4,7 4,4 20,4 20,7"></polyline>
+                            <line x1="9" y1="20" x2="15" y2="20"></line>
+                            <line x1="12" y1="4" x2="12" y2="20"></line>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold">TextHub</h3>
+                </div>
+                <p class="text-slate-300 mb-6 leading-relaxed">
+                    Quick and simple text utilities in one place. Transform, analyze, and format your text with our comprehensive suite of tools.
+                </p>
+                <div class="flex gap-4">
+                    <a href="https://github.com/codefrydev/TextHub" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-slate-700 hover:bg-slate-600 rounded-lg flex items-center justify-center transition-colors group">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-github group-hover:scale-110 transition-transform">
+                            <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path>
+                            <path d="M9 18c-4.51 2-5-2-7-2"></path>
+                        </svg>
+                    </a>
+                    <a href="https://codefrydev.in" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-slate-700 hover:bg-slate-600 rounded-lg flex items-center justify-center transition-colors group">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-external-link group-hover:scale-110 transition-transform">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                            <polyline points="15,3 21,3 21,9"></polyline>
+                            <line x1="10" y1="14" x2="21" y2="3"></line>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Tools Section -->
+            <div>
+                <h4 class="text-lg font-semibold mb-4 text-white">Text Tools</h4>
+                <ul class="space-y-3">
+                    <li><a href="/camel-case" class="text-slate-300 hover:text-white transition-colors text-sm">Camel Case</a></li>
+                    <li><a href="/kebab-case" class="text-slate-300 hover:text-white transition-colors text-sm">Kebab Case</a></li>
+                    <li><a href="/snake-case" class="text-slate-300 hover:text-white transition-colors text-sm">Snake Case</a></li>
+                    <li><a href="/pascal-case" class="text-slate-300 hover:text-white transition-colors text-sm">Pascal Case</a></li>
+                    <li><a href="/word-counter" class="text-slate-300 hover:text-white transition-colors text-sm">Word Counter</a></li>
+                    <li><a href="/uppercase" class="text-slate-300 hover:text-white transition-colors text-sm">Uppercase</a></li>
+                    <li><a href="/lowercase" class="text-slate-300 hover:text-white transition-colors text-sm">Lowercase</a></li>
+                    <li><a href="/title-case" class="text-slate-300 hover:text-white transition-colors text-sm">Title Case</a></li>
+                </ul>
+            </div>
+
+            <!-- Resources Section -->
+            <div>
+                <h4 class="text-lg font-semibold mb-4 text-white">Resources</h4>
+                <ul class="space-y-3">
+                    <li><a href="/documentation" class="text-slate-300 hover:text-white transition-colors text-sm">Documentation</a></li>
+                    <li><a href="https://github.com/codefrydev/TextHub/issues" target="_blank" rel="noopener noreferrer" class="text-slate-300 hover:text-white transition-colors text-sm">Report Bug</a></li>
+                    <li><a href="https://github.com/codefrydev/TextHub/discussions" target="_blank" rel="noopener noreferrer" class="text-slate-300 hover:text-white transition-colors text-sm">Community</a></li>
+                    <li><a href="https://github.com/codefrydev/TextHub/blob/master/LICENSE" target="_blank" rel="noopener noreferrer" class="text-slate-300 hover:text-white transition-colors text-sm">License</a></li>
+                    <li><a href="https://github.com/codefrydev/TextHub/releases" target="_blank" rel="noopener noreferrer" class="text-slate-300 hover:text-white transition-colors text-sm">Releases</a></li>
+                    <li><a href="https://github.com/codefrydev/TextHub/blob/master/README.md" target="_blank" rel="noopener noreferrer" class="text-slate-300 hover:text-white transition-colors text-sm">README</a></li>
+                </ul>
+            </div>
+
+            <!-- Company Section -->
+            <div>
+                <h4 class="text-lg font-semibold mb-4 text-white">About</h4>
+                <ul class="space-y-3">
+                    <li><a href="https://codefrydev.in" target="_blank" rel="noopener noreferrer" class="text-slate-300 hover:text-white transition-colors text-sm">CodeFryDev</a></li>
+                    <li><a href="https://codefrydev.in/contact" target="_blank" rel="noopener noreferrer" class="text-slate-300 hover:text-white transition-colors text-sm">Contact Us</a></li>
+                    <li><a href="https://codefrydev.in/privacy" target="_blank" rel="noopener noreferrer" class="text-slate-300 hover:text-white transition-colors text-sm">Privacy Policy</a></li>
+                    <li><a href="https://codefrydev.in/terms" target="_blank" rel="noopener noreferrer" class="text-slate-300 hover:text-white transition-colors text-sm">Terms of Service</a></li>
+                    <li><a href="https://codefrydev.in/blog" target="_blank" rel="noopener noreferrer" class="text-slate-300 hover:text-white transition-colors text-sm">Blog</a></li>
+                    <li><a href="https://codefrydev.in/projects" target="_blank" rel="noopener noreferrer" class="text-slate-300 hover:text-white transition-colors text-sm">Other Projects</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Newsletter Section -->
+
+        <!-- Bottom Section -->
+        <div class="border-t border-slate-700 pt-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="text-center md:text-left">
+                    <p class="text-slate-400 text-sm">
+                        © @DateTime.Now.Year <a href="https://codefrydev.in" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 transition-colors">CodeFryDev</a>. 
+                        All rights reserved. TextHub is open source under MIT License.
+                    </p>
+                </div>
+                <div class="flex items-center gap-6 text-sm text-slate-400">
+                    <span>Made with</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart text-red-500">
+                        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"></path>
+                    </svg>
+                    <span>by CodeFryDev</span>
+                </div>
+            </div>
+        </div>
     </div>
 </footer>
