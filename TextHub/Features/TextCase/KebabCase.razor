@@ -1,0 +1,21 @@
+@page "/kebab-case"
+@using TextHub.Services.Converters
+@using TextHub.Components.Forms
+@inject TextCaseConverterService ConverterService
+
+<TextCaseLayout 
+    PageTitle="kebab-case Converter"
+    ToolName="kebab-case Converter"
+    Description="Convert to kebab-case for URLs"
+    ConvertButtonText="Convert to kebab-case"
+    UseCaseDescription="Perfect for URLs, CSS classes, and HTML attributes"
+    Route="/kebab-case"
+    ConvertFunction="@(input => ConverterService.ConvertToKebabCase(input))">
+    
+    <IconSvg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-code w-6 h-6 sm:w-8 sm:h-8 text-primary">
+            <polyline points="16 18 22 12 16 6"></polyline>
+            <polyline points="8 6 2 12 8 18"></polyline>
+        </svg>
+    </IconSvg>
+</TextCaseLayout>

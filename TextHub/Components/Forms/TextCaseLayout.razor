@@ -1,30 +1,25 @@
-@page "/camel-case"
-@using TextHub.Services
-@using TextHub.UIComponent
+@using TextHub.Services.Data
+@using TextHub.Components.Shared
 @using Microsoft.JSInterop
-@using System.Text
 @inject JsonLdService JsonLdService
 @inject ToolDataService ToolDataService
 @inject IJSRuntime JSRuntime
 
-<PageTitle>camelCase Converter - Text Hub</PageTitle>
+<PageTitle>@PageTitle - Text Hub</PageTitle>
 
-<DynamicJsonLd JsonLdContent="@_jsonLdContent" Id="camelcase-jsonld" />
+<DynamicJsonLd JsonLdContent="@_jsonLdContent" Id="@(ToolName.ToLower().Replace(" ", "").Replace("-", "").Replace("_", "") + "-jsonld")" />
 
 <main class="flex-1">
     <div class="container mx-auto px-4 py-8 md:py-12 animate-fade-in">
         <div class="max-w-4xl mx-auto">
             <div class="text-center mb-8 md:mb-10">
                 <div class="inline-flex items-center justify-center p-2.5 sm:p-3 bg-primary/10 rounded-lg mb-3 md:mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-code w-6 h-6 sm:w-8 sm:h-8 text-primary">
-                        <polyline points="16 18 22 12 16 6"></polyline>
-                        <polyline points="8 6 2 12 8 18"></polyline>
-                    </svg>
+                    @IconSvg
                 </div>
                 <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 md:mb-4">
-                    <span class="text-gradient">camelCase Converter</span>
+                    <span class="text-gradient">@ToolName</span>
                 </h1>
-                <p class="text-base sm:text-lg text-muted-foreground px-4">Convert to camelCase for coding</p>
+                <p class="text-base sm:text-lg text-muted-foreground px-4">@Description</p>
             </div>
             
             <div class="grid gap-4 md:gap-6">
@@ -32,13 +27,13 @@
                     <label class="block text-sm font-medium mb-2">Input Text</label>
                     <textarea 
                         @bind="_inputText" 
-                        @oninput="ConvertToCamelCase"
+                        @oninput="OnInputChanged"
                         placeholder="Enter or paste your text here..." 
                         class="input-area min-h-[150px] sm:min-h-[200px] text-sm sm:text-base"></textarea>
                 </div>
                 
                 <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center animate-fade-in" style="animation-delay: 200ms;">
-                    <button @onclick="ConvertToCamelCase" class="btn-primary w-full sm:w-auto text-sm sm:text-base">Convert to camelCase</button>
+                    <button @onclick="OnConvertClicked" class="btn-primary w-full sm:w-auto text-sm sm:text-base">@ConvertButtonText</button>
                     <button @onclick="ClearText" class="btn-secondary w-full sm:w-auto text-sm sm:text-base">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rotate-ccw w-4 h-4 mr-2 inline">
                             <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
@@ -73,9 +68,9 @@
                 <h2 class="text-lg md:text-xl font-semibold mb-2 md:mb-3">How it works</h2>
                 <ul class="space-y-1.5 md:space-y-2 text-sm md:text-base text-muted-foreground">
                     <li>• Simply paste or type your text in the input box</li>
-                    <li>• Click "Convert to camelCase" to transform your text</li>
+                    <li>• Click "@ConvertButtonText" to transform your text</li>
                     <li>• Copy the result to your clipboard with one click</li>
-                    <li>• Perfect for variable names, function names, and coding</li>
+                    <li>• @UseCaseDescription</li>
                 </ul>
             </div>
         </div>
@@ -83,93 +78,42 @@
 </main>
 
 @code {
+    [Parameter] public string PageTitle { get; set; } = string.Empty;
+    [Parameter] public string ToolName { get; set; } = string.Empty;
+    [Parameter] public string Description { get; set; } = string.Empty;
+    [Parameter] public string ConvertButtonText { get; set; } = string.Empty;
+    [Parameter] public string UseCaseDescription { get; set; } = string.Empty;
+    [Parameter] public RenderFragment IconSvg { get; set; } = default!;
+    [Parameter] public string Route { get; set; } = string.Empty;
+    [Parameter] public Func<string, string> ConvertFunction { get; set; } = default!;
+
     private string _inputText = string.Empty;
     private string _outputText = string.Empty;
     private string _jsonLdContent = string.Empty;
 
     protected override void OnInitialized()
     {
-        var tool = ToolDataService.GetTextCaseTools().FirstOrDefault(t => t.Href == "/camel-case");
+        var tool = ToolDataService.GetTextCaseTools().FirstOrDefault(t => t.Href == Route);
         if (tool != null)
         {
             _jsonLdContent = JsonLdService.GenerateToolPageJsonLd(tool, "Text Case Tools");
         }
     }
 
-    private void ConvertToCamelCase()
+    private void OnInputChanged()
     {
-        if (string.IsNullOrWhiteSpace(_inputText))
+        if (ConvertFunction != null)
         {
-            _outputText = string.Empty;
-            return;
+            _outputText = ConvertFunction(_inputText);
         }
-
-        var words = SplitIntoWords(_inputText);
-        if (words.Count == 0)
-        {
-            _outputText = string.Empty;
-            return;
-        }
-
-        var result = new StringBuilder();
-        
-        // First word is lowercase
-        result.Append(words[0].ToLower());
-        
-        // Subsequent words are capitalized
-        for (int i = 1; i < words.Count; i++)
-        {
-            result.Append(CapitalizeWord(words[i]));
-        }
-
-        _outputText = result.ToString();
     }
 
-    private List<string> SplitIntoWords(string text)
+    private void OnConvertClicked()
     {
-        var words = new List<string>();
-        var currentWord = new StringBuilder();
-        
-        foreach (char c in text)
+        if (ConvertFunction != null)
         {
-            if (char.IsLetterOrDigit(c))
-            {
-                currentWord.Append(c);
-            }
-            else if (char.IsWhiteSpace(c) || c == '-' || c == '_')
-            {
-                if (currentWord.Length > 0)
-                {
-                    words.Add(currentWord.ToString());
-                    currentWord.Clear();
-                }
-            }
+            _outputText = ConvertFunction(_inputText);
         }
-        
-        if (currentWord.Length > 0)
-        {
-            words.Add(currentWord.ToString());
-        }
-        
-        return words;
-    }
-
-    private string CapitalizeWord(string word)
-    {
-        if (string.IsNullOrWhiteSpace(word))
-            return word;
-
-        var chars = word.ToCharArray();
-        if (chars.Length > 0)
-        {
-            chars[0] = char.ToUpper(chars[0]);
-            for (int i = 1; i < chars.Length; i++)
-            {
-                chars[i] = char.ToLower(chars[i]);
-            }
-        }
-
-        return new string(chars);
     }
 
     private void ClearText()

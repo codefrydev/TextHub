@@ -1,0 +1,22 @@
+@page "/uppercase"
+@using TextHub.Services.Converters
+@using TextHub.Components.Forms
+@inject TextCaseConverterService ConverterService
+
+<TextCaseLayout 
+    PageTitle="Uppercase Converter"
+    ToolName="Uppercase Converter"
+    Description="Convert any text to UPPERCASE letters instantly"
+    ConvertButtonText="Convert to UPPERCASE"
+    UseCaseDescription="Perfect for headings, titles, or emphasis"
+    Route="/uppercase"
+    ConvertFunction="@(input => ConverterService.ConvertToUppercase(input))">
+    
+    <IconSvg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-type w-6 h-6 sm:w-8 sm:h-8 text-primary">
+            <polyline points="4 7 4 4 20 4 20 7"></polyline>
+            <line x1="9" x2="15" y1="20" y2="20"></line>
+            <line x1="12" x2="12" y1="4" y2="20"></line>
+        </svg>
+    </IconSvg>
+</TextCaseLayout>

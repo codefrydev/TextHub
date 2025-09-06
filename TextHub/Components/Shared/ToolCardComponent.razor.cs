@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using TextHub.Models;
 
-namespace TextHub.UIComponent;
+namespace TextHub.Components.Shared;
 
 public partial class ToolCardComponent : ComponentBase
 {

@@ -1,0 +1,21 @@
+@page "/snake-case"
+@using TextHub.Services.Converters
+@using TextHub.Components.Forms
+@inject TextCaseConverterService ConverterService
+
+<TextCaseLayout 
+    PageTitle="snake_case Converter"
+    ToolName="snake_case Converter"
+    Description="Convert to snake_case format"
+    ConvertButtonText="Convert to snake_case"
+    UseCaseDescription="Perfect for variable names, database columns, and Python coding"
+    Route="/snake-case"
+    ConvertFunction="@(input => ConverterService.ConvertToSnakeCase(input))">
+    
+    <IconSvg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-code w-6 h-6 sm:w-8 sm:h-8 text-primary">
+            <polyline points="16 18 22 12 16 6"></polyline>
+            <polyline points="8 6 2 12 8 18"></polyline>
+        </svg>
+    </IconSvg>
+</TextCaseLayout>

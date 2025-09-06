@@ -1,7 +1,7 @@
 using System.Text.Json;
 using TextHub.Models;
 
-namespace TextHub.Services;
+namespace TextHub.Services.Data;
 
 public class JsonLdService
 {
