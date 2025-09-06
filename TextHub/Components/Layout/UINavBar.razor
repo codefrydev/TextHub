@@ -68,7 +68,17 @@
 {
     private bool _isMobileMenuOpen;
     private bool _isToolsDropdownOpen;
-    private bool _isDarkMode = false; // Start with light mode
+    private bool _isDarkMode = false; // Will be initialized from localStorage
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Initialize theme from localStorage or system preference
+            _isDarkMode = await JsRuntime.InvokeAsync<bool>("getTheme");
+            StateHasChanged();
+        }
+    }
 
     private void ToggleMobileMenu()
     {

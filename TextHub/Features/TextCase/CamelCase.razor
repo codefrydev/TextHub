@@ -1,4 +1,4 @@
-@page "/camel-case"
+@page "/TextHub/camel-case"
 @using TextHub.Services.Converters
 @using TextHub.Components.Forms
 @inject TextCaseConverterService ConverterService
@@ -9,7 +9,7 @@
     Description="Convert to camelCase for coding"
     ConvertButtonText="Convert to camelCase"
     UseCaseDescription="Perfect for variable names, function names, and coding"
-    Route="/camel-case"
+    Route="/TextHub/camel-case"
     ConvertFunction="@(input => ConverterService.ConvertToCamelCase(input))">
     
     <IconSvg>
