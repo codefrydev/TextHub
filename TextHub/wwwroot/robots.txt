@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://codefrydev.in/TextHub/sitemap.xml
+
+# Crawl-delay for respectful crawling
+Crawl-delay: 1

@@ -135,10 +135,10 @@ public class ToolDataService
     }
 
     /// <summary>
-    /// Gets the total count of active tools across all categories
+    /// Gets all tools from all categories
     /// </summary>
-    /// <returns>Total number of active tools</returns>
-    public int GetTotalActiveToolsCount()
+    /// <returns>List of all tools</returns>
+    public List<Tool> GetAllTools()
     {
         var allTools = new List<Tool>();
         allTools.AddRange(GetFeaturedTools());
@@ -149,6 +149,15 @@ public class ToolDataService
         allTools.AddRange(GetTextSecurityTools());
         allTools.AddRange(GetTextUtilityTools());
 
-        return allTools.Count(tool => !tool.IsComingSoon);
+        return allTools;
+    }
+
+    /// <summary>
+    /// Gets the total count of active tools (excluding coming soon tools)
+    /// </summary>
+    /// <returns>Total number of active tools</returns>
+    public int GetTotalActiveToolsCount()
+    {
+        return GetAllTools().Count(tool => !tool.IsComingSoon);
     }
 }

@@ -2,9 +2,11 @@
 @using TextHub.Components.Shared
 @using TextHub.Services.Data
 @inject JsonLdService JsonLdService
+@inject MetaTagsService MetaTagsService
 
 <PageTitle>Text Hub - Quick & Simple Text Utilities</PageTitle>
 
+<DynamicMetaTags MetaTags="@_metaTags" />
 <DynamicJsonLd JsonLdContent="@_jsonLdContent" Id="home-jsonld" />
 
 <div class="min-h-screen flex flex-col">
@@ -42,9 +44,11 @@
 
 @code {
     private string _jsonLdContent = string.Empty;
+    private MetaTagsData? _metaTags;
 
     protected override void OnInitialized()
     {
         _jsonLdContent = JsonLdService.GenerateHomePageJsonLd();
+        _metaTags = MetaTagsService.GetHomePageMetaTags();
     }
 }

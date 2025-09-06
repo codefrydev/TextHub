@@ -3,24 +3,24 @@
 @inject TextHub.Services.Data.ToolDataService ToolDataService
 @inject NavigationManager Navigation
 @using Microsoft.AspNetCore.Components.Web
-   <nav class="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
+<nav class="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border" role="navigation" aria-label="Main navigation">
         <div class="container mx-auto px-4 py-3 md:py-4">
             <div class="flex items-center justify-between">
-                <a class="text-xl md:text-2xl font-bold text-gradient hover:opacity-80 transition-opacity" href="">Text Hub</a>
+                <a class="text-xl md:text-2xl font-bold text-gradient hover:opacity-80 transition-opacity" href="/" aria-label="Text Hub - Home">Text Hub</a>
 
                 @* --- Desktop Menu --- *@
-                <div class="hidden md:flex items-center gap-6">
-                    <NavLink class="nav-link" href="" Match="NavLinkMatch.All">Home</NavLink>
+                <div class="hidden md:flex items-center gap-6" role="menubar">
+                    <NavLink class="nav-link" href="" Match="NavLinkMatch.All" role="menuitem">Home</NavLink>
                     <div class="relative">
-                        <button @onclick="() => _isToolsDropdownOpen = !_isToolsDropdownOpen" @onclick:stopPropagation="true" type="button" class="flex items-center gap-1 font-medium hover:text-primary transition-colors cursor-pointer">
+                        <button @onclick="() => _isToolsDropdownOpen = !_isToolsDropdownOpen" @onclick:stopPropagation="true" type="button" class="flex items-center gap-1 font-medium hover:text-primary transition-colors cursor-pointer" aria-expanded="@_isToolsDropdownOpen" aria-haspopup="true" role="menuitem">
                             Tools
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down w-4 h-4 transition-transform @(_isToolsDropdownOpen ? "rotate-180" : "")">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down w-4 h-4 transition-transform @(_isToolsDropdownOpen ? "rotate-180" : "")" aria-hidden="true">
                                 <path d="m6 9 6 6 6-6"></path>
                             </svg>
                         </button>
                         @if (_isToolsDropdownOpen)
                         {
-                            <div id="tools-dropdown" @onclick:stopPropagation="true" @onclick:preventDefault="true" class="absolute top-full mt-2 w-72 p-2 bg-popover text-popover-foreground border border-border rounded-md shadow-md z-50">
+                            <div id="tools-dropdown" @onclick:stopPropagation="true" @onclick:preventDefault="true" class="absolute top-full mt-2 w-72 p-2 bg-popover text-popover-foreground border border-border rounded-md shadow-md z-50" role="menu" aria-label="Tools menu">
                                 @* Text Case Tools Section *@
                                 <div class="mb-1">
                                     <button @onclick="() => ToggleTextCaseSection()" type="button" class="flex items-center justify-between w-full px-2 py-1.5 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors rounded hover:bg-muted/50">

@@ -11,6 +11,8 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 builder.Services.AddScoped<ToolDataService>();
 builder.Services.AddScoped<JsonLdService>();
+builder.Services.AddScoped<MetaTagsService>();
+builder.Services.AddScoped<SitemapService>();
 builder.Services.AddScoped<TextCaseConverterService>();
 
 await builder.Build().RunAsync();

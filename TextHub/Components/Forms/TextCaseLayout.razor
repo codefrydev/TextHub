@@ -3,10 +3,12 @@
 @using Microsoft.JSInterop
 @inject JsonLdService JsonLdService
 @inject ToolDataService ToolDataService
+@inject MetaTagsService MetaTagsService
 @inject IJSRuntime JSRuntime
 
 <PageTitle>@PageTitle - Text Hub</PageTitle>
 
+<DynamicMetaTags MetaTags="@_metaTags" />
 <DynamicJsonLd JsonLdContent="@_jsonLdContent" Id="@(ToolName.ToLower().Replace(" ", "").Replace("-", "").Replace("_", "") + "-jsonld")" />
 
 <main class="flex-1">
@@ -90,6 +92,7 @@
     private string _inputText = string.Empty;
     private string _outputText = string.Empty;
     private string _jsonLdContent = string.Empty;
+    private MetaTagsData? _metaTags;
 
     protected override void OnInitialized()
     {
@@ -97,6 +100,7 @@
         if (tool != null)
         {
             _jsonLdContent = JsonLdService.GenerateToolPageJsonLd(tool, "Text Case Tools");
+            _metaTags = MetaTagsService.GetToolPageMetaTags(tool, "Text Case Tools");
         }
     }
 

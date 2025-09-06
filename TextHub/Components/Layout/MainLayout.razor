@@ -1,7 +1,18 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="min-h-screen flex flex-col"> 
-    <UINavBar/>
-    @Body
-    <UIFooter/>
+<div class="min-h-screen flex flex-col">
+    <SkipNavigation />
+    <ServiceWorkerManager />
+    
+    <header role="banner" id="navigation">
+        <UINavBar/>
+    </header>
+    
+    <main role="main" id="main-content" class="flex-1">
+        @Body
+    </main>
+    
+    <footer role="contentinfo">
+        <UIFooter/>
+    </footer>
 </div>

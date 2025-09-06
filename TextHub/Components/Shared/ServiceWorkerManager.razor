@@ -1,0 +1,43 @@
+@using Microsoft.AspNetCore.Components.WebAssembly.Hosting
+@inject IWebAssemblyHostEnvironment HostEnvironment
+@inject IJSRuntime JSRuntime
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await RegisterServiceWorkerIfProduction();
+        }
+    }
+
+    private async Task RegisterServiceWorkerIfProduction()
+    {
+        if (HostEnvironment.IsProduction())
+        {
+            try
+            {
+                // Check if we're on localhost via JavaScript
+                var isLocalhost = await JSRuntime.InvokeAsync<bool>("isLocalhost");
+                
+                if (!isLocalhost)
+                {
+                    await JSRuntime.InvokeVoidAsync("registerServiceWorker");
+                    Console.WriteLine("Service Worker registered successfully in production");
+                }
+                else
+                {
+                    Console.WriteLine("Service Worker disabled - localhost detected even in production mode");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Service Worker registration failed: {ex.Message}");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Service Worker disabled - Development mode");
+        }
+    }
+}
