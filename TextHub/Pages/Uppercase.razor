@@ -10,76 +10,77 @@
 
 <DynamicJsonLd JsonLdContent="@_jsonLdContent" Id="uppercase-jsonld" />
 
-<div class="min-h-screen flex flex-col">
-    <main class="flex-1 py-8 px-4">
-        <div class="container mx-auto max-w-4xl">
-            <!-- Page Header -->
-            <div class="text-center mb-8">
-                <h1 class="text-4xl font-bold mb-4">Uppercase Converter</h1>
-                <p class="text-xl text-muted-foreground">Convert any text to UPPERCASE instantly</p>
-            </div>
-
-            <!-- Tool Interface -->
-            <div class="bg-card rounded-lg border p-6 mb-8">
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium mb-2">Enter your text:</label>
-                        <textarea 
-                            @bind="_inputText" 
-                            @oninput="ConvertToUppercase"
-                            class="w-full h-32 p-3 border rounded-md resize-none"
-                            placeholder="Type or paste your text here..."></textarea>
-                    </div>
-                    
-                    <div class="flex gap-2">
-                        <button @onclick="ConvertToUppercase" 
-                                class="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary-hover">
-                            Convert to UPPERCASE
-                        </button>
-                        <button @onclick="ClearText" 
-                                class="px-4 py-2 border border-border rounded-md hover:bg-muted">
-                            Clear
-                        </button>
-                        <button @onclick="CopyResult" 
-                                class="px-4 py-2 border border-border rounded-md hover:bg-muted">
-                            Copy Result
-                        </button>
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-medium mb-2">Result:</label>
-                        <textarea 
-                            @bind="_outputText"
-                            class="w-full h-32 p-3 border rounded-md resize-none bg-muted"
-                            readonly></textarea>
-                    </div>
+<main class="flex-1">
+    <div class="container mx-auto px-4 py-8 md:py-12 animate-fade-in">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-8 md:mb-10">
+                <div class="inline-flex items-center justify-center p-2.5 sm:p-3 bg-primary/10 rounded-lg mb-3 md:mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-type w-6 h-6 sm:w-8 sm:h-8 text-primary">
+                        <polyline points="4 7 4 4 20 4 20 7"></polyline>
+                        <line x1="9" x2="15" y1="20" y2="20"></line>
+                        <line x1="12" x2="12" y1="4" y2="20"></line>
+                    </svg>
                 </div>
+                <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 md:mb-4">
+                    <span class="text-gradient">Uppercase Converter</span>
+                </h1>
+                <p class="text-base sm:text-lg text-muted-foreground px-4">Convert any text to UPPERCASE letters instantly</p>
             </div>
-
-            <!-- Tool Information -->
-            <div class="grid md:grid-cols-2 gap-6">
-                <div class="bg-card rounded-lg border p-6">
-                    <h3 class="text-lg font-semibold mb-3">How to use:</h3>
-                    <ol class="list-decimal list-inside space-y-2 text-sm text-muted-foreground">
-                        <li>Enter or paste your text in the input field</li>
-                        <li>Click "Convert to UPPERCASE" or the text will convert automatically</li>
-                        <li>Copy the result using the "Copy Result" button</li>
-                    </ol>
+            
+            <div class="grid gap-4 md:gap-6">
+                <div class="animate-fade-in" style="animation-delay: 100ms;">
+                    <label class="block text-sm font-medium mb-2">Input Text</label>
+                    <textarea 
+                        @bind="_inputText" 
+                        @oninput="ConvertToUppercase"
+                        placeholder="Enter or paste your text here..." 
+                        class="input-area min-h-[150px] sm:min-h-[200px] text-sm sm:text-base"></textarea>
                 </div>
                 
-                <div class="bg-card rounded-lg border p-6">
-                    <h3 class="text-lg font-semibold mb-3">Features:</h3>
-                    <ul class="list-disc list-inside space-y-2 text-sm text-muted-foreground">
-                        <li>Instant conversion to uppercase</li>
-                        <li>Preserves line breaks and formatting</li>
-                        <li>No character limit</li>
-                        <li>Works with any language</li>
-                    </ul>
+                <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center animate-fade-in" style="animation-delay: 200ms;">
+                    <button @onclick="ConvertToUppercase" class="btn-primary w-full sm:w-auto text-sm sm:text-base">Convert to UPPERCASE</button>
+                    <button @onclick="ClearText" class="btn-secondary w-full sm:w-auto text-sm sm:text-base">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rotate-ccw w-4 h-4 mr-2 inline">
+                            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                            <path d="M3 3v5h5"></path>
+                        </svg>
+                        Reset
+                    </button>
                 </div>
+                
+                @if (!string.IsNullOrEmpty(_outputText))
+                {
+                    <div class="animate-fade-in" style="animation-delay: 300ms;">
+                        <label class="block text-sm font-medium mb-2">Result</label>
+                        <div class="relative">
+                            <textarea 
+                                @bind="_outputText"
+                                class="input-area min-h-[150px] sm:min-h-[200px] text-sm sm:text-base bg-muted"
+                                readonly></textarea>
+                            <button @onclick="CopyResult" 
+                                    class="absolute top-2 right-2 p-2 bg-primary/10 hover:bg-primary/20 rounded-md transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy">
+                                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                }
+            </div>
+            
+            <div class="mt-8 md:mt-12 p-4 md:p-6 bg-muted/30 rounded-lg animate-fade-in" style="animation-delay: 300ms;">
+                <h2 class="text-lg md:text-xl font-semibold mb-2 md:mb-3">How it works</h2>
+                <ul class="space-y-1.5 md:space-y-2 text-sm md:text-base text-muted-foreground">
+                    <li>• Simply paste or type your text in the input box</li>
+                    <li>• Click "Convert to UPPERCASE" to transform your text</li>
+                    <li>• Copy the result to your clipboard with one click</li>
+                    <li>• Perfect for headings, titles, or emphasis</li>
+                </ul>
             </div>
         </div>
-    </main>
-</div>
+    </div>
+</main>
 
 @code {
     private string _inputText = string.Empty;
