@@ -6,9 +6,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Text Hub - Quick & Simple Text Utilities</title>
     <base href="/TextHub/" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Primary Meta Tags (Fallback/Default) -->
+    <meta name="title" content="Text Hub - Quick & Simple Text Utilities" />
+    <meta name="description" content="Transform, analyze, and clean your text with our free online tools. 20+ text utilities including case converters, word counters, and formatting tools. No registration required." />
+    <meta name="keywords" content="text converter, case converter, uppercase, lowercase, title case, camel case, snake case, kebab case, word counter, character counter, text formatter, online text tools, free text utilities" />
+    <meta name="author" content="CodeFryDev" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow" />
+    <meta name="bingbot" content="index, follow" />
+    <link rel="canonical" href="https://codefrydev.in/TextHub/" />
+    
+    <!-- Open Graph / Facebook (Fallback) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://codefrydev.in/TextHub/" />
+    <meta property="og:title" content="Text Hub - Quick & Simple Text Utilities" />
+    <meta property="og:description" content="Transform, analyze, and clean your text with our free online tools. 20+ text utilities including case converters, word counters, and formatting tools. No registration required." />
+    <meta property="og:image" content="https://codefrydev.in/TextHub/icon-512.png" />
+    <meta property="og:image:width" content="512" />
+    <meta property="og:image:height" content="512" />
+    <meta property="og:image:alt" content="Text Hub - Text Utilities Logo" />
+    <meta property="og:site_name" content="Text Hub" />
+    <meta property="og:locale" content="en_US" />
+    
+    <!-- Twitter (Fallback) -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://codefrydev.in/TextHub/" />
+    <meta property="twitter:title" content="Text Hub - Quick & Simple Text Utilities" />
+    <meta property="twitter:description" content="Transform, analyze, and clean your text with our free online tools. 20+ text utilities including case converters, word counters, and formatting tools. No registration required." />
+    <meta property="twitter:image" content="https://codefrydev.in/TextHub/icon-512.png" />
+    <meta property="twitter:image:alt" content="Text Hub - Text Utilities Logo" />
+    
+    <!-- Additional SEO Meta Tags -->
+    <meta name="theme-color" content="#3b82f6" />
+    <meta name="msapplication-TileColor" content="#3b82f6" />
+    <meta name="application-name" content="Text Hub" />
+    <meta name="apple-mobile-web-app-title" content="Text Hub" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    
+    <!-- Language and Region -->
+    <meta name="language" content="English" />
+    <meta name="geo.region" content="US" />
+    <meta name="geo.placename" content="United States" />
+    
+    <!-- Security -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta http-equiv="X-Frame-Options" content="DENY" />
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
+    
+    <!-- Resource Hints for Performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+    <link rel="dns-prefetch" href="https://www.google-analytics.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"></noscript>
 
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com" defer></script>
 
     <script type="text/tailwindcss-config">
         tailwind.config = {
@@ -184,8 +240,34 @@
             // Add new listener
             document.addEventListener('click', handleClickOutside);
         };
+
+        // Check if running on localhost
+        window.isLocalhost = () => {
+            const hostname = window.location.hostname;
+            return hostname === 'localhost' || 
+                   hostname === '127.0.0.1' || 
+                   hostname === '::1' ||
+                   hostname.startsWith('192.168.') ||
+                   hostname.startsWith('10.') ||
+                   hostname.endsWith('.local');
+        };
+
+        // Service Worker registration function
+        window.registerServiceWorker = async () => {
+            if ('serviceWorker' in navigator) {
+                try {
+                    const registration = await navigator.serviceWorker.register('service-worker.js');
+                    console.log('Service Worker registered successfully:', registration.scope);
+                    return registration;
+                } catch (error) {
+                    console.log('Service Worker registration failed:', error);
+                    throw error;
+                }
+            } else {
+                console.log('Service Worker not supported');
+            }
+        };
     </script>
-<!--    <script>navigator.serviceWorker.register('service-worker.js');</script>-->
 </body>
 
 </html>
