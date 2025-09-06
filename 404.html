@@ -137,13 +137,34 @@
     
     <script src="_framework/blazor.webassembly.js"></script>
     <script>
+        // Initialize theme on page load to prevent flash
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const isDarkMode = savedTheme === 'dark' || (savedTheme === null && prefersDark);
+            
+            if (isDarkMode) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+
         window.toggleTheme = (isDarkMode) => {
             const html = document.documentElement;
             if (isDarkMode) {
                 html.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
             } else {
                 html.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
             }
+        };
+
+        window.getTheme = () => {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            return savedTheme === 'dark' || (savedTheme === null && prefersDark);
         };
     </script>
 <!--    <script>navigator.serviceWorker.register('service-worker.js');</script>-->
