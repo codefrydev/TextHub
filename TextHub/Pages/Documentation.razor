@@ -100,6 +100,18 @@
                     </div>
                     <span class="text-sm font-medium group-hover:text-primary transition-colors">Customization</span>
                 </a>
+                <a href="documentation/#ui-testing" class="group flex items-center gap-3 p-3 rounded-lg hover:bg-primary/10 transition-all duration-200">
+                    <div class="w-8 h-8 bg-teal-100 dark:bg-teal-900/30 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-test-tube text-teal-600">
+                            <path d="M14.5 2H17a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h2.5"></path>
+                            <path d="M10 2v4"></path>
+                            <path d="M2.5 10h19"></path>
+                            <path d="M2.5 14h19"></path>
+                            <path d="M2.5 18h19"></path>
+                        </svg>
+                    </div>
+                    <span class="text-sm font-medium group-hover:text-primary transition-colors">UI Testing</span>
+                </a>
                 <a href="documentation/#common-issues" class="group flex items-center gap-3 p-3 rounded-lg hover:bg-primary/10 transition-all duration-200">
                     <div class="w-8 h-8 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-alert-triangle text-red-600">
@@ -842,6 +854,453 @@
                             <p class="text-sm text-cyan-800 dark:text-cyan-200">Configure Progressive Web App features in <code class="bg-cyan-200 dark:bg-cyan-800 px-2 py-1 rounded text-xs">manifest.webmanifest</code></p>
                         </div>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- UI Testing -->
+        <section id="ui-testing" class="mb-16">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-12 h-12 bg-teal-100 dark:bg-teal-900/30 rounded-xl flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-test-tube text-teal-600">
+                        <path d="M14.5 2H17a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h2.5"></path>
+                        <path d="M10 2v4"></path>
+                        <path d="M2.5 10h19"></path>
+                        <path d="M2.5 14h19"></path>
+                        <path d="M2.5 18h19"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="text-4xl font-bold text-foreground">UI Testing with Playwright</h2>
+                    <p class="text-muted-foreground mt-2">Comprehensive automated testing suite for TextHub's user interface</p>
+                </div>
+            </div>
+
+            <!-- Overview -->
+            <div class="bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-teal-950/20 dark:to-cyan-950/20 border border-teal-200 dark:border-teal-800 rounded-2xl p-8 mb-8 shadow-lg">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 bg-teal-500 rounded-lg flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info text-white">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-teal-900 dark:text-teal-100">Test Suite Overview</h3>
+                </div>
+                <p class="text-teal-800 dark:text-teal-200 text-lg leading-relaxed mb-6">
+                    TextHub includes a comprehensive UI test suite built with Playwright and xUnit that provides automated testing for all major UI functionality. 
+                    The tests cover page navigation, tool functionality, responsive design, accessibility, and performance metrics.
+                </p>
+                <div class="grid md:grid-cols-3 gap-4">
+                    <div class="bg-white/50 dark:bg-black/20 rounded-xl p-4 text-center">
+                        <div class="text-2xl font-bold text-teal-600 mb-2">5+</div>
+                        <div class="text-sm text-teal-700 dark:text-teal-300">Test Categories</div>
+                    </div>
+                    <div class="bg-white/50 dark:bg-black/20 rounded-xl p-4 text-center">
+                        <div class="text-2xl font-bold text-teal-600 mb-2">50+</div>
+                        <div class="text-sm text-teal-700 dark:text-teal-300">Test Cases</div>
+                    </div>
+                    <div class="bg-white/50 dark:bg-black/20 rounded-xl p-4 text-center">
+                        <div class="text-2xl font-bold text-teal-600 mb-2">100%</div>
+                        <div class="text-sm text-teal-700 dark:text-teal-300">UI Coverage</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Test Categories -->
+            <div class="grid lg:grid-cols-2 gap-8 mb-8">
+                <!-- Test Coverage -->
+                <div class="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 border border-blue-200 dark:border-blue-800 rounded-2xl p-8 shadow-lg">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-circle text-white">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                <polyline points="22,4 12,14.01 9,11.01"></polyline>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-blue-900 dark:text-blue-100">Test Coverage</h3>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3 p-3 bg-white/50 dark:bg-black/20 rounded-lg">
+                            <div class="w-8 h-8 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-home text-green-600">
+                                    <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                    <polyline points="9,22 9,12 15,12 15,22"></polyline>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-blue-900 dark:text-blue-100">Home Page Tests</h4>
+                                <p class="text-sm text-blue-700 dark:text-blue-300">Navigation, search, theme toggle, mobile menu</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 bg-white/50 dark:bg-black/20 rounded-lg">
+                            <div class="w-8 h-8 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-type text-purple-600">
+                                    <polyline points="4,7 4,4 20,4 20,7"></polyline>
+                                    <line x1="9" y1="20" x2="15" y2="20"></line>
+                                    <line x1="12" y1="4" x2="12" y2="20"></line>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-blue-900 dark:text-blue-100">Text Case Tools</h4>
+                                <p class="text-sm text-blue-700 dark:text-blue-300">All case conversions, input validation</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 bg-white/50 dark:bg-black/20 rounded-lg">
+                            <div class="w-8 h-8 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bar-chart text-orange-600">
+                                    <line x1="12" y1="20" x2="12" y2="10"></line>
+                                    <line x1="18" y1="20" x2="18" y2="4"></line>
+                                    <line x1="6" y1="20" x2="6" y2="16"></line>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-blue-900 dark:text-blue-100">Text Analysis Tools</h4>
+                                <p class="text-sm text-blue-700 dark:text-blue-300">Word/character/line counters, statistics</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 bg-white/50 dark:bg-black/20 rounded-lg">
+                            <div class="w-8 h-8 bg-pink-100 dark:bg-pink-900/30 rounded-lg flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-smartphone text-pink-600">
+                                    <rect width="14" height="20" x="5" y="2" rx="2" ry="2"></rect>
+                                    <path d="M12 18h.01"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-blue-900 dark:text-blue-100">Responsive Design</h4>
+                                <p class="text-sm text-blue-700 dark:text-blue-300">Mobile navigation, viewport adaptation</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 bg-white/50 dark:bg-black/20 rounded-lg">
+                            <div class="w-8 h-8 bg-cyan-100 dark:bg-cyan-900/30 rounded-lg flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-accessibility text-cyan-600">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="m9 12 2 2 4-4"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-blue-900 dark:text-blue-100">Accessibility</h4>
+                                <p class="text-sm text-blue-700 dark:text-blue-300">ARIA labels, keyboard navigation, contrast</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Getting Started -->
+                <div class="bg-gradient-to-br from-emerald-50 to-green-50 dark:from-emerald-950/20 dark:to-green-950/20 border border-emerald-200 dark:border-emerald-800 rounded-2xl p-8 shadow-lg">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 bg-emerald-500 rounded-lg flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rocket text-white">
+                                <path d="M4.5 16.5c-1.5 1.5-1.5 3.5 0 5s3.5 1.5 5 0L12 17l-2.5-2.5L4.5 16.5z"></path>
+                                <path d="m12 15 8.5-8.5a2.12 2.12 0 0 0 0-3L18 2.5a2.12 2.12 0 0 0-3 0L6.5 11 12 15z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-emerald-900 dark:text-emerald-100">Getting Started</h3>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <!-- Prerequisites -->
+                        <div>
+                            <h4 class="font-semibold text-emerald-900 dark:text-emerald-100 mb-3 flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-circle text-emerald-600">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22,4 12,14.01 9,11.01"></polyline>
+                                </svg>
+                                Prerequisites
+                            </h4>
+                            <ul class="space-y-2 text-sm text-emerald-700 dark:text-emerald-300">
+                                <li class="flex items-center gap-2">
+                                    <div class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
+                                    .NET 9.0 SDK installed
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <div class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
+                                    TextHub running on localhost:5099
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <div class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
+                                    Playwright browsers installed
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Running Tests -->
+                        <div>
+                            <h4 class="font-semibold text-emerald-900 dark:text-emerald-100 mb-3 flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play text-emerald-600">
+                                    <polygon points="5,3 19,12 5,21"></polygon>
+                                </svg>
+                                Running Tests
+                            </h4>
+                            <div class="space-y-3">
+                                <div class="bg-white/50 dark:bg-black/20 rounded-lg p-3">
+                                    <div class="text-xs text-emerald-600 dark:text-emerald-400 mb-1">Linux/macOS</div>
+                                    <code class="text-sm text-emerald-800 dark:text-emerald-200">./run-ui-tests.sh</code>
+                                </div>
+                                <div class="bg-white/50 dark:bg-black/20 rounded-lg p-3">
+                                    <div class="text-xs text-emerald-600 dark:text-emerald-400 mb-1">Windows PowerShell</div>
+                                    <code class="text-sm text-emerald-800 dark:text-emerald-200">.\run-ui-tests.ps1</code>
+                                </div>
+                                <div class="bg-white/50 dark:bg-black/20 rounded-lg p-3">
+                                    <div class="text-xs text-emerald-600 dark:text-emerald-400 mb-1">dotnet CLI</div>
+                                    <code class="text-sm text-emerald-800 dark:text-emerald-200">dotnet test</code>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Test Structure -->
+                        <div>
+                            <h4 class="font-semibold text-emerald-900 dark:text-emerald-100 mb-3 flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-folder-tree text-emerald-600">
+                                    <path d="M20 10a1 1 0 0 0 1-1V7a2 2 0 0 0-2-2h-2.5a2 2 0 0 1-2-2 2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2 2 2 0 0 1-2 2H5a2 2 0 0 0-2 2v2a1 1 0 0 0 1 1"></path>
+                                    <path d="M14 2H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2h-2z"></path>
+                                </svg>
+                                Test Structure
+                            </h4>
+                            <ul class="space-y-2 text-sm text-emerald-700 dark:text-emerald-300">
+                                <li class="flex items-center gap-2">
+                                    <div class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
+                                    <code class="text-xs">UITestBase.cs</code> - Common test functionality
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <div class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
+                                    <code class="text-xs">HomePageUITests.cs</code> - Home page functionality
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <div class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
+                                    <code class="text-xs">TextCaseToolsUITests.cs</code> - Case conversion tools
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <div class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
+                                    <code class="text-xs">AccessibilityAndPerformanceUITests.cs</code> - A11y & performance
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Configuration & Debugging -->
+            <div class="grid lg:grid-cols-2 gap-8 mb-8">
+                <!-- Configuration -->
+                <div class="bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-950/20 dark:to-purple-950/20 border border-violet-200 dark:border-violet-800 rounded-2xl p-8 shadow-lg">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 bg-violet-500 rounded-lg flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings text-white">
+                                <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-violet-900 dark:text-violet-100">Configuration</h3>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-semibold text-violet-900 dark:text-violet-100 mb-2">Browser Settings</h4>
+                            <div class="bg-white/50 dark:bg-black/20 rounded-lg p-3">
+                                <code class="text-sm text-violet-800 dark:text-violet-200">
+                                    Browser: Chromium (visible mode)<br/>
+                                    Viewport: 1920x1080<br/>
+                                    Timeout: 30 seconds<br/>
+                                    SlowMo: 500ms
+                                </code>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-semibold text-violet-900 dark:text-violet-100 mb-2">Screenshots</h4>
+                            <p class="text-sm text-violet-700 dark:text-violet-300 mb-2">
+                                Automatic screenshot capture for debugging and verification.
+                            </p>
+                            <div class="bg-white/50 dark:bg-black/20 rounded-lg p-3">
+                                <code class="text-sm text-violet-800 dark:text-violet-200">
+                                    Screenshots saved to: screenshots/
+                                </code>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="font-semibold text-violet-900 dark:text-violet-100 mb-2">CI/CD Configuration</h4>
+                            <div class="bg-white/50 dark:bg-black/20 rounded-lg p-3">
+                                <code class="text-sm text-violet-800 dark:text-violet-200">
+                                    Headless = true<br/>
+                                    SlowMo = 0
+                                </code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Debugging -->
+                <div class="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 border border-amber-200 dark:border-amber-800 rounded-2xl p-8 shadow-lg">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 bg-amber-500 rounded-lg flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bug text-white">
+                                <path d="m8 2 1.88 1.88"></path>
+                                <path d="M14.12 3.88 16 2"></path>
+                                <path d="M9 7.13v-1a3.003 3.003 0 1 1 6 0v1"></path>
+                                <path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4.5-4l1.5-1.5"></path>
+                                <path d="M12 20c3.3 0 6-2.7 6-6v-3a4 4 0 0 0-4.5-4L12 5.5"></path>
+                                <path d="M12 8v8"></path>
+                                <path d="m8 12 4 4 4-4"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-amber-900 dark:text-amber-100">Debugging</h3>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-semibold text-amber-900 dark:text-amber-100 mb-2">Running Individual Tests</h4>
+                            <div class="bg-white/50 dark:bg-black/20 rounded-lg p-3">
+                                <code class="text-sm text-amber-800 dark:text-amber-200">
+                                    dotnet test --filter "FullyQualifiedName~HomePageUITests"
+                                </code>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-semibold text-amber-900 dark:text-amber-100 mb-2">Debug Mode</h4>
+                            <p class="text-sm text-amber-700 dark:text-amber-300 mb-2">
+                                Set Headless = false to see browser interactions.
+                            </p>
+                            <div class="bg-white/50 dark:bg-black/20 rounded-lg p-3">
+                                <code class="text-sm text-amber-800 dark:text-amber-200">
+                                    Headless = false<br/>
+                                    SlowMo = 1000
+                                </code>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="font-semibold text-amber-900 dark:text-amber-100 mb-2">Common Issues</h4>
+                            <ul class="space-y-2 text-sm text-amber-700 dark:text-amber-300">
+                                <li class="flex items-center gap-2">
+                                    <div class="w-1.5 h-1.5 bg-amber-500 rounded-full"></div>
+                                    Application not running on localhost:5099
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <div class="w-1.5 h-1.5 bg-amber-500 rounded-full"></div>
+                                    Playwright browsers not installed
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <div class="w-1.5 h-1.5 bg-amber-500 rounded-full"></div>
+                                    Tests timing out - increase timeout values
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <div class="w-1.5 h-1.5 bg-amber-500 rounded-full"></div>
+                                    Element not found - check selectors
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Best Practices -->
+            <div class="bg-gradient-to-br from-rose-50 to-pink-50 dark:from-rose-950/20 dark:to-pink-950/20 border border-rose-200 dark:border-rose-800 rounded-2xl p-8 shadow-lg">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 bg-rose-500 rounded-lg flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-star text-white">
+                            <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"></polygon>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-rose-900 dark:text-rose-100">Best Practices</h3>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-semibold text-rose-900 dark:text-rose-100 mb-3">Test Development</h4>
+                        <ul class="space-y-2 text-sm text-rose-700 dark:text-rose-300">
+                            <li class="flex items-center gap-2">
+                                <div class="w-1.5 h-1.5 bg-rose-500 rounded-full"></div>
+                                Use descriptive test method names
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <div class="w-1.5 h-1.5 bg-rose-500 rounded-full"></div>
+                                Keep tests independent and isolated
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <div class="w-1.5 h-1.5 bg-rose-500 rounded-full"></div>
+                                Wait for elements and network activity
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <div class="w-1.5 h-1.5 bg-rose-500 rounded-full"></div>
+                                Test both success and failure scenarios
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-rose-900 dark:text-rose-100 mb-3">Maintenance</h4>
+                        <ul class="space-y-2 text-sm text-rose-700 dark:text-rose-300">
+                            <li class="flex items-center gap-2">
+                                <div class="w-1.5 h-1.5 bg-rose-500 rounded-full"></div>
+                                Capture screenshots at key moments
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <div class="w-1.5 h-1.5 bg-rose-500 rounded-full"></div>
+                                Monitor test execution time
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <div class="w-1.5 h-1.5 bg-rose-500 rounded-full"></div>
+                                Verify accessibility compliance
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <div class="w-1.5 h-1.5 bg-rose-500 rounded-full"></div>
+                                Test responsive behavior
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resources -->
+            <div class="mt-8 bg-gradient-to-r from-slate-50 to-gray-50 dark:from-slate-950/20 dark:to-gray-950/20 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 shadow-lg">
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 bg-slate-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open text-white">
+                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4">Additional Resources</h3>
+                    <p class="text-slate-800 dark:text-slate-200 text-lg max-w-2xl mx-auto">
+                        Learn more about UI testing and the technologies used in TextHub's test suite.
+                    </p>
+                </div>
+                
+                <div class="grid md:grid-cols-3 gap-6">
+                    <a href="https://playwright.dev/dotnet/" target="_blank" rel="noopener noreferrer" class="group bg-white/50 dark:bg-black/20 rounded-xl p-6 hover:bg-white/70 dark:hover:bg-black/40 transition-all duration-200">
+                        <div class="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play text-green-600">
+                                <polygon points="5,3 19,12 5,21"></polygon>
+                            </svg>
+                        </div>
+                        <h4 class="font-semibold text-slate-900 dark:text-slate-100 mb-2">Playwright Documentation</h4>
+                        <p class="text-sm text-slate-700 dark:text-slate-300">Complete guide to Playwright for .NET</p>
+                    </a>
+                    
+                    <a href="https://xunit.net/" target="_blank" rel="noopener noreferrer" class="group bg-white/50 dark:bg-black/20 rounded-xl p-6 hover:bg-white/70 dark:hover:bg-black/40 transition-all duration-200">
+                        <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-circle text-blue-600">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                <polyline points="22,4 12,14.01 9,11.01"></polyline>
+                            </svg>
+                        </div>
+                        <h4 class="font-semibold text-slate-900 dark:text-slate-100 mb-2">xUnit Documentation</h4>
+                        <p class="text-sm text-slate-700 dark:text-slate-300">Testing framework for .NET applications</p>
+                    </a>
+                    
+                    <a href="https://www.w3.org/WAI/test-evaluate/" target="_blank" rel="noopener noreferrer" class="group bg-white/50 dark:bg-black/20 rounded-xl p-6 hover:bg-white/70 dark:hover:bg-black/40 transition-all duration-200">
+                        <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-accessibility text-purple-600">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="m9 12 2 2 4-4"></path>
+                            </svg>
+                        </div>
+                        <h4 class="font-semibold text-slate-900 dark:text-slate-100 mb-2">Accessibility Testing</h4>
+                        <p class="text-sm text-slate-700 dark:text-slate-300">W3C guidelines for accessibility testing</p>
+                    </a>
                 </div>
             </div>
         </section>

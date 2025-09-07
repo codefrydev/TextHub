@@ -368,7 +368,7 @@ public class JsonLdService
                         "@id": "{{docId}}",
                         "url": "{{docUrl}}",
                         "name": "Documentation - How to Contribute to TextHub",
-                        "description": "Learn how to contribute to TextHub and help improve our text utilities. Complete guide covering installation, project structure, adding new tools, and deployment.",
+                        "description": "Learn how to contribute to TextHub and help improve our text utilities. Complete guide covering installation, project structure, adding new tools, UI testing with Playwright, and deployment.",
                         "isPartOf": {
                             "@id": "{{BaseUrl}}/#website"
                         },
@@ -405,7 +405,7 @@ public class JsonLdService
                         "@type": "TechArticle",
                         "@id": "{{docId}}#techarticle",
                         "headline": "How to Contribute to TextHub",
-                        "description": "Complete documentation for contributing to the TextHub project, including setup instructions, project structure, and development guidelines.",
+                        "description": "Complete documentation for contributing to the TextHub project, including setup instructions, project structure, development guidelines, and comprehensive UI testing with Playwright.",
                         "url": "{{docUrl}}",
                         "datePublished": "2024-01-01",
                         "dateModified": "{{DateTime.Now:yyyy-MM-dd}}",
@@ -425,8 +425,9 @@ public class JsonLdService
                         "proficiencyLevel": "Beginner",
                         "dependencies": [
                             ".NET 9.0 SDK",
-                            "Visual Studio 2022 or VS Code",
-                            "Git"
+                            "Visual Studio 2022 or VS Code or JetBrains Rider",
+                            "Git",
+                            "Playwright for .NET"
                         ],
                         "programmingLanguage": "C#",
                         "framework": "Blazor WebAssembly"
