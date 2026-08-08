@@ -1,0 +1,81 @@
+@page "/text-obfuscator"
+@using TextHub.Components.Forms
+@using System.Text
+
+<SimpleToolLayout 
+    PageTitle="Text Obfuscator"
+    ToolName="Text Obfuscator"
+    Description="Obfuscate text to evade basic filters"
+    ConvertButtonText="Obfuscate Text"
+    UseCaseDescription="Perfect for bypassing simple keyword filters by replacing characters with look-alikes (homoglyphs)"
+    CategoryName="Text Security Tools"
+    Route="/text-obfuscator"
+    ConvertFunction="Obfuscate">
+    
+    <IconSvg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-venetian-mask w-6 h-6 sm:w-8 sm:h-8 text-primary">
+            <path d="M2 12a10 10 0 0 0 20 0 2 2 0 0 0-2-2h-2a2 2 0 0 1-2-2 2 2 0 0 0-2-2H8a2 2 0 0 0-2 2 2 2 0 0 1-2 2H2a2 2 0 0 0-2 2z"></path>
+            <circle cx="16" cy="11" r="2"></circle>
+            <circle cx="8" cy="11" r="2"></circle>
+        </svg>
+    </IconSvg>
+
+    <OptionsContent>
+        <div class="grid grid-cols-1 gap-4 max-w-sm">
+            <label class="flex items-center gap-2 cursor-pointer mt-2">
+                <input type="checkbox" @bind="_useZeroWidthSpaces" class="w-4 h-4 text-primary rounded focus:ring-primary">
+                <span class="text-xs sm:text-sm">Insert Zero-Width Spaces</span>
+            </label>
+        </div>
+    </OptionsContent>
+</SimpleToolLayout>
+
+@code {
+    private bool _useZeroWidthSpaces = false;
+
+    private static readonly Dictionary<char, char> Homoglyphs = new()
+    {
+        { 'a', 'а' }, // Cyrillic a
+        { 'c', 'с' }, // Cyrillic s
+        { 'e', 'е' }, // Cyrillic ie
+        { 'o', 'о' }, // Cyrillic o
+        { 'p', 'р' }, // Cyrillic er
+        { 'x', 'х' }, // Cyrillic ha
+        { 'y', 'у' }, // Cyrillic u
+        { 'A', 'А' }, // Cyrillic A
+        { 'B', 'В' }, // Cyrillic Ve
+        { 'C', 'С' }, // Cyrillic Es
+        { 'E', 'Е' }, // Cyrillic Ie
+        { 'H', 'Н' }, // Cyrillic En
+        { 'M', 'М' }, // Cyrillic Em
+        { 'O', 'О' }, // Cyrillic O
+        { 'P', 'Р' }, // Cyrillic Er
+        { 'T', 'Т' }, // Cyrillic Te
+        { 'X', 'Х' }  // Cyrillic Ha
+    };
+
+    private string Obfuscate(string input)
+    {
+        if (string.IsNullOrEmpty(input)) return string.Empty;
+
+        var sb = new StringBuilder();
+        foreach (char c in input)
+        {
+            if (Homoglyphs.TryGetValue(c, out char obfuscated))
+            {
+                sb.Append(obfuscated);
+            }
+            else
+            {
+                sb.Append(c);
+            }
+
+            if (_useZeroWidthSpaces)
+            {
+                sb.Append('\u200B'); // Zero-width space
+            }
+        }
+
+        return sb.ToString();
+    }
+}

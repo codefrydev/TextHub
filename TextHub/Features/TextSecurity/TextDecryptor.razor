@@ -1,0 +1,81 @@
+@page "/text-decryptor"
+@using TextHub.Components.Forms
+@using System.Security.Cryptography
+@using System.Text
+@using System.IO
+
+<SimpleToolLayout 
+    PageTitle="Text Decryptor"
+    ToolName="Text Decryptor"
+    Description="Decrypt AES encrypted text"
+    ConvertButtonText="Decrypt Text"
+    UseCaseDescription="Perfect for reading securely transmitted sensitive information"
+    CategoryName="Text Security Tools"
+    Route="/text-decryptor"
+    ConvertFunction="Decrypt">
+    
+    <IconSvg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-unlock w-6 h-6 sm:w-8 sm:h-8 text-primary">
+            <path d="M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v1"></path>
+            <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
+            <rect width="8" height="5" x="2" y="13" rx="1"></rect>
+            <path d="M8 13v-2a2 2 0 1 0-4 0v2"></path>
+            <path d="M6 13v-2a2 2 0 0 1 4 0"></path>
+        </svg>
+    </IconSvg>
+
+    <OptionsContent>
+        <div class="grid grid-cols-1 gap-4">
+            <div>
+                <label class="block text-xs sm:text-sm font-medium mb-1">Secret Key (Required)</label>
+                <input type="password" @bind="_secretKey" placeholder="Enter the secure password used for encryption..." class="w-full bg-background border border-input rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary" />
+            </div>
+        </div>
+    </OptionsContent>
+</SimpleToolLayout>
+
+@code {
+    private string _secretKey = string.Empty;
+
+    private string Decrypt(string input)
+    {
+        if (string.IsNullOrEmpty(input)) return string.Empty;
+        if (string.IsNullOrEmpty(_secretKey)) return "Please provide a Secret Key.";
+
+        try
+        {
+            input = input.Trim().Replace(" ", "+");
+            byte[] cipherBytes = Convert.FromBase64String(input);
+            
+            using (Aes encryptor = Aes.Create())
+            {
+                var pdb = new Rfc2898DeriveBytes(_secretKey, new byte[] { 0x49, 0x76, 0x61, 0x6e, 0x20, 0x4d, 0x65, 0x64, 0x76, 0x65, 0x64, 0x65, 0x76 }, 1000, HashAlgorithmName.SHA256);
+                encryptor.Key = pdb.GetBytes(32);
+                encryptor.IV = pdb.GetBytes(16);
+                
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    using (CryptoStream cs = new CryptoStream(ms, encryptor.CreateDecryptor(), CryptoStreamMode.Write))
+                    {
+                        cs.Write(cipherBytes, 0, cipherBytes.Length);
+                        cs.Close();
+                    }
+                    input = Encoding.UTF8.GetString(ms.ToArray());
+                }
+            }
+            return input;
+        }
+        catch (FormatException)
+        {
+            return "Invalid Base64 format. Ensure you pasted the exact encrypted text.";
+        }
+        catch (CryptographicException)
+        {
+            return "Decryption failed. Incorrect secret key or corrupted data.";
+        }
+        catch (Exception ex)
+        {
+            return $"Decryption error: {ex.Message}";
+        }
+    }
+}

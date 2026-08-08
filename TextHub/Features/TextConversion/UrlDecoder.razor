@@ -1,0 +1,33 @@
+@page "/url-decoder"
+@using TextHub.Components.Forms
+@using System.Net
+
+<SimpleToolLayout 
+    PageTitle="URL Decoder"
+    ToolName="URL Decoder"
+    Description="Decode URL-encoded text"
+    ConvertButtonText="Decode URL"
+    UseCaseDescription="Perfect for reading escaped query strings back into plain text"
+    CategoryName="Text Conversion Tools"
+    Route="/url-decoder"
+    ConvertFunction="Decode">
+    
+    <IconSvg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-unlink w-6 h-6 sm:w-8 sm:h-8 text-primary">
+            <path d="m18.84 12.25 1.72-1.71a5.5 5.5 0 0 0-7.78-7.78l-1.71 1.71"></path>
+            <path d="m5.17 11.75-1.71 1.71a5.5 5.5 0 0 0 7.78 7.78l1.71-1.71"></path>
+            <line x1="8" x2="16" y1="2" y2="2"></line>
+            <line x1="8" x2="16" y1="22" y2="22"></line>
+            <line x1="2" x2="2" y1="8" y2="16"></line>
+            <line x1="22" x2="22" y1="8" y2="16"></line>
+        </svg>
+    </IconSvg>
+</SimpleToolLayout>
+
+@code {
+    private string Decode(string input)
+    {
+        if (string.IsNullOrEmpty(input)) return string.Empty;
+        return Uri.UnescapeDataString(input);
+    }
+}

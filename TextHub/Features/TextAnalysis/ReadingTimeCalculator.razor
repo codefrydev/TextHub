@@ -1,0 +1,38 @@
+@page "/reading-time"
+@using TextHub.Components.Forms
+
+<SimpleToolLayout 
+    PageTitle="Reading Time Calculator"
+    ToolName="Reading Time Calculator"
+    Description="Calculate how long it takes to read a piece of text"
+    ConvertButtonText="Calculate Time"
+    UseCaseDescription="Useful for estimating speech lengths, article read times, and presentation pacing."
+    CategoryName="Text Analysis Tools"
+    Route="/reading-time"
+    ConvertFunction="CalculateReadingTime">
+    
+    <IconSvg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock w-6 h-6 sm:w-8 sm:h-8 text-primary">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+    </IconSvg>
+</SimpleToolLayout>
+
+@code {
+    private string CalculateReadingTime(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input)) return "0 minutes (0 words)";
+
+        var words = input.Split(new[] { ' ', '\r', '\n', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+        int wordCount = words.Length;
+        
+        // Standard reading speed is ~238 words per minute
+        double readTimeMinutes = wordCount / 238.0;
+        
+        // Standard speaking speed is ~183 words per minute
+        double speakTimeMinutes = wordCount / 183.0;
+
+        return $"Reading Time: {Math.Ceiling(readTimeMinutes)} min\nSpeaking Time: {Math.Ceiling(speakTimeMinutes)} min\n(Based on {wordCount} words)";
+    }
+}

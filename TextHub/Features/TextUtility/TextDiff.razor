@@ -1,0 +1,150 @@
+@page "/text-diff"
+@using TextHub.Services.Data
+@using TextHub.Components.Shared
+@using System.Text
+@inject JsonLdService JsonLdService
+@inject ToolDataService ToolDataService
+@inject MetaTagsService MetaTagsService
+
+<PageTitle>Text Diff Checker - Text Hub</PageTitle>
+
+<DynamicMetaTags MetaTags="@_metaTags" />
+<DynamicJsonLd JsonLdContent="@_jsonLdContent" Id="textdiff-jsonld" />
+
+<main class="flex-1">
+    <div class="container mx-auto px-4 py-8 md:py-12 animate-fade-in">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-8 md:mb-10">
+                <div class="inline-flex items-center justify-center p-2.5 sm:p-3 bg-primary/10 rounded-lg mb-3 md:mb-4 text-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-diff w-6 h-6 sm:w-8 sm:h-8"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M9 10h6"></path><path d="M12 13V7"></path><path d="M9 17h6"></path></svg>
+                </div>
+                <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 md:mb-4">
+                    <span class="text-gradient">Text Diff Checker</span>
+                </h1>
+                <p class="text-base sm:text-lg text-muted-foreground px-4">Compare two texts and find the differences instantly</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 max-w-5xl mx-auto">
+                <div class="animate-fade-in" style="animation-delay: 100ms;">
+                    <label class="block text-sm font-medium mb-2">Original Text</label>
+                    <textarea 
+                        @bind="_originalText" 
+                        @bind:event="oninput"
+                        placeholder="Paste original text here..." 
+                        class="input-area min-h-[200px] text-sm sm:text-base"></textarea>
+                </div>
+
+                <div class="animate-fade-in" style="animation-delay: 150ms;">
+                    <label class="block text-sm font-medium mb-2">Modified Text</label>
+                    <textarea 
+                        @bind="_modifiedText" 
+                        @bind:event="oninput"
+                        placeholder="Paste modified text here..." 
+                        class="input-area min-h-[200px] text-sm sm:text-base"></textarea>
+                </div>
+            </div>
+
+            <div class="flex justify-center mt-6 animate-fade-in" style="animation-delay: 200ms;">
+                <button @onclick="Compare" class="btn-primary w-full sm:w-auto text-sm sm:text-base px-8">
+                    Compare Text
+                </button>
+            </div>
+
+            @if (_hasCompared)
+            {
+                <div class="mt-8 p-4 bg-background border border-border rounded-lg animate-fade-in shadow-sm" style="animation-delay: 300ms;">
+                    <h3 class="font-semibold mb-4 text-lg border-b border-border pb-2">Differences</h3>
+                    <div class="font-mono text-sm sm:text-base overflow-x-auto whitespace-pre-wrap p-2">
+                        @foreach (var chunk in _diffChunks)
+                        {
+                            <span class="@chunk.CssClass">@chunk.Text</span>
+                        }
+                        @if (_diffChunks.Count == 1 && _diffChunks[0].Type == DiffType.Unchanged)
+                        {
+                            <div class="text-green-600 dark:text-green-400 font-medium mt-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-circle w-5 h-5 inline mr-1"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                The texts are identical.
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</main>
+
+@code {
+    private string _jsonLdContent = string.Empty;
+    private MetaTagsData? _metaTags;
+    private string _originalText = string.Empty;
+    private string _modifiedText = string.Empty;
+    private bool _hasCompared = false;
+    private List<DiffChunk> _diffChunks = new();
+
+    protected override void OnInitialized()
+    {
+        var tool = ToolDataService.GetAllTools().FirstOrDefault(t => t.Href == "/text-diff");
+        if (tool != null)
+        {
+            _jsonLdContent = JsonLdService.GenerateToolPageJsonLd(tool, "Text Utility Tools");
+            _metaTags = MetaTagsService.GetToolPageMetaTags(tool, "Text Utility Tools");
+        }
+    }
+
+    private void Compare()
+    {
+        _diffChunks.Clear();
+        _hasCompared = true;
+
+        if (_originalText == _modifiedText)
+        {
+            _diffChunks.Add(new DiffChunk { Text = _originalText, Type = DiffType.Unchanged });
+            return;
+        }
+
+        // Basic Line-by-Line diff simulation (in a real app, use a diffing library like DiffPlex)
+        // Since we cannot install NuGet packages right now easily, we do a basic array comparison
+        var origLines = _originalText.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+        var modLines = _modifiedText.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+
+        int i = 0, j = 0;
+        while (i < origLines.Length || j < modLines.Length)
+        {
+            if (i < origLines.Length && j < modLines.Length && origLines[i] == modLines[j])
+            {
+                _diffChunks.Add(new DiffChunk { Text = origLines[i] + "\n", Type = DiffType.Unchanged });
+                i++; j++;
+            }
+            else if (i < origLines.Length && (j >= modLines.Length || !modLines.Contains(origLines[i])))
+            {
+                _diffChunks.Add(new DiffChunk { Text = "- " + origLines[i] + "\n", Type = DiffType.Removed });
+                i++;
+            }
+            else if (j < modLines.Length)
+            {
+                _diffChunks.Add(new DiffChunk { Text = "+ " + modLines[j] + "\n", Type = DiffType.Added });
+                j++;
+            }
+            else
+            {
+                // Fallback failsafe to avoid infinite loop
+                break;
+            }
+        }
+    }
+
+    private enum DiffType { Unchanged, Added, Removed }
+
+    private class DiffChunk
+    {
+        public string Text { get; set; } = string.Empty;
+        public DiffType Type { get; set; }
+        
+        public string CssClass => Type switch
+        {
+            DiffType.Added => "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 block",
+            DiffType.Removed => "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 block line-through opacity-70",
+            _ => "text-foreground block"
+        };
+    }
+}

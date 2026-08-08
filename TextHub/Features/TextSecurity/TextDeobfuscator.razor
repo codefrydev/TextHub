@@ -1,0 +1,68 @@
+@page "/text-deobfuscator"
+@using TextHub.Components.Forms
+@using System.Text
+
+<SimpleToolLayout 
+    PageTitle="Text Deobfuscator"
+    ToolName="Text Deobfuscator"
+    Description="Remove basic obfuscation from text"
+    ConvertButtonText="Deobfuscate Text"
+    UseCaseDescription="Perfect for cleaning up text that has zero-width spaces or homoglyph replacements"
+    CategoryName="Text Security Tools"
+    Route="/text-deobfuscator"
+    ConvertFunction="Deobfuscate">
+    
+    <IconSvg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search-check w-6 h-6 sm:w-8 sm:h-8 text-primary">
+            <path d="m8 11 2 2 4-4"></path>
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.3-4.3"></path>
+        </svg>
+    </IconSvg>
+</SimpleToolLayout>
+
+@code {
+    private static readonly Dictionary<char, char> ReverseHomoglyphs = new()
+    {
+        { 'а', 'a' },
+        { 'с', 'c' },
+        { 'е', 'e' },
+        { 'о', 'o' },
+        { 'р', 'p' },
+        { 'х', 'x' },
+        { 'у', 'y' },
+        { 'А', 'A' },
+        { 'В', 'B' },
+        { 'С', 'C' },
+        { 'Е', 'E' },
+        { 'Н', 'H' },
+        { 'М', 'M' },
+        { 'О', 'O' },
+        { 'Р', 'P' },
+        { 'Т', 'T' },
+        { 'Х', 'X' }
+    };
+
+    private string Deobfuscate(string input)
+    {
+        if (string.IsNullOrEmpty(input)) return string.Empty;
+
+        // Remove zero-width spaces
+        input = input.Replace("\u200B", "");
+
+        var sb = new StringBuilder();
+        foreach (char c in input)
+        {
+            if (ReverseHomoglyphs.TryGetValue(c, out char deobfuscated))
+            {
+                sb.Append(deobfuscated);
+            }
+            else
+            {
+                sb.Append(c);
+            }
+        }
+
+        return sb.ToString();
+    }
+}

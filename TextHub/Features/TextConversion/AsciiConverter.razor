@@ -1,0 +1,73 @@
+@page "/ascii-converter"
+@using TextHub.Components.Forms
+@using System.Text
+@using System.Linq
+
+<SimpleToolLayout 
+    PageTitle="ASCII Converter"
+    ToolName="ASCII Converter"
+    Description="Convert text to ASCII codes and vice versa"
+    ConvertButtonText="@(_direction == "ToAscii" ? "Convert to ASCII" : "Convert to Text")"
+    UseCaseDescription="Perfect for finding the underlying decimal character codes"
+    CategoryName="Text Conversion Tools"
+    Route="/ascii-converter"
+    ConvertFunction="ConvertData">
+    
+    <IconSvg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-type w-6 h-6 sm:w-8 sm:h-8 text-primary">
+            <polyline points="4 7 4 4 20 4 20 7"></polyline>
+            <line x1="9" x2="15" y1="20" y2="20"></line>
+            <line x1="12" x2="12" y1="4" y2="20"></line>
+        </svg>
+    </IconSvg>
+
+    <OptionsContent>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-xs sm:text-sm font-medium mb-1">Conversion Direction</label>
+                <select @bind="_direction" class="w-full bg-background border border-input rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                    <option value="ToAscii">Text to ASCII Codes (Decimal)</option>
+                    <option value="ToText">ASCII Codes to Text</option>
+                </select>
+            </div>
+            @if (_direction == "ToAscii")
+            {
+                <div class="flex items-center">
+                    <label class="flex items-center gap-2 cursor-pointer mt-6">
+                        <input type="checkbox" @bind="_commaSeparated" class="w-4 h-4 text-primary rounded focus:ring-primary">
+                        <span class="text-xs sm:text-sm">Use Comma Separator</span>
+                    </label>
+                </div>
+            }
+        </div>
+    </OptionsContent>
+</SimpleToolLayout>
+
+@code {
+    private string _direction = "ToAscii";
+    private bool _commaSeparated = true;
+
+    private string ConvertData(string input)
+    {
+        if (string.IsNullOrEmpty(input)) return string.Empty;
+
+        try
+        {
+            if (_direction == "ToAscii")
+            {
+                var bytes = Encoding.ASCII.GetBytes(input);
+                return string.Join(_commaSeparated ? ", " : " ", bytes.Select(b => b.ToString()));
+            }
+            else // ToText
+            {
+                var codeStrings = input.Split(new[] { ' ', ',', '\r', '\n', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                var bytes = codeStrings.Select(b => byte.Parse(b)).ToArray();
+                return Encoding.ASCII.GetString(bytes);
+            }
+        }
+        catch
+        {
+            return "Invalid input for the selected conversion.";
+        }
+    }
+}

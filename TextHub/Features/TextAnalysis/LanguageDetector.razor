@@ -1,0 +1,74 @@
+@page "/language-detector"
+@using TextHub.Components.Forms
+@using System.Text.RegularExpressions
+
+<SimpleToolLayout 
+    PageTitle="Language Detector"
+    ToolName="Language Detector"
+    Description="Detect the likely language of your text"
+    ConvertButtonText="Detect Language"
+    UseCaseDescription="Useful for identifying the language of unknown text snippets."
+    CategoryName="Text Analysis Tools"
+    Route="/language-detector"
+    ConvertFunction="DetectLanguage">
+    
+    <IconSvg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-globe w-6 h-6 sm:w-8 sm:h-8 text-primary">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="2" x2="22" y1="12" y2="12"></line>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+    </IconSvg>
+</SimpleToolLayout>
+
+@code {
+    // Basic dictionary of highly common words in various languages for a lightweight on-device detector
+    private static readonly Dictionary<string, string[]> LanguageProfiles = new()
+    {
+        { "English", new[] { "the", "and", "to", "of", "a", "in", "is", "it", "you", "that" } },
+        { "Spanish", new[] { "el", "la", "de", "que", "y", "en", "un", "ser", "se", "no", "por" } },
+        { "French", new[] { "le", "la", "de", "et", "un", "une", "est", "en", "que", "pour" } },
+        { "German", new[] { "der", "die", "und", "in", "den", "von", "zu", "das", "mit", "sich" } },
+        { "Italian", new[] { "il", "di", "e", "la", "che", "un", "in", "per", "una", "sono" } },
+        { "Portuguese", new[] { "que", "de", "não", "para", "um", "uma", "com", "se", "os" } },
+        { "Dutch", new[] { "de", "en", "van", "ik", "te", "dat", "die", "in", "een", "hij" } },
+        { "Russian", new[] { "и", "в", "не", "на", "я", "быть", "с", "он", "что", "это" } }
+    };
+
+    private string DetectLanguage(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input)) return "No text provided.";
+
+        // Convert to lowercase and remove punctuation
+        string cleanText = Regex.Replace(input.ToLowerInvariant(), @"[^\w\s\p{IsCyrillic}]", "");
+        var words = cleanText.Split(new[] { ' ', '\r', '\n', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+        
+        if (words.Length == 0) return "No identifiable words found.";
+
+        var scores = new Dictionary<string, int>();
+        foreach (var lang in LanguageProfiles.Keys)
+        {
+            scores[lang] = 0;
+        }
+
+        foreach (var word in words)
+        {
+            foreach (var profile in LanguageProfiles)
+            {
+                if (profile.Value.Contains(word))
+                {
+                    scores[profile.Key]++;
+                }
+            }
+        }
+
+        var topLanguage = scores.OrderByDescending(kvp => kvp.Value).First();
+
+        if (topLanguage.Value == 0)
+        {
+            return "Language could not be definitively determined. (Algorithm only detects major Western/Cyrillic languages based on stop-words).";
+        }
+
+        return $"Detected Language: {topLanguage.Key}\nConfidence Score: {topLanguage.Value} matching stop-words.";
+    }
+}

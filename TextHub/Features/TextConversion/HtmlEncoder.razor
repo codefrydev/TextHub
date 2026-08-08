@@ -1,0 +1,29 @@
+@page "/html-encoder"
+@using TextHub.Components.Forms
+@using System.Net
+
+<SimpleToolLayout 
+    PageTitle="HTML Encoder"
+    ToolName="HTML Encoder"
+    Description="Encode text for HTML display"
+    ConvertButtonText="Encode to HTML"
+    UseCaseDescription="Perfect for safely escaping HTML tags and entities"
+    CategoryName="Text Conversion Tools"
+    Route="/html-encoder"
+    ConvertFunction="Encode">
+    
+    <IconSvg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-code w-6 h-6 sm:w-8 sm:h-8 text-primary">
+            <polyline points="16 18 22 12 16 6"></polyline>
+            <polyline points="8 6 2 12 8 18"></polyline>
+        </svg>
+    </IconSvg>
+</SimpleToolLayout>
+
+@code {
+    private string Encode(string input)
+    {
+        if (string.IsNullOrEmpty(input)) return string.Empty;
+        return WebUtility.HtmlEncode(input);
+    }
+}

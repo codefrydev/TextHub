@@ -1,0 +1,95 @@
+@page "/text-reverser"
+@using TextHub.Components.Forms
+@using System.Text
+@using System.Linq
+
+<TextFormattingLayout 
+    PageTitle="Text Reverser"
+    ToolName="Text Reverser"
+    Description="Reverse characters, words, or lines in text"
+    ConvertButtonText="Reverse Text"
+    Route="/text-reverser"
+    @bind-Output="_outputText"
+    OnConvert="ProcessText">
+    
+    <IconSvg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left-right w-6 h-6 sm:w-8 sm:h-8">
+            <path d="M8 3 4 7l4 4"></path>
+            <path d="M4 7h16"></path>
+            <path d="m16 21 4-4-4-4"></path>
+            <path d="M20 17H4"></path>
+        </svg>
+    </IconSvg>
+
+    <OptionsContent>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-xs sm:text-sm font-medium mb-1">Reverse Mode</label>
+                <select @bind="_reverseMode" class="w-full bg-background border border-input rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                    <option value="EntireText">Entire Text</option>
+                    <option value="Lines">Reverse Line Order</option>
+                    <option value="CharactersPerLine">Characters (Line by Line)</option>
+                    <option value="WordsPerLine">Words (Line by Line)</option>
+                </select>
+            </div>
+        </div>
+    </OptionsContent>
+</TextFormattingLayout>
+
+@code {
+    private string _outputText = string.Empty;
+    private string _reverseMode = "EntireText";
+
+    private void ProcessText(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+        {
+            _outputText = string.Empty;
+            return;
+        }
+
+        if (_reverseMode == "EntireText")
+        {
+            var charArray = input.ToCharArray();
+            Array.Reverse(charArray);
+            _outputText = new string(charArray);
+            return;
+        }
+
+        var lines = input.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+        var sb = new StringBuilder();
+
+        if (_reverseMode == "Lines")
+        {
+            for (int i = lines.Length - 1; i >= 0; i--)
+            {
+                sb.AppendLine(lines[i]);
+            }
+        }
+        else if (_reverseMode == "CharactersPerLine")
+        {
+            foreach (var line in lines)
+            {
+                var charArray = line.ToCharArray();
+                Array.Reverse(charArray);
+                sb.AppendLine(new string(charArray));
+            }
+        }
+        else if (_reverseMode == "WordsPerLine")
+        {
+            foreach (var line in lines)
+            {
+                var words = line.Split(' ');
+                Array.Reverse(words);
+                sb.AppendLine(string.Join(" ", words));
+            }
+        }
+
+        if (sb.Length >= Environment.NewLine.Length)
+        {
+            sb.Length -= Environment.NewLine.Length;
+        }
+        
+        _outputText = sb.ToString();
+    }
+}

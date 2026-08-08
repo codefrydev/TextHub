@@ -1,0 +1,73 @@
+@page "/sentiment-analyzer"
+@using TextHub.Components.Forms
+@using System.Text.RegularExpressions
+
+<SimpleToolLayout 
+    PageTitle="Sentiment Analyzer"
+    ToolName="Sentiment Analyzer"
+    Description="Analyze the emotional tone of text"
+    ConvertButtonText="Analyze Sentiment"
+    UseCaseDescription="Useful for getting a quick read on whether a block of text is generally positive, negative, or neutral."
+    CategoryName="Text Analysis Tools"
+    Route="/sentiment-analyzer"
+    ConvertFunction="AnalyzeSentiment">
+    
+    <IconSvg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-smile w-6 h-6 sm:w-8 sm:h-8 text-primary">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+            <line x1="9" x2="9.01" y1="9" y2="9"></line>
+            <line x1="15" x2="15.01" y1="9" y2="9"></line>
+        </svg>
+    </IconSvg>
+</SimpleToolLayout>
+
+@code {
+    private static readonly HashSet<string> PositiveWords = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "good", "great", "awesome", "excellent", "happy", "love", "wonderful", "fantastic", "beautiful", "amazing", 
+        "best", "better", "glad", "joy", "success", "perfect", "positive", "brilliant", "delighted", "superb", "win", 
+        "winner", "yay", "yes", "nice", "kind", "friendly", "smile", "laugh", "excited", "fun", "blessed"
+    };
+
+    private static readonly HashSet<string> NegativeWords = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "bad", "terrible", "awful", "horrible", "sad", "hate", "worst", "worse", "angry", "mad", "upset", "depressed", 
+        "fail", "failure", "lose", "loser", "no", "not", "never", "cry", "pain", "hurt", "evil", "poor", "sorry", 
+        "stupid", "idiot", "disaster", "tragedy", "annoyed", "frustrated", "disappointed", "negative"
+    };
+
+    private string AnalyzeSentiment(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input)) return "No text provided.";
+
+        // Convert to lowercase and remove punctuation
+        string cleanText = Regex.Replace(input.ToLowerInvariant(), @"[^\w\s]", "");
+        var words = cleanText.Split(new[] { ' ', '\r', '\n', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+        
+        if (words.Length == 0) return "No words found.";
+
+        int positiveCount = 0;
+        int negativeCount = 0;
+
+        foreach (var word in words)
+        {
+            if (PositiveWords.Contains(word)) positiveCount++;
+            if (NegativeWords.Contains(word)) negativeCount++;
+        }
+
+        int score = positiveCount - negativeCount;
+        
+        string tone;
+        if (score > 0) tone = "Positive 😊";
+        else if (score < 0) tone = "Negative 😔";
+        else tone = "Neutral 😐";
+
+        return $"Overall Tone: {tone}\n\n" +
+               $"--- Score Breakdown ---\n" +
+               $"Positive Words Found: {positiveCount}\n" +
+               $"Negative Words Found: {negativeCount}\n" +
+               $"Total Words Analyzed: {words.Length}\n\n" +
+               $"(Note: This is a basic lexicon analyzer running locally in your browser. It does not understand sarcasm or complex context.)";
+    }
+}

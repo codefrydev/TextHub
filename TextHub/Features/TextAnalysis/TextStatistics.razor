@@ -1,0 +1,58 @@
+@page "/text-stats"
+@using TextHub.Components.Forms
+@using System.Text.RegularExpressions
+
+<SimpleToolLayout 
+    PageTitle="Text Statistics"
+    ToolName="Text Statistics"
+    Description="Get detailed statistical breakdown of your text"
+    ConvertButtonText="Analyze Text"
+    UseCaseDescription="Useful for editors, writers, and analysts looking for comprehensive text metrics."
+    CategoryName="Text Analysis Tools"
+    Route="/text-stats"
+    ConvertFunction="GenerateStats">
+    
+    <IconSvg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bar-chart-3 w-6 h-6 sm:w-8 sm:h-8 text-primary">
+            <path d="M3 3v18h18"></path>
+            <path d="M18 17V9"></path>
+            <path d="M13 17V5"></path>
+            <path d="M8 17v-3"></path>
+        </svg>
+    </IconSvg>
+</SimpleToolLayout>
+
+@code {
+    private string GenerateStats(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input)) return "No text provided.";
+
+        int chars = input.Length;
+        int charsNoSpaces = input.Replace(" ", "").Replace("\n", "").Replace("\r", "").Length;
+        
+        var words = input.Split(new[] { ' ', '\r', '\n', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+        int wordCount = words.Length;
+
+        var sentences = input.Split(new[] { '.', '!', '?' }, StringSplitOptions.RemoveEmptyEntries)
+                             .Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+        int sentenceCount = sentences.Length;
+
+        var paragraphs = input.Split(new[] { "\n\n", "\r\n\r\n" }, StringSplitOptions.RemoveEmptyEntries)
+                               .Where(p => !string.IsNullOrWhiteSpace(p)).ToArray();
+        int paragraphCount = paragraphs.Length;
+
+        int lines = input.Split(new[] { '\n' }).Length;
+
+        double avgWordLength = wordCount > 0 ? (double)charsNoSpaces / wordCount : 0;
+        double avgWordsPerSentence = sentenceCount > 0 ? (double)wordCount / sentenceCount : 0;
+
+        return $"Characters: {chars}\n" +
+               $"Characters (no spaces): {charsNoSpaces}\n" +
+               $"Words: {wordCount}\n" +
+               $"Sentences: {sentenceCount}\n" +
+               $"Paragraphs: {paragraphCount}\n" +
+               $"Lines: {lines}\n\n" +
+               $"Average Word Length: {avgWordLength:F2} chars\n" +
+               $"Average Words per Sentence: {avgWordsPerSentence:F2} words";
+    }
+}

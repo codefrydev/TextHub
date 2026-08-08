@@ -1,0 +1,86 @@
+@page "/text-shuffler"
+@using TextHub.Components.Forms
+@using System.Text
+@using System.Linq
+@using System.Collections.Generic
+
+<TextFormattingLayout 
+    PageTitle="Text Shuffler"
+    ToolName="Text Shuffler"
+    Description="Randomize lines, words, or characters in text"
+    ConvertButtonText="Shuffle Text"
+    Route="/text-shuffler"
+    @bind-Output="_outputText"
+    OnConvert="ProcessText">
+    
+    <IconSvg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shuffle w-6 h-6 sm:w-8 sm:h-8">
+            <polyline points="16 3 21 3 21 8"></polyline>
+            <line x1="4" x2="21" y1="20" y2="3"></line>
+            <polyline points="21 16 21 21 16 21"></polyline>
+            <line x1="15" x2="21" y1="15" y2="21"></line>
+            <line x1="4" x2="9" y1="4" y2="9"></line>
+        </svg>
+    </IconSvg>
+
+    <OptionsContent>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-xs sm:text-sm font-medium mb-1">Shuffle Mode</label>
+                <select @bind="_shuffleMode" class="w-full bg-background border border-input rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                    <option value="Lines">Lines</option>
+                    <option value="WordsPerLine">Words per Line</option>
+                    <option value="CharactersPerLine">Characters per Line</option>
+                </select>
+            </div>
+        </div>
+    </OptionsContent>
+</TextFormattingLayout>
+
+@code {
+    private string _outputText = string.Empty;
+    private string _shuffleMode = "Lines";
+    private Random _random = new Random();
+
+    private void ProcessText(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+        {
+            _outputText = string.Empty;
+            return;
+        }
+
+        var lines = input.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+        var sb = new StringBuilder();
+
+        if (_shuffleMode == "Lines")
+        {
+            var shuffledLines = lines.OrderBy(x => _random.Next()).ToList();
+            _outputText = string.Join(Environment.NewLine, shuffledLines);
+            return;
+        }
+
+        foreach (var line in lines)
+        {
+            if (_shuffleMode == "WordsPerLine")
+            {
+                var words = line.Split(' ').Where(w => w.Length > 0).ToList();
+                var shuffled = words.OrderBy(x => _random.Next()).ToList();
+                sb.AppendLine(string.Join(" ", shuffled));
+            }
+            else if (_shuffleMode == "CharactersPerLine")
+            {
+                var chars = line.ToCharArray().ToList();
+                var shuffled = chars.OrderBy(x => _random.Next()).ToArray();
+                sb.AppendLine(new string(shuffled));
+            }
+        }
+
+        if (sb.Length >= Environment.NewLine.Length)
+        {
+            sb.Length -= Environment.NewLine.Length;
+        }
+        
+        _outputText = sb.ToString();
+    }
+}

@@ -1,0 +1,82 @@
+@page "/text-sorter"
+@using TextHub.Components.Forms
+@using System.Text
+@using System.Collections.Generic
+@using System.Linq
+
+<TextFormattingLayout 
+    PageTitle="Text Sorter"
+    ToolName="Text Sorter"
+    Description="Sort lines of text alphabetically or by length"
+    ConvertButtonText="Sort Lines"
+    Route="/text-sorter"
+    @bind-Output="_outputText"
+    OnConvert="ProcessText">
+    
+    <IconSvg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-down-a-z w-6 h-6 sm:w-8 sm:h-8">
+            <path d="m3 16 4 4 4-4"></path>
+            <path d="M7 20V4"></path>
+            <path d="M20 8h-5"></path>
+            <path d="M15 10V6.5a2.5 2.5 0 0 1 5 0V10"></path>
+            <path d="M15 14h5l-5 6h5"></path>
+        </svg>
+    </IconSvg>
+
+    <OptionsContent>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-xs sm:text-sm font-medium mb-1">Sort Order</label>
+                <select @bind="_sortOrder" class="w-full bg-background border border-input rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                    <option value="Alphabetical">Alphabetical (A-Z)</option>
+                    <option value="ReverseAlphabetical">Reverse Alphabetical (Z-A)</option>
+                    <option value="ByLength">By Length (Shortest First)</option>
+                    <option value="ReverseByLength">By Length (Longest First)</option>
+                </select>
+            </div>
+            <div class="flex items-center">
+                <label class="flex items-center gap-2 cursor-pointer mt-6">
+                    <input type="checkbox" @bind="_ignoreCase" class="w-4 h-4 text-primary rounded focus:ring-primary">
+                    <span class="text-xs sm:text-sm">Ignore Case</span>
+                </label>
+            </div>
+        </div>
+    </OptionsContent>
+</TextFormattingLayout>
+
+@code {
+    private string _outputText = string.Empty;
+    private string _sortOrder = "Alphabetical";
+    private bool _ignoreCase = true;
+
+    private void ProcessText(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+        {
+            _outputText = string.Empty;
+            return;
+        }
+
+        var lines = input.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None).ToList();
+        
+        var comparer = _ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal;
+
+        switch (_sortOrder)
+        {
+            case "Alphabetical":
+                lines.Sort(comparer);
+                break;
+            case "ReverseAlphabetical":
+                lines.Sort((a, b) => comparer.Compare(b, a));
+                break;
+            case "ByLength":
+                lines = lines.OrderBy(l => l.Length).ThenBy(l => l, comparer).ToList();
+                break;
+            case "ReverseByLength":
+                lines = lines.OrderByDescending(l => l.Length).ThenBy(l => l, comparer).ToList();
+                break;
+        }
+
+        _outputText = string.Join(Environment.NewLine, lines);
+    }
+}

@@ -1,0 +1,104 @@
+@page "/text-aligner"
+@using TextHub.Components.Forms
+@using System.Text
+
+<TextFormattingLayout 
+    PageTitle="Text Aligner"
+    ToolName="Text Aligner"
+    Description="Align text to left, center, right, or justify"
+    ConvertButtonText="Align Text"
+    Route="/text-aligner"
+    @bind-Output="_outputText"
+    OnConvert="ProcessText">
+    
+    <IconSvg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-align-left w-6 h-6 sm:w-8 sm:h-8">
+            <line x1="21" x2="3" y1="6" y2="6"></line>
+            <line x1="15" x2="3" y1="12" y2="12"></line>
+            <line x1="17" x2="3" y1="18" y2="18"></line>
+        </svg>
+    </IconSvg>
+
+    <OptionsContent>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-xs sm:text-sm font-medium mb-1">Alignment</label>
+                <select @bind="_alignment" class="w-full bg-background border border-input rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                    <option value="Left">Left</option>
+                    <option value="Center">Center</option>
+                    <option value="Right">Right</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-xs sm:text-sm font-medium mb-1">Line Width (characters)</label>
+                <input type="number" @bind="_lineWidth" min="10" max="200" class="w-full bg-background border border-input rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary" />
+            </div>
+        </div>
+    </OptionsContent>
+</TextFormattingLayout>
+
+@code {
+    private string _outputText = string.Empty;
+    private string _alignment = "Center";
+    private int _lineWidth = 80;
+
+    private void ProcessText(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+        {
+            _outputText = string.Empty;
+            return;
+        }
+
+        var lines = input.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+        var sb = new StringBuilder();
+
+        foreach (var line in lines)
+        {
+            var trimmed = line.Trim();
+            if (trimmed.Length == 0)
+            {
+                sb.AppendLine();
+                continue;
+            }
+
+            if (_alignment == "Left")
+            {
+                sb.AppendLine(trimmed);
+            }
+            else if (_alignment == "Right")
+            {
+                int spacesToPad = _lineWidth - trimmed.Length;
+                if (spacesToPad > 0)
+                {
+                    sb.AppendLine(new string(' ', spacesToPad) + trimmed);
+                }
+                else
+                {
+                    sb.AppendLine(trimmed);
+                }
+            }
+            else if (_alignment == "Center")
+            {
+                int spacesToPad = _lineWidth - trimmed.Length;
+                if (spacesToPad > 0)
+                {
+                    int leftPad = spacesToPad / 2;
+                    sb.AppendLine(new string(' ', leftPad) + trimmed);
+                }
+                else
+                {
+                    sb.AppendLine(trimmed);
+                }
+            }
+        }
+
+        // Remove trailing newline
+        if (sb.Length >= Environment.NewLine.Length)
+        {
+            sb.Length -= Environment.NewLine.Length;
+        }
+        
+        _outputText = sb.ToString();
+    }
+}

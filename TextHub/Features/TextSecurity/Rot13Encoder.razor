@@ -1,0 +1,49 @@
+@page "/rot13-encoder"
+@using TextHub.Components.Forms
+@using System.Text
+
+<SimpleToolLayout 
+    PageTitle="ROT13 Encoder"
+    ToolName="ROT13 Encoder"
+    Description="Encode or decode text using ROT13"
+    ConvertButtonText="Apply ROT13"
+    UseCaseDescription="Perfect for hiding spoilers or solving simple geocache puzzles"
+    CategoryName="Text Security Tools"
+    Route="/rot13-encoder"
+    ConvertFunction="ApplyRot13">
+    
+    <IconSvg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-replace w-6 h-6 sm:w-8 sm:h-8 text-primary">
+            <path d="M14 4c0-1.1.9-2 2-2"></path>
+            <path d="M20 2c1.1 0 2 .9 2 2"></path>
+            <path d="M22 8c0 1.1-.9 2-2 2"></path>
+            <path d="M16 10c-1.1 0-2-.9-2-2"></path>
+            <path d="m3 7 3 3 3-3"></path>
+            <path d="M6 10V5c0-1.7 1.3-3 3-3h1"></path>
+            <rect width="8" height="8" x="2" y="14" rx="2"></rect>
+        </svg>
+    </IconSvg>
+</SimpleToolLayout>
+
+@code {
+    private string ApplyRot13(string input)
+    {
+        if (string.IsNullOrEmpty(input)) return string.Empty;
+
+        var sb = new StringBuilder();
+        foreach (char c in input)
+        {
+            if (char.IsLetter(c))
+            {
+                char offset = char.IsUpper(c) ? 'A' : 'a';
+                sb.Append((char)(((c + 13 - offset) % 26) + offset));
+            }
+            else
+            {
+                sb.Append(c);
+            }
+        }
+
+        return sb.ToString();
+    }
+}

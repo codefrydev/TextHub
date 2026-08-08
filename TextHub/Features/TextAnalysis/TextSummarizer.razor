@@ -1,0 +1,114 @@
+@page "/text-summarizer"
+@using TextHub.Components.Forms
+@using System.Text.RegularExpressions
+
+<SimpleToolLayout 
+    PageTitle="Text Summarizer"
+    ToolName="Text Summarizer"
+    Description="Generate a quick summary of your text"
+    ConvertButtonText="Summarize Text"
+    UseCaseDescription="Extract the most important sentences from a long article or document."
+    CategoryName="Text Analysis Tools"
+    Route="/text-summarizer"
+    ConvertFunction="SummarizeText">
+    
+    <IconSvg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text w-6 h-6 sm:w-8 sm:h-8 text-primary">
+            <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path>
+            <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
+            <path d="M10 9H8"></path>
+            <path d="M16 13H8"></path>
+            <path d="M16 17H8"></path>
+        </svg>
+    </IconSvg>
+</SimpleToolLayout>
+
+@code {
+    private static readonly HashSet<string> StopWords = new(StringComparer.OrdinalIgnoreCase) 
+    { 
+        "the", "be", "to", "of", "and", "a", "in", "that", "have", "i", "it", "for", "not", "on", "with", "he", "as", "you", "do", "at", 
+        "this", "but", "his", "by", "from", "they", "we", "say", "her", "she", "or", "an", "will", "my", "one", "all", "would", "there", 
+        "their", "what", "so", "up", "out", "if", "about", "who", "get", "which", "go", "me", "when", "make", "can", "like", "time", "no", 
+        "just", "him", "know", "take", "people", "into", "year", "your", "good", "some", "could", "them", "see", "other", "than", "then", 
+        "now", "look", "only", "come", "its", "over", "think", "also", "back", "after", "use", "two", "how", "our", "work", "first", "well", 
+        "way", "even", "new", "want", "because", "any", "these", "give", "day", "most", "us"
+    };
+
+    private string SummarizeText(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input)) return "No text provided.";
+
+        // Split into sentences
+        var sentences = Regex.Split(input, @"(?<=[\.!\?])\s+")
+                             .Where(s => !string.IsNullOrWhiteSpace(s))
+                             .Select(s => s.Trim())
+                             .ToList();
+
+        if (sentences.Count <= 3)
+        {
+            return "Text is too short to summarize. (3 sentences or fewer)";
+        }
+
+        // Calculate word frequencies
+        string cleanText = Regex.Replace(input.ToLowerInvariant(), @"[^\w\s]", "");
+        var words = cleanText.Split(new[] { ' ', '\r', '\n', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+        
+        var wordFrequencies = new Dictionary<string, int>();
+        foreach (var word in words)
+        {
+            if (word.Length > 2 && !StopWords.Contains(word))
+            {
+                if (wordFrequencies.ContainsKey(word))
+                    wordFrequencies[word]++;
+                else
+                    wordFrequencies[word] = 1;
+            }
+        }
+
+        if (wordFrequencies.Count == 0) return "Not enough meaningful content to summarize.";
+
+        int maxFreq = wordFrequencies.Values.Max();
+
+        // Score sentences
+        var sentenceScores = new Dictionary<string, double>();
+        foreach (var sentence in sentences)
+        {
+            double score = 0;
+            var sentenceWords = Regex.Replace(sentence.ToLowerInvariant(), @"[^\w\s]", "")
+                                     .Split(new[] { ' ', '\r', '\n', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+            
+            foreach (var word in sentenceWords)
+            {
+                if (wordFrequencies.ContainsKey(word))
+                {
+                    score += (double)wordFrequencies[word] / maxFreq;
+                }
+            }
+            
+            // Normalize by length to prevent extremely long sentences from always winning
+            if (sentenceWords.Length > 0)
+            {
+                score = score / sentenceWords.Length;
+            }
+            
+            // Avoid duplicate sentences messing up the dictionary
+            if (!sentenceScores.ContainsKey(sentence))
+            {
+                sentenceScores.Add(sentence, score);
+            }
+        }
+
+        // Pick top 30% of sentences (min 2, max 7)
+        int summaryLength = (int)Math.Max(2, Math.Min(7, Math.Ceiling(sentences.Count * 0.3)));
+        
+        var topSentences = sentenceScores.OrderByDescending(kvp => kvp.Value)
+                                         .Take(summaryLength)
+                                         .Select(kvp => kvp.Key)
+                                         .ToList();
+
+        // Reorder sentences to match their original appearance in the text
+        var orderedSummary = sentences.Where(s => topSentences.Contains(s)).ToList();
+
+        return "(Extractive Summary - " + summaryLength + " sentences)\n\n" + string.Join(" ", orderedSummary);
+    }
+}

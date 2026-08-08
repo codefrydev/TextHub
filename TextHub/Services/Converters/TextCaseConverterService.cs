@@ -198,6 +198,155 @@ public class TextCaseConverterService
         return result.ToString();
     }
 
+    public string ConvertToConstantCase(string input)
+    {
+        return ConvertToScreamingSnakeCase(input);
+    }
+
+    public string ConvertToScreamingSnakeCase(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+            return string.Empty;
+
+        var words = SplitIntoWords(input);
+        if (words.Count == 0)
+            return string.Empty;
+
+        var result = new StringBuilder();
+        
+        for (int i = 0; i < words.Count; i++)
+        {
+            if (i > 0)
+            {
+                result.Append("_");
+            }
+            result.Append(words[i].ToUpper());
+        }
+
+        return result.ToString();
+    }
+
+    public string ConvertToDotCase(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+            return string.Empty;
+
+        var words = SplitIntoWords(input);
+        if (words.Count == 0)
+            return string.Empty;
+
+        var result = new StringBuilder();
+        
+        for (int i = 0; i < words.Count; i++)
+        {
+            if (i > 0)
+            {
+                result.Append(".");
+            }
+            result.Append(words[i].ToLower());
+        }
+
+        return result.ToString();
+    }
+
+    public string ConvertToPathCase(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+            return string.Empty;
+
+        var words = SplitIntoWords(input);
+        if (words.Count == 0)
+            return string.Empty;
+
+        var result = new StringBuilder();
+        
+        for (int i = 0; i < words.Count; i++)
+        {
+            if (i > 0)
+            {
+                result.Append("/");
+            }
+            result.Append(words[i].ToLower());
+        }
+
+        return result.ToString();
+    }
+
+    public string ConvertToHeaderCase(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+            return string.Empty;
+
+        var words = SplitIntoWords(input);
+        if (words.Count == 0)
+            return string.Empty;
+
+        var result = new StringBuilder();
+        
+        for (int i = 0; i < words.Count; i++)
+        {
+            if (i > 0)
+            {
+                result.Append("-");
+            }
+            result.Append(CapitalizeWord(words[i]));
+        }
+
+        return result.ToString();
+    }
+
+    public string ConvertToTrainCase(string input)
+    {
+        return ConvertToHeaderCase(input);
+    }
+
+    public string ConvertToParamCase(string input)
+    {
+        return ConvertToKebabCase(input);
+    }
+
+    public string ConvertToCobolCase(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+            return string.Empty;
+
+        var words = SplitIntoWords(input);
+        if (words.Count == 0)
+            return string.Empty;
+
+        var result = new StringBuilder();
+        
+        for (int i = 0; i < words.Count; i++)
+        {
+            if (i > 0)
+            {
+                result.Append("-");
+            }
+            result.Append(words[i].ToUpper());
+        }
+
+        return result.ToString();
+    }
+
+    public string ConvertToFlatCase(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+            return string.Empty;
+
+        var words = SplitIntoWords(input);
+        if (words.Count == 0)
+            return string.Empty;
+
+        var result = new StringBuilder();
+        
+        for (int i = 0; i < words.Count; i++)
+        {
+            result.Append(words[i].ToLower());
+        }
+
+        return result.ToString();
+    }
+
     private List<string> SplitIntoWords(string text)
     {
         var words = new List<string>();

@@ -1,0 +1,89 @@
+@page "/hex-converter"
+@using TextHub.Components.Forms
+@using System.Text
+@using System.Linq
+@using System.Globalization
+
+<SimpleToolLayout 
+    PageTitle="Hex Converter"
+    ToolName="Hex Converter"
+    Description="Convert text to hexadecimal and vice versa"
+    ConvertButtonText="@(_direction == "ToHex" ? "Convert to Hex" : "Convert to Text")"
+    UseCaseDescription="Perfect for viewing low-level byte representation of text"
+    CategoryName="Text Conversion Tools"
+    Route="/hex-converter"
+    ConvertFunction="ConvertData">
+    
+    <IconSvg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-hash w-6 h-6 sm:w-8 sm:h-8 text-primary">
+            <line x1="4" x2="20" y1="9" y2="9"></line>
+            <line x1="4" x2="20" y1="15" y2="15"></line>
+            <line x1="10" x2="8" y1="3" y2="21"></line>
+            <line x1="16" x2="14" y1="3" y2="21"></line>
+        </svg>
+    </IconSvg>
+
+    <OptionsContent>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-xs sm:text-sm font-medium mb-1">Conversion Direction</label>
+                <select @bind="_direction" class="w-full bg-background border border-input rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                    <option value="ToHex">Text to Hexadecimal</option>
+                    <option value="ToText">Hexadecimal to Text</option>
+                </select>
+            </div>
+            @if (_direction == "ToHex")
+            {
+                <div class="flex items-center">
+                    <label class="flex items-center gap-2 cursor-pointer mt-6">
+                        <input type="checkbox" @bind="_addSpaces" class="w-4 h-4 text-primary rounded focus:ring-primary">
+                        <span class="text-xs sm:text-sm">Add Spaces Between Bytes</span>
+                    </label>
+                </div>
+            }
+        </div>
+    </OptionsContent>
+</SimpleToolLayout>
+
+@code {
+    private string _direction = "ToHex";
+    private bool _addSpaces = true;
+
+    private string ConvertData(string input)
+    {
+        if (string.IsNullOrEmpty(input)) return string.Empty;
+
+        try
+        {
+            if (_direction == "ToHex")
+            {
+                var bytes = Encoding.UTF8.GetBytes(input);
+                var hex = Convert.ToHexString(bytes);
+                if (_addSpaces)
+                {
+                    return string.Join(" ", Enumerable.Range(0, hex.Length / 2).Select(i => hex.Substring(i * 2, 2)));
+                }
+                return hex;
+            }
+            else // ToText
+            {
+                var cleanHex = input.Replace(" ", "").Replace("-", "").Replace("0x", "").Replace("\r", "").Replace("\n", "");
+                if (cleanHex.Length % 2 != 0)
+                {
+                    return "Invalid Hex length. Must be an even number of characters.";
+                }
+                
+                var bytes = new byte[cleanHex.Length / 2];
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    bytes[i] = byte.Parse(cleanHex.Substring(i * 2, 2), NumberStyles.HexNumber);
+                }
+                return Encoding.UTF8.GetString(bytes);
+            }
+        }
+        catch
+        {
+            return "Invalid input for the selected conversion.";
+        }
+    }
+}

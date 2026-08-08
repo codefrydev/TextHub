@@ -1,0 +1,150 @@
+@page "/speech-to-text"
+@using TextHub.Services.Data
+@using TextHub.Components.Shared
+@using System.Text
+@inject JsonLdService JsonLdService
+@inject ToolDataService ToolDataService
+@inject MetaTagsService MetaTagsService
+@inject IJSRuntime JSRuntime
+@implements IDisposable
+
+<PageTitle>Speech to Text - Text Hub</PageTitle>
+
+<DynamicMetaTags MetaTags="@_metaTags" />
+<DynamicJsonLd JsonLdContent="@_jsonLdContent" Id="speechtotext-jsonld" />
+
+<main class="flex-1">
+    <div class="container mx-auto px-4 py-8 md:py-12 animate-fade-in">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-8 md:mb-10">
+                <div class="inline-flex items-center justify-center p-2.5 sm:p-3 bg-primary/10 rounded-lg mb-3 md:mb-4 text-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mic w-6 h-6 sm:w-8 sm:h-8"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" x2="12" y1="19" y2="22"></line></svg>
+                </div>
+                <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 md:mb-4">
+                    <span class="text-gradient">Speech to Text</span>
+                </h1>
+                <p class="text-base sm:text-lg text-muted-foreground px-4">Convert your spoken words into text using your microphone</p>
+            </div>
+            
+            <div class="grid gap-4 md:gap-6 max-w-2xl mx-auto">
+                <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center animate-fade-in" style="animation-delay: 100ms;">
+                    @if (!_isListening)
+                    {
+                        <button @onclick="StartListening" class="btn-primary w-full sm:w-auto text-sm sm:text-base">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mic w-4 h-4 mr-2 inline">
+                                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" x2="12" y1="19" y2="22"></line>
+                            </svg>
+                            Start Listening
+                        </button>
+                    }
+                    else
+                    {
+                        <button @onclick="StopListening" class="w-full sm:w-auto text-sm sm:text-base bg-destructive hover:bg-destructive/90 text-destructive-foreground px-4 py-2 rounded-md font-medium transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square w-4 h-4 mr-2 inline">
+                                <rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect>
+                            </svg>
+                            Stop Listening
+                        </button>
+                    }
+                    <button @onclick="ClearText" class="btn-secondary w-full sm:w-auto text-sm sm:text-base">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2 w-4 h-4 mr-2 inline">
+                            <path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line>
+                        </svg>
+                        Clear
+                    </button>
+                </div>
+
+                <div class="animate-fade-in relative" style="animation-delay: 200ms;">
+                    <label class="block text-sm font-medium mb-2">Transcript</label>
+                    <textarea 
+                        @bind="_finalText" 
+                        class="input-area min-h-[150px] sm:min-h-[200px] text-sm sm:text-base w-full"
+                        placeholder="Your speech will appear here..."></textarea>
+                    
+                    @if (_isListening)
+                    {
+                        <div class="absolute bottom-4 right-4 flex items-center gap-2 text-primary text-sm font-medium animate-pulse">
+                            <span class="relative flex h-3 w-3">
+                              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                              <span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
+                            </span>
+                            Listening...
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(_interimText))
+                    {
+                        <div class="text-sm text-muted-foreground mt-2 italic">
+                            @_interimText
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@code {
+    private string _jsonLdContent = string.Empty;
+    private MetaTagsData? _metaTags;
+    private string _finalText = string.Empty;
+    private string _interimText = string.Empty;
+    private bool _isListening = false;
+    private DotNetObjectReference<SpeechToText>? _dotNetRef;
+
+    protected override void OnInitialized()
+    {
+        var tool = ToolDataService.GetAllTools().FirstOrDefault(t => t.Href == "/speech-to-text");
+        if (tool != null)
+        {
+            _jsonLdContent = JsonLdService.GenerateToolPageJsonLd(tool, "Text Utility Tools");
+            _metaTags = MetaTagsService.GetToolPageMetaTags(tool, "Text Utility Tools");
+        }
+        _dotNetRef = DotNetObjectReference.Create(this);
+    }
+
+    private async Task StartListening()
+    {
+        _isListening = true;
+        bool started = await JSRuntime.InvokeAsync<bool>("startSpeechRecognition", _dotNetRef);
+        if (!started)
+        {
+            _isListening = false;
+        }
+    }
+
+    private async Task StopListening()
+    {
+        _isListening = false;
+        await JSRuntime.InvokeVoidAsync("stopSpeechRecognition");
+    }
+
+    [JSInvokable]
+    public void UpdateSpeechTranscript(string finalTranscript, string interimTranscript)
+    {
+        if (!string.IsNullOrEmpty(finalTranscript))
+        {
+            _finalText += finalTranscript + " ";
+        }
+        _interimText = interimTranscript;
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public void OnSpeechRecognitionEnded()
+    {
+        _isListening = false;
+        _interimText = string.Empty;
+        StateHasChanged();
+    }
+
+    private void ClearText()
+    {
+        _finalText = string.Empty;
+        _interimText = string.Empty;
+    }
+
+    public void Dispose()
+    {
+        _dotNetRef?.Dispose();
+    }
+}

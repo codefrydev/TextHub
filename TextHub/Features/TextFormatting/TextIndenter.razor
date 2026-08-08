@@ -1,0 +1,105 @@
+@page "/text-indenter"
+@using TextHub.Components.Forms
+@using System.Text
+
+<TextFormattingLayout 
+    PageTitle="Text Indenter"
+    ToolName="Text Indenter"
+    Description="Add or remove indentation from text"
+    ConvertButtonText="Apply Indentation"
+    Route="/text-indenter"
+    @bind-Output="_outputText"
+    OnConvert="ProcessText">
+    
+    <IconSvg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-indent w-6 h-6 sm:w-8 sm:h-8">
+            <polyline points="7 8 3 12 7 16"></polyline>
+            <line x1="21" x2="11" y1="12" y2="12"></line>
+            <line x1="21" x2="11" y1="6" y2="6"></line>
+            <line x1="21" x2="11" y1="18" y2="18"></line>
+        </svg>
+    </IconSvg>
+
+    <OptionsContent>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+                <label class="block text-xs sm:text-sm font-medium mb-1">Action</label>
+                <select @bind="_action" class="w-full bg-background border border-input rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                    <option value="Indent">Indent</option>
+                    <option value="Outdent">Outdent</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-xs sm:text-sm font-medium mb-1">Indent Type</label>
+                <select @bind="_indentType" class="w-full bg-background border border-input rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                    <option value="Spaces">Spaces</option>
+                    <option value="Tabs">Tabs</option>
+                </select>
+            </div>
+            @if (_indentType == "Spaces")
+            {
+                <div>
+                    <label class="block text-xs sm:text-sm font-medium mb-1">Indent Size</label>
+                    <input type="number" @bind="_indentSize" min="1" max="16" class="w-full bg-background border border-input rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary" />
+                </div>
+            }
+        </div>
+    </OptionsContent>
+</TextFormattingLayout>
+
+@code {
+    private string _outputText = string.Empty;
+    private string _action = "Indent";
+    private string _indentType = "Spaces";
+    private int _indentSize = 4;
+
+    private void ProcessText(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+        {
+            _outputText = string.Empty;
+            return;
+        }
+
+        var lines = input.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+        var sb = new StringBuilder();
+        
+        string indentString = _indentType == "Tabs" ? "\t" : new string(' ', _indentSize);
+
+        foreach (var line in lines)
+        {
+            if (line.Length == 0)
+            {
+                sb.AppendLine();
+                continue;
+            }
+
+            if (_action == "Indent")
+            {
+                sb.AppendLine(indentString + line);
+            }
+            else // Outdent
+            {
+                if (_indentType == "Tabs" && line.StartsWith("\t"))
+                {
+                    sb.AppendLine(line.Substring(1));
+                }
+                else if (_indentType == "Spaces" && line.StartsWith(indentString))
+                {
+                    sb.AppendLine(line.Substring(indentString.Length));
+                }
+                else
+                {
+                    sb.AppendLine(line);
+                }
+            }
+        }
+
+        if (sb.Length >= Environment.NewLine.Length)
+        {
+            sb.Length -= Environment.NewLine.Length;
+        }
+        
+        _outputText = sb.ToString();
+    }
+}

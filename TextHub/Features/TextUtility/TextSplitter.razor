@@ -1,0 +1,76 @@
+@page "/text-splitter"
+@using TextHub.Components.Forms
+@using System.Text
+
+<SimpleToolLayout 
+    PageTitle="Text Splitter"
+    ToolName="Text Splitter"
+    Description="Split a single string into multiple lines based on a delimiter"
+    ConvertButtonText="Split Text"
+    UseCaseDescription="Perfect for breaking apart comma-separated lists into individual lines"
+    CategoryName="Text Utility Tools"
+    Route="/text-splitter"
+    ConvertFunction="SplitText">
+    
+    <IconSvg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-split w-6 h-6 sm:w-8 sm:h-8 text-primary">
+            <path d="M16 3h5v5"></path>
+            <path d="M8 3H3v5"></path>
+            <path d="M12 22v-8.3a4 4 0 0 0-1.17-2.83L3 3"></path>
+            <path d="m15 9 6-6"></path>
+        </svg>
+    </IconSvg>
+
+    <OptionsContent>
+        <div class="grid grid-cols-1 gap-4 max-w-sm">
+            <div>
+                <label class="block text-xs sm:text-sm font-medium mb-1">Delimiter</label>
+                <select @bind="_delimiterType" class="w-full bg-background border border-input rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                    <option value="comma">Comma (,)</option>
+                    <option value="space">Space ( )</option>
+                    <option value="semicolon">Semicolon (;)</option>
+                    <option value="pipe">Pipe (|)</option>
+                    <option value="custom">Custom</option>
+                </select>
+            </div>
+            
+            @if (_delimiterType == "custom")
+            {
+                <div>
+                    <label class="block text-xs sm:text-sm font-medium mb-1">Custom Delimiter</label>
+                    <input type="text" @bind="_customDelimiter" class="w-full bg-background border border-input rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary" />
+                </div>
+            }
+        </div>
+    </OptionsContent>
+</SimpleToolLayout>
+
+@code {
+    private string _delimiterType = "comma";
+    private string _customDelimiter = "-";
+
+    private string SplitText(string input)
+    {
+        if (string.IsNullOrEmpty(input)) return string.Empty;
+
+        var delimiter = _delimiterType switch
+        {
+            "comma" => ",",
+            "space" => " ",
+            "semicolon" => ";",
+            "pipe" => "|",
+            "custom" => _customDelimiter,
+            _ => ","
+        };
+
+        if (string.IsNullOrEmpty(delimiter))
+        {
+            return input;
+        }
+
+        var segments = input.Split(new[] { delimiter }, StringSplitOptions.None)
+                            .Select(s => s.Trim());
+
+        return string.Join(Environment.NewLine, segments);
+    }
+}

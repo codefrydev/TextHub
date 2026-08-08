@@ -1,0 +1,69 @@
+@page "/plagiarism-checker"
+@using TextHub.Components.Forms
+@using System.Text.RegularExpressions
+
+<SimpleToolLayout 
+    PageTitle="Plagiarism Checker"
+    ToolName="Plagiarism Checker"
+    Description="Extract key unique sentences to verify originality online"
+    ConvertButtonText="Generate Verification Links"
+    UseCaseDescription="Because this app runs entirely in your browser without an API, it extracts the most unique sentences and formats them for Google search to manually check for plagiarism."
+    CategoryName="Text Analysis Tools"
+    Route="/plagiarism-checker"
+    ConvertFunction="GeneratePlagiarismChecks">
+    
+    <IconSvg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-check w-6 h-6 sm:w-8 sm:h-8 text-primary">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            <path d="M9 12l2 2 4-4"></path>
+        </svg>
+    </IconSvg>
+</SimpleToolLayout>
+
+@code {
+    private string GeneratePlagiarismChecks(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input)) return "No text provided.";
+
+        // Split into sentences
+        var sentences = Regex.Split(input, @"(?<=[\.!\?])\s+")
+                             .Where(s => !string.IsNullOrWhiteSpace(s))
+                             .Select(s => s.Trim())
+                             .Where(s => s.Split(' ').Length > 6) // Only take sentences with more than 6 words
+                             .ToList();
+
+        if (sentences.Count == 0)
+        {
+            return "Text does not contain any sentences long enough to reliably check for plagiarism.";
+        }
+
+        var result = new System.Text.StringBuilder();
+        result.AppendLine("Instructions: Copy the quoted strings below and paste them into Google to check for exact matches online.\n");
+
+        // Take up to 3 random sentences from different parts of the text
+        int numChecks = Math.Min(3, sentences.Count);
+        
+        // Take first sentence
+        result.AppendLine("Check 1 (Start of text):");
+        result.AppendLine($"\"{sentences.First()}\"");
+        result.AppendLine();
+
+        if (numChecks > 1)
+        {
+            // Take a middle sentence
+            int midIndex = sentences.Count / 2;
+            result.AppendLine("Check 2 (Middle of text):");
+            result.AppendLine($"\"{sentences[midIndex]}\"");
+            result.AppendLine();
+        }
+
+        if (numChecks > 2)
+        {
+            // Take the last sentence
+            result.AppendLine("Check 3 (End of text):");
+            result.AppendLine($"\"{sentences.Last()}\"");
+        }
+
+        return result.ToString();
+    }
+}

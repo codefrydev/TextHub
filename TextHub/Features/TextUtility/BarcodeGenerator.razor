@@ -1,0 +1,91 @@
+@page "/barcode-generator"
+@using TextHub.Services.Data
+@using TextHub.Components.Shared
+@using System.Net
+@inject JsonLdService JsonLdService
+@inject ToolDataService ToolDataService
+@inject MetaTagsService MetaTagsService
+
+<PageTitle>Barcode Generator - Text Hub</PageTitle>
+
+<DynamicMetaTags MetaTags="@_metaTags" />
+<DynamicJsonLd JsonLdContent="@_jsonLdContent" Id="barcodegenerator-jsonld" />
+
+<main class="flex-1">
+    <div class="container mx-auto px-4 py-8 md:py-12 animate-fade-in">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-8 md:mb-10">
+                <div class="inline-flex items-center justify-center p-2.5 sm:p-3 bg-primary/10 rounded-lg mb-3 md:mb-4 text-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-barcode w-6 h-6 sm:w-8 sm:h-8"><path d="M3 5v14"></path><path d="M8 5v14"></path><path d="M12 5v14"></path><path d="M17 5v14"></path><path d="M21 5v14"></path></svg>
+                </div>
+                <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 md:mb-4">
+                    <span class="text-gradient">Barcode Generator</span>
+                </h1>
+                <p class="text-base sm:text-lg text-muted-foreground px-4">Generate 1D barcodes from text instantly</p>
+            </div>
+            
+            <div class="grid gap-4 md:gap-6 max-w-2xl mx-auto">
+                <div class="mb-4 p-4 bg-muted/30 rounded-lg border border-border animate-fade-in" style="animation-delay: 100ms;">
+                    <label class="block text-sm font-medium mb-1">Barcode Format</label>
+                    <select @bind="_format" class="w-full bg-background border border-input rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                        <option value="code128">Code 128 (Most common for alphanumeric)</option>
+                        <option value="code39">Code 39</option>
+                        <option value="ean13">EAN-13 (Numeric only, exactly 12 or 13 digits)</option>
+                        <option value="upc">UPC-A (Numeric only, exactly 11 or 12 digits)</option>
+                    </select>
+                </div>
+
+                <div class="animate-fade-in" style="animation-delay: 150ms;">
+                    <label class="block text-sm font-medium mb-2">Text or ID to Encode</label>
+                    <input type="text"
+                        @bind="_inputText" 
+                        @bind:event="oninput"
+                        placeholder="Enter text or number here..." 
+                        class="w-full bg-background border border-input rounded-md px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary" />
+                </div>
+
+                <div class="flex flex-col items-center justify-center animate-fade-in mt-4" style="animation-delay: 200ms;">
+                    <label class="block text-sm font-medium mb-4 w-full text-left">Generated Barcode</label>
+                    <div class="p-4 bg-white rounded-lg shadow-sm border border-border inline-block min-w-[300px] text-center">
+                        @if (!string.IsNullOrWhiteSpace(_inputText))
+                        {
+                            <img src="@($"https://barcodeapi.org/api/{_format}/{Uri.EscapeDataString(_inputText)}")" alt="Generated Barcode" class="h-32 mx-auto object-contain" />
+                        }
+                        else
+                        {
+                            <div class="h-32 flex items-center justify-center bg-muted/50 rounded-md">
+                                <span class="text-muted-foreground text-sm px-4">Enter text above to generate a Barcode</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 md:mt-12 p-4 md:p-6 bg-muted/30 rounded-lg animate-fade-in max-w-2xl mx-auto" style="animation-delay: 300ms;">
+                <h2 class="text-lg md:text-xl font-semibold mb-2 md:mb-3">How it works</h2>
+                <ul class="space-y-1.5 md:space-y-2 text-sm md:text-base text-muted-foreground">
+                    <li>• Type or paste a short string of text or numbers into the input box.</li>
+                    <li>• Ensure you are using the correct barcode format (e.g. UPC requires exact numbers).</li>
+                    <li>• You can right-click the generated barcode image to save it.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</main>
+
+@code {
+    private string _jsonLdContent = string.Empty;
+    private MetaTagsData? _metaTags;
+    private string _inputText = string.Empty;
+    private string _format = "code128";
+
+    protected override void OnInitialized()
+    {
+        var tool = ToolDataService.GetAllTools().FirstOrDefault(t => t.Href == "/barcode-generator");
+        if (tool != null)
+        {
+            _jsonLdContent = JsonLdService.GenerateToolPageJsonLd(tool, "Text Utility Tools");
+            _metaTags = MetaTagsService.GetToolPageMetaTags(tool, "Text Utility Tools");
+        }
+    }
+}

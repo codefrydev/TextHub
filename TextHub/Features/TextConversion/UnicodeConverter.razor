@@ -1,0 +1,74 @@
+@page "/unicode-converter"
+@using TextHub.Components.Forms
+@using System.Text
+@using System.Linq
+
+<SimpleToolLayout 
+    PageTitle="Unicode Converter"
+    ToolName="Unicode Converter"
+    Description="Convert text to Unicode codes and vice versa"
+    ConvertButtonText="@(_direction == "ToUnicode" ? "Convert to Unicode" : "Convert to Text")"
+    UseCaseDescription="Perfect for encoding text with \\uXXXX escape sequences"
+    CategoryName="Text Conversion Tools"
+    Route="/unicode-converter"
+    ConvertFunction="ConvertData">
+    
+    <IconSvg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-globe w-6 h-6 sm:w-8 sm:h-8 text-primary">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="2" x2="22" y1="12" y2="12"></line>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+    </IconSvg>
+
+    <OptionsContent>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-xs sm:text-sm font-medium mb-1">Conversion Direction</label>
+                <select @bind="_direction" class="w-full bg-background border border-input rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                    <option value="ToUnicode">Text to Unicode (\uXXXX)</option>
+                    <option value="ToText">Unicode to Text</option>
+                </select>
+            </div>
+        </div>
+    </OptionsContent>
+</SimpleToolLayout>
+
+@code {
+    private string _direction = "ToUnicode";
+
+    private string ConvertData(string input)
+    {
+        if (string.IsNullOrEmpty(input)) return string.Empty;
+
+        try
+        {
+            if (_direction == "ToUnicode")
+            {
+                var sb = new StringBuilder();
+                foreach (char c in input)
+                {
+                    if (c > 127) // Only escape non-ASCII, or we can escape everything
+                    {
+                        sb.Append("\\u");
+                        sb.Append(((int)c).ToString("x4"));
+                    }
+                    else
+                    {
+                        sb.Append(c);
+                    }
+                }
+                return sb.ToString();
+            }
+            else // ToText
+            {
+                // Basic unescape logic for \uXXXX
+                return System.Text.RegularExpressions.Regex.Unescape(input);
+            }
+        }
+        catch
+        {
+            return "Invalid input for the selected conversion.";
+        }
+    }
+}

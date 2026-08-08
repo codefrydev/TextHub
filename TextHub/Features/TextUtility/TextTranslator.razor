@@ -1,0 +1,97 @@
+@page "/text-translator"
+@using TextHub.Services.Data
+@using TextHub.Components.Shared
+@using System.Net
+@inject JsonLdService JsonLdService
+@inject ToolDataService ToolDataService
+@inject MetaTagsService MetaTagsService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Text Translator - Text Hub</PageTitle>
+
+<DynamicMetaTags MetaTags="@_metaTags" />
+<DynamicJsonLd JsonLdContent="@_jsonLdContent" Id="texttranslator-jsonld" />
+
+<main class="flex-1">
+    <div class="container mx-auto px-4 py-8 md:py-12 animate-fade-in">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-8 md:mb-10">
+                <div class="inline-flex items-center justify-center p-2.5 sm:p-3 bg-primary/10 rounded-lg mb-3 md:mb-4 text-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-languages w-6 h-6 sm:w-8 sm:h-8"><path d="m5 8 6 6"></path><path d="m4 14 6-6 2-3"></path><path d="M2 5h12"></path><path d="M7 2h1"></path><path d="m22 22-5-10-5 10"></path><path d="M14 18h6"></path></svg>
+                </div>
+                <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 md:mb-4">
+                    <span class="text-gradient">Text Translator</span>
+                </h1>
+                <p class="text-base sm:text-lg text-muted-foreground px-4">Translate your text easily to any language</p>
+            </div>
+            
+            <div class="grid gap-4 md:gap-6 max-w-2xl mx-auto">
+                <div class="animate-fade-in" style="animation-delay: 100ms;">
+                    <label class="block text-sm font-medium mb-2">Text to Translate</label>
+                    <textarea 
+                        @bind="_inputText" 
+                        placeholder="Enter text to translate..." 
+                        class="input-area min-h-[150px] sm:min-h-[200px] text-sm sm:text-base"></textarea>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 animate-fade-in" style="animation-delay: 150ms;">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Target Language</label>
+                        <select @bind="_targetLang" class="w-full bg-background border border-input rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                            <option value="es">Spanish (es)</option>
+                            <option value="fr">French (fr)</option>
+                            <option value="de">German (de)</option>
+                            <option value="zh-CN">Chinese (Simplified)</option>
+                            <option value="ja">Japanese (ja)</option>
+                            <option value="ru">Russian (ru)</option>
+                            <option value="hi">Hindi (hi)</option>
+                            <option value="ar">Arabic (ar)</option>
+                            <option value="pt">Portuguese (pt)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center animate-fade-in mt-4" style="animation-delay: 200ms;">
+                    <button @onclick="TranslateWithGoogle" class="btn-primary w-full sm:w-auto text-sm sm:text-base">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-external-link w-4 h-4 mr-2 inline">
+                            <path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        </svg>
+                        Translate in Google Translate
+                    </button>
+                </div>
+                
+                <div class="mt-4 p-4 bg-muted/30 rounded-lg text-sm text-muted-foreground text-center animate-fade-in" style="animation-delay: 250ms;">
+                    <em>Note: To ensure the highest accuracy without requiring API keys, this tool redirects your text securely to Google Translate.</em>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@code {
+    private string _jsonLdContent = string.Empty;
+    private MetaTagsData? _metaTags;
+    private string _inputText = string.Empty;
+    private string _targetLang = "es";
+
+    protected override void OnInitialized()
+    {
+        var tool = ToolDataService.GetAllTools().FirstOrDefault(t => t.Href == "/text-translator");
+        if (tool != null)
+        {
+            _jsonLdContent = JsonLdService.GenerateToolPageJsonLd(tool, "Text Utility Tools");
+            _metaTags = MetaTagsService.GetToolPageMetaTags(tool, "Text Utility Tools");
+        }
+    }
+
+    private async Task TranslateWithGoogle()
+    {
+        if (string.IsNullOrWhiteSpace(_inputText)) return;
+
+        var encodedText = Uri.EscapeDataString(_inputText);
+        var url = $"https://translate.google.com/?sl=auto&tl={_targetLang}&text={encodedText}&op=translate";
+        
+        await JSRuntime.InvokeVoidAsync("window.open", url, "_blank");
+    }
+}

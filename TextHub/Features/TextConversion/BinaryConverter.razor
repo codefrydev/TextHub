@@ -1,0 +1,66 @@
+@page "/binary-converter"
+@using TextHub.Components.Forms
+@using System.Text
+@using System.Linq
+
+<SimpleToolLayout 
+    PageTitle="Binary Converter"
+    ToolName="Binary Converter"
+    Description="Convert text to binary and vice versa"
+    ConvertButtonText="@(_direction == "ToBinary" ? "Convert to Binary" : "Convert to Text")"
+    UseCaseDescription="Perfect for encoding text for systems that require binary representations"
+    CategoryName="Text Conversion Tools"
+    Route="/binary-converter"
+    ConvertFunction="ConvertData">
+    
+    <IconSvg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-binary w-6 h-6 sm:w-8 sm:h-8 text-primary">
+            <path d="M6 20h4"></path>
+            <path d="M14 10h4"></path>
+            <path d="M6 14c2.5 0 4.5-2 4.5-4.5S8.5 5 6 5s-4.5 2-4.5 4.5S3.5 14 6 14z"></path>
+            <path d="M18 9c1.5 0 2.5-1 2.5-2.5S19.5 4 18 4s-2.5 1-2.5 2.5S16.5 9 18 9z"></path>
+            <path d="M12 2l3 4"></path>
+            <path d="M12 22l-3-4"></path>
+        </svg>
+    </IconSvg>
+
+    <OptionsContent>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-xs sm:text-sm font-medium mb-1">Conversion Direction</label>
+                <select @bind="_direction" class="w-full bg-background border border-input rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                    <option value="ToBinary">Text to Binary</option>
+                    <option value="ToText">Binary to Text</option>
+                </select>
+            </div>
+        </div>
+    </OptionsContent>
+</SimpleToolLayout>
+
+@code {
+    private string _direction = "ToBinary";
+
+    private string ConvertData(string input)
+    {
+        if (string.IsNullOrEmpty(input)) return string.Empty;
+
+        try
+        {
+            if (_direction == "ToBinary")
+            {
+                var bytes = Encoding.UTF8.GetBytes(input);
+                return string.Join(" ", bytes.Select(b => Convert.ToString(b, 2).PadLeft(8, '0')));
+            }
+            else // ToText
+            {
+                var binaryStrings = input.Split(new[] { ' ', '\r', '\n', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                var bytes = binaryStrings.Select(b => Convert.ToByte(b, 2)).ToArray();
+                return Encoding.UTF8.GetString(bytes);
+            }
+        }
+        catch
+        {
+            return "Invalid input for the selected conversion.";
+        }
+    }
+}

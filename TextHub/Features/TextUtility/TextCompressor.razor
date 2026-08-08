@@ -1,0 +1,52 @@
+@page "/text-compressor"
+@using TextHub.Components.Forms
+@using System.IO.Compression
+@using System.Text
+@using System.IO
+
+<SimpleToolLayout 
+    PageTitle="Text Compressor"
+    ToolName="Text Compressor"
+    Description="Compress long text into a shorter Base64 string"
+    ConvertButtonText="Compress Text"
+    UseCaseDescription="Perfect for shrinking large blocks of text or JSON for URL transmission"
+    CategoryName="Text Utility Tools"
+    Route="/text-compressor"
+    ConvertFunction="Compress">
+    
+    <IconSvg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-archive w-6 h-6 sm:w-8 sm:h-8 text-primary">
+            <path d="M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v1"></path>
+            <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
+            <circle cx="10" cy="20" r="2"></circle>
+            <path d="M10 7V6"></path>
+            <path d="M10 12v-1"></path>
+            <path d="M10 18v-2"></path>
+        </svg>
+    </IconSvg>
+</SimpleToolLayout>
+
+@code {
+    private string Compress(string input)
+    {
+        if (string.IsNullOrEmpty(input)) return string.Empty;
+
+        try
+        {
+            byte[] bytes = Encoding.UTF8.GetBytes(input);
+            using (var msi = new MemoryStream(bytes))
+            using (var mso = new MemoryStream())
+            {
+                using (var gs = new GZipStream(mso, CompressionMode.Compress))
+                {
+                    msi.CopyTo(gs);
+                }
+                return Convert.ToBase64String(mso.ToArray());
+            }
+        }
+        catch (Exception ex)
+        {
+            return $"Compression error: {ex.Message}";
+        }
+    }
+}

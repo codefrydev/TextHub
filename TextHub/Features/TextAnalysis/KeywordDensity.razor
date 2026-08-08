@@ -1,0 +1,69 @@
+@page "/keyword-density"
+@using TextHub.Components.Forms
+@using System.Text.RegularExpressions
+
+<SimpleToolLayout 
+    PageTitle="Keyword Density Analyzer"
+    ToolName="Keyword Density"
+    Description="Analyze the most frequently used words in your text"
+    ConvertButtonText="Analyze Keywords"
+    UseCaseDescription="Perfect for SEO optimization, checking keyword stuffing, and analyzing text themes."
+    CategoryName="Text Analysis Tools"
+    Route="/keyword-density"
+    ConvertFunction="AnalyzeDensity">
+    
+    <IconSvg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search w-6 h-6 sm:w-8 sm:h-8 text-primary">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+        </svg>
+    </IconSvg>
+</SimpleToolLayout>
+
+@code {
+    private static readonly HashSet<string> StopWords = new(StringComparer.OrdinalIgnoreCase) 
+    { 
+        "the", "be", "to", "of", "and", "a", "in", "that", "have", "i", "it", "for", "not", "on", "with", "he", "as", "you", "do", "at", 
+        "this", "but", "his", "by", "from", "they", "we", "say", "her", "she", "or", "an", "will", "my", "one", "all", "would", "there", 
+        "their", "what", "so", "up", "out", "if", "about", "who", "get", "which", "go", "me", "when", "make", "can", "like", "time", "no", 
+        "just", "him", "know", "take", "people", "into", "year", "your", "good", "some", "could", "them", "see", "other", "than", "then", 
+        "now", "look", "only", "come", "its", "over", "think", "also", "back", "after", "use", "two", "how", "our", "work", "first", "well", 
+        "way", "even", "new", "want", "because", "any", "these", "give", "day", "most", "us"
+    };
+
+    private string AnalyzeDensity(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input)) return "No text provided.";
+
+        // Convert to lowercase and remove punctuation
+        string cleanText = Regex.Replace(input.ToLowerInvariant(), @"[^\w\s]", "");
+        
+        var words = cleanText.Split(new[] { ' ', '\r', '\n', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+        int totalWords = words.Length;
+
+        if (totalWords == 0) return "No words found.";
+
+        var frequency = words
+            .Where(w => w.Length > 1 && !StopWords.Contains(w))
+            .GroupBy(w => w)
+            .Select(g => new { Word = g.Key, Count = g.Count() })
+            .OrderByDescending(x => x.Count)
+            .Take(15)
+            .ToList();
+
+        if (!frequency.Any()) return "No meaningful keywords found.";
+
+        var result = new System.Text.StringBuilder();
+        result.AppendLine($"Analyzed {totalWords} words.");
+        result.AppendLine("Top Keywords (excluding common stop words):");
+        result.AppendLine("-----------------------------------------");
+
+        foreach (var item in frequency)
+        {
+            double density = Math.Round((double)item.Count / totalWords * 100, 2);
+            result.AppendLine($"{item.Word,-20} | {item.Count} times | {density}% density");
+        }
+
+        return result.ToString();
+    }
+}

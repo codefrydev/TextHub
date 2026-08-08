@@ -1,0 +1,80 @@
+@page "/qr-code-generator"
+@using TextHub.Services.Data
+@using TextHub.Components.Shared
+@using System.Net
+@inject JsonLdService JsonLdService
+@inject ToolDataService ToolDataService
+@inject MetaTagsService MetaTagsService
+
+<PageTitle>QR Code Generator - Text Hub</PageTitle>
+
+<DynamicMetaTags MetaTags="@_metaTags" />
+<DynamicJsonLd JsonLdContent="@_jsonLdContent" Id="qrcodegenerator-jsonld" />
+
+<main class="flex-1">
+    <div class="container mx-auto px-4 py-8 md:py-12 animate-fade-in">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-8 md:mb-10">
+                <div class="inline-flex items-center justify-center p-2.5 sm:p-3 bg-primary/10 rounded-lg mb-3 md:mb-4 text-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-qr-code w-6 h-6 sm:w-8 sm:h-8"><rect width="5" height="5" x="3" y="3" rx="1"></rect><rect width="5" height="5" x="16" y="3" rx="1"></rect><rect width="5" height="5" x="3" y="16" rx="1"></rect><path d="M21 16h-3a2 2 0 0 0-2 2v3"></path><path d="M21 21v.01"></path><path d="M12 7v3a2 2 0 0 1-2 2H7"></path><path d="M3 12h.01"></path><path d="M12 3h.01"></path><path d="M12 16v.01"></path><path d="M16 12h1"></path><path d="M21 12v.01"></path><path d="M12 21v-1"></path></svg>
+                </div>
+                <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 md:mb-4">
+                    <span class="text-gradient">QR Code Generator</span>
+                </h1>
+                <p class="text-base sm:text-lg text-muted-foreground px-4">Generate QR codes from text or URLs instantly</p>
+            </div>
+            
+            <div class="grid gap-4 md:gap-6 max-w-2xl mx-auto">
+                <div class="animate-fade-in" style="animation-delay: 100ms;">
+                    <label class="block text-sm font-medium mb-2">Text or URL to Encode</label>
+                    <textarea 
+                        @bind="_inputText" 
+                        @bind:event="oninput"
+                        placeholder="Enter URL, contact info, or any text here..." 
+                        class="input-area min-h-[100px] text-sm sm:text-base"></textarea>
+                </div>
+
+                <div class="flex flex-col items-center justify-center animate-fade-in mt-4" style="animation-delay: 200ms;">
+                    <label class="block text-sm font-medium mb-4 w-full text-left">Generated QR Code</label>
+                    <div class="p-4 bg-white rounded-lg shadow-sm border border-border inline-block">
+                        @if (!string.IsNullOrWhiteSpace(_inputText))
+                        {
+                            <img src="@($"https://api.qrserver.com/v1/create-qr-code/?size=250x250&data={Uri.EscapeDataString(_inputText)}")" alt="Generated QR Code" class="w-48 h-48 md:w-64 md:h-64 object-contain" />
+                        }
+                        else
+                        {
+                            <div class="w-48 h-48 md:w-64 md:h-64 flex items-center justify-center bg-muted/50 rounded-md">
+                                <span class="text-muted-foreground text-sm text-center px-4">Enter text above to generate a QR Code</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 md:mt-12 p-4 md:p-6 bg-muted/30 rounded-lg animate-fade-in max-w-2xl mx-auto" style="animation-delay: 300ms;">
+                <h2 class="text-lg md:text-xl font-semibold mb-2 md:mb-3">How it works</h2>
+                <ul class="space-y-1.5 md:space-y-2 text-sm md:text-base text-muted-foreground">
+                    <li>• Type or paste any text (like a website URL) into the input box.</li>
+                    <li>• The QR code generates automatically in real-time.</li>
+                    <li>• You can right-click the image to save it to your device.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</main>
+
+@code {
+    private string _jsonLdContent = string.Empty;
+    private MetaTagsData? _metaTags;
+    private string _inputText = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        var tool = ToolDataService.GetAllTools().FirstOrDefault(t => t.Href == "/qr-code-generator");
+        if (tool != null)
+        {
+            _jsonLdContent = JsonLdService.GenerateToolPageJsonLd(tool, "Text Utility Tools");
+            _metaTags = MetaTagsService.GetToolPageMetaTags(tool, "Text Utility Tools");
+        }
+    }
+}

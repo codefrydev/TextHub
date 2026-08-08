@@ -267,6 +267,71 @@
                 console.log('Service Worker not supported');
             }
         };
+
+        // Speech Synthesis (Text to Speech)
+        window.speakText = (text) => {
+            if ('speechSynthesis' in window) {
+                // Cancel any ongoing speech
+                window.speechSynthesis.cancel();
+                const msg = new SpeechSynthesisUtterance(text);
+                window.speechSynthesis.speak(msg);
+            } else {
+                alert("Sorry, your browser doesn't support text to speech!");
+            }
+        };
+
+        // Speech Recognition (Speech to Text)
+        window.startSpeechRecognition = (dotNetReference) => {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (SpeechRecognition) {
+                if (window.currentRecognition) {
+                    window.currentRecognition.stop();
+                }
+
+                const recognition = new SpeechRecognition();
+                recognition.continuous = true;
+                recognition.interimResults = true;
+                
+                recognition.onresult = (event) => {
+                    let finalTranscript = '';
+                    let interimTranscript = '';
+                    for (let i = event.resultIndex; i < event.results.length; ++i) {
+                        if (event.results[i].isFinal) {
+                            finalTranscript += event.results[i][0].transcript;
+                        } else {
+                            interimTranscript += event.results[i][0].transcript;
+                        }
+                    }
+                    dotNetReference.invokeMethodAsync('UpdateSpeechTranscript', finalTranscript, interimTranscript);
+                };
+
+                recognition.onend = () => {
+                    dotNetReference.invokeMethodAsync('OnSpeechRecognitionEnded');
+                    window.currentRecognition = null;
+                };
+
+                recognition.onerror = (event) => {
+                    console.error('Speech recognition error:', event.error);
+                    dotNetReference.invokeMethodAsync('OnSpeechRecognitionEnded');
+                    window.currentRecognition = null;
+                };
+
+                window.currentRecognition = recognition;
+                recognition.start();
+                return true; 
+            } else {
+                alert("Sorry, your browser doesn't support speech recognition!");
+                return false;
+            }
+        };
+
+        window.stopSpeechRecognition = () => {
+            if (window.currentRecognition) {
+                window.currentRecognition.stop();
+                window.currentRecognition = null;
+            }
+        };
+
     </script>
 </body>
 

@@ -1,0 +1,88 @@
+@page "/readability"
+@using TextHub.Components.Forms
+@using System.Text.RegularExpressions
+
+<SimpleToolLayout 
+    PageTitle="Text Readability"
+    ToolName="Text Readability"
+    Description="Calculate the Flesch-Kincaid reading ease score and grade level"
+    ConvertButtonText="Check Readability"
+    UseCaseDescription="Great for ensuring your writing is appropriate for your target audience's reading level."
+    CategoryName="Text Analysis Tools"
+    Route="/readability"
+    ConvertFunction="CalculateReadability">
+    
+    <IconSvg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-graduation-cap w-6 h-6 sm:w-8 sm:h-8 text-primary">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+            <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+        </svg>
+    </IconSvg>
+</SimpleToolLayout>
+
+@code {
+    private string CalculateReadability(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input)) return "No text provided.";
+
+        var words = input.Split(new[] { ' ', '\r', '\n', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+        int totalWords = words.Length;
+
+        var sentences = input.Split(new[] { '.', '!', '?' }, StringSplitOptions.RemoveEmptyEntries)
+                             .Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+        int totalSentences = sentences.Length > 0 ? sentences.Length : 1; // Default to 1 to prevent div zero
+
+        int totalSyllables = 0;
+        foreach (var word in words)
+        {
+            totalSyllables += CountSyllables(word);
+        }
+
+        if (totalWords == 0) return "No words found.";
+
+        // Flesch Reading Ease Formula
+        // 206.835 - 1.015 * (total words / total sentences) - 84.6 * (total syllables / total words)
+        double wordsPerSentence = (double)totalWords / totalSentences;
+        double syllablesPerWord = (double)totalSyllables / totalWords;
+        
+        double fleschReadingEase = 206.835 - (1.015 * wordsPerSentence) - (84.6 * syllablesPerWord);
+        
+        // Flesch-Kincaid Grade Level Formula
+        // 0.39 * (total words / total sentences) + 11.8 * (total syllables / total words) - 15.59
+        double gradeLevel = (0.39 * wordsPerSentence) + (11.8 * syllablesPerWord) - 15.59;
+
+        // Determine difficulty level string based on Reading Ease
+        string difficulty;
+        if (fleschReadingEase > 90) difficulty = "Very Easy (5th grade level)";
+        else if (fleschReadingEase > 80) difficulty = "Easy (6th grade level)";
+        else if (fleschReadingEase > 70) difficulty = "Fairly Easy (7th grade level)";
+        else if (fleschReadingEase > 60) difficulty = "Standard (8th-9th grade level)";
+        else if (fleschReadingEase > 50) difficulty = "Fairly Difficult (10th-12th grade level)";
+        else if (fleschReadingEase > 30) difficulty = "Difficult (College level)";
+        else difficulty = "Very Difficult (College graduate level)";
+
+        return $"Flesch Reading Ease Score: {fleschReadingEase:F1} / 100\n" +
+               $"Estimated Grade Level: {Math.Max(0, gradeLevel):F1}\n\n" +
+               $"Difficulty: {difficulty}\n\n" +
+               $"--- Metrics ---\n" +
+               $"Words: {totalWords}\n" +
+               $"Sentences: {totalSentences}\n" +
+               $"Syllables: {totalSyllables}\n" +
+               $"Average Words/Sentence: {wordsPerSentence:F1}\n" +
+               $"Average Syllables/Word: {syllablesPerWord:F1}";
+    }
+
+    private int CountSyllables(string word)
+    {
+        word = word.ToLowerInvariant();
+        word = Regex.Replace(word, @"[^a-z]", "");
+        
+        if (word.Length <= 3) return 1;
+        
+        word = Regex.Replace(word, @"(?:[^laeiouy]es|ed|[^laeiouy]e)$", "");
+        word = Regex.Replace(word, @"^y", "");
+        
+        var matches = Regex.Matches(word, @"[aeiouy]{1,2}");
+        return Math.Max(1, matches.Count);
+    }
+}

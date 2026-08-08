@@ -1,0 +1,85 @@
+@page "/text-to-speech"
+@using TextHub.Services.Data
+@using TextHub.Components.Shared
+@inject JsonLdService JsonLdService
+@inject ToolDataService ToolDataService
+@inject MetaTagsService MetaTagsService
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Text to Speech - Text Hub</PageTitle>
+
+<DynamicMetaTags MetaTags="@_metaTags" />
+<DynamicJsonLd JsonLdContent="@_jsonLdContent" Id="texttospeech-jsonld" />
+
+<main class="flex-1">
+    <div class="container mx-auto px-4 py-8 md:py-12 animate-fade-in">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-8 md:mb-10">
+                <div class="inline-flex items-center justify-center p-2.5 sm:p-3 bg-primary/10 rounded-lg mb-3 md:mb-4 text-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume-2 w-6 h-6 sm:w-8 sm:h-8"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
+                </div>
+                <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 md:mb-4">
+                    <span class="text-gradient">Text to Speech</span>
+                </h1>
+                <p class="text-base sm:text-lg text-muted-foreground px-4">Read your text out loud using your browser's voice synthesis</p>
+            </div>
+            
+            <div class="grid gap-4 md:gap-6 max-w-2xl mx-auto">
+                <div class="animate-fade-in" style="animation-delay: 100ms;">
+                    <label class="block text-sm font-medium mb-2">Text to Read</label>
+                    <textarea 
+                        @bind="_inputText" 
+                        @bind:event="oninput"
+                        placeholder="Type or paste the text you want to hear..." 
+                        class="input-area min-h-[150px] sm:min-h-[200px] text-sm sm:text-base"></textarea>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center animate-fade-in" style="animation-delay: 200ms;">
+                    <button @onclick="Speak" class="btn-primary w-full sm:w-auto text-sm sm:text-base" disabled="@(string.IsNullOrWhiteSpace(_inputText))">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play w-4 h-4 mr-2 inline">
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
+                        Play Audio
+                    </button>
+                    <button @onclick="Stop" class="btn-secondary w-full sm:w-auto text-sm sm:text-base">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square w-4 h-4 mr-2 inline">
+                            <rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect>
+                        </svg>
+                        Stop
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@code {
+    private string _jsonLdContent = string.Empty;
+    private MetaTagsData? _metaTags;
+    private string _inputText = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        var tool = ToolDataService.GetAllTools().FirstOrDefault(t => t.Href == "/text-to-speech");
+        if (tool != null)
+        {
+            _jsonLdContent = JsonLdService.GenerateToolPageJsonLd(tool, "Text Utility Tools");
+            _metaTags = MetaTagsService.GetToolPageMetaTags(tool, "Text Utility Tools");
+        }
+    }
+
+    private async Task Speak()
+    {
+        if (!string.IsNullOrWhiteSpace(_inputText))
+        {
+            await JSRuntime.InvokeVoidAsync("speakText", _inputText);
+        }
+    }
+
+    private async Task Stop()
+    {
+        // Calling speakText with empty string effectively cancels any ongoing speech 
+        // due to window.speechSynthesis.cancel() in the JS function.
+        await JSRuntime.InvokeVoidAsync("speakText", "");
+    }
+}

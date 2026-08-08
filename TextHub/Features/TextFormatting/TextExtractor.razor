@@ -1,0 +1,110 @@
+@page "/text-extractor"
+@using TextHub.Components.Forms
+@using System.Text
+@using System.Text.RegularExpressions
+
+<TextFormattingLayout 
+    PageTitle="Text Extractor"
+    ToolName="Text Extractor"
+    Description="Extract emails, URLs, numbers or custom patterns from text"
+    ConvertButtonText="Extract Matches"
+    Route="/text-extractor"
+    @bind-Output="_outputText"
+    OnConvert="ProcessText">
+    
+    <IconSvg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search w-6 h-6 sm:w-8 sm:h-8">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.3-4.3"></path>
+        </svg>
+    </IconSvg>
+
+    <OptionsContent>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-xs sm:text-sm font-medium mb-1">Extraction Type</label>
+                <select @bind="_extractionType" class="w-full bg-background border border-input rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                    <option value="Emails">Emails</option>
+                    <option value="Urls">URLs</option>
+                    <option value="Numbers">Numbers</option>
+                    <option value="CustomRegex">Custom Regex</option>
+                </select>
+            </div>
+            @if (_extractionType == "CustomRegex")
+            {
+                <div>
+                    <label class="block text-xs sm:text-sm font-medium mb-1">Regex Pattern</label>
+                    <input type="text" @bind="_customRegex" placeholder="\d{3}-\d{2}-\d{4}" class="w-full bg-background border border-input rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary" />
+                </div>
+            }
+        </div>
+    </OptionsContent>
+</TextFormattingLayout>
+
+@code {
+    private string _outputText = string.Empty;
+    private string _extractionType = "Emails";
+    private string _customRegex = string.Empty;
+
+    private void ProcessText(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+        {
+            _outputText = string.Empty;
+            return;
+        }
+
+        string pattern = string.Empty;
+
+        switch (_extractionType)
+        {
+            case "Emails":
+                pattern = @"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}";
+                break;
+            case "Urls":
+                pattern = @"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)";
+                break;
+            case "Numbers":
+                pattern = @"\b\d+(\.\d+)?\b";
+                break;
+            case "CustomRegex":
+                pattern = _customRegex;
+                break;
+        }
+
+        if (string.IsNullOrEmpty(pattern))
+        {
+            _outputText = "Please provide a valid regex pattern.";
+            return;
+        }
+
+        try
+        {
+            var matches = Regex.Matches(input, pattern);
+            var sb = new StringBuilder();
+            
+            foreach (Match match in matches)
+            {
+                sb.AppendLine(match.Value);
+            }
+            
+            if (sb.Length == 0)
+            {
+                _outputText = "No matches found.";
+            }
+            else
+            {
+                // Remove trailing newline
+                if (sb.Length >= Environment.NewLine.Length)
+                {
+                    sb.Length -= Environment.NewLine.Length;
+                }
+                _outputText = sb.ToString();
+            }
+        }
+        catch (Exception ex)
+        {
+            _outputText = $"Regex Error: {ex.Message}";
+        }
+    }
+}
