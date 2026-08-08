@@ -1,0 +1,49 @@
+@using TextHub.Services.Data
+@using TextHub.Models
+@inject ToolDataService ToolDataService
+
+@if (_recommendedTools != null && _recommendedTools.Any())
+{
+    <div class="mt-12 pt-8 border-t border-border animate-fade-in" style="animation-delay: 400ms;">
+        <h2 class="text-xl md:text-2xl font-bold mb-4 md:mb-6 text-center">Similar Tools You Might Like</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+            @foreach (var tool in _recommendedTools)
+            {
+                <ToolCardComponent Tool="tool" />
+            }
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public string CurrentRoute { get; set; } = string.Empty;
+    [Parameter] public string CategoryName { get; set; } = string.Empty;
+    
+    private List<Tool> _recommendedTools = new();
+
+    protected override void OnParametersSet()
+    {
+        var categoryTools = GetToolsByCategory(CategoryName);
+        
+        // Exclude current tool, randomize and take 3
+        _recommendedTools = categoryTools
+            .Where(t => !string.Equals(t.Href, CurrentRoute, StringComparison.OrdinalIgnoreCase))
+            .OrderBy(t => Guid.NewGuid())
+            .Take(3)
+            .ToList();
+    }
+
+    private List<Tool> GetToolsByCategory(string category)
+    {
+        return category switch
+        {
+            "Text Case Tools" => ToolDataService.GetTextCaseTools(),
+            "Text Analysis Tools" => ToolDataService.GetTextAnalysisTools(),
+            "Text Formatting Tools" => ToolDataService.GetTextFormattingTools(),
+            "Text Conversion Tools" => ToolDataService.GetTextConversionTools(),
+            "Text Security Tools" => ToolDataService.GetTextSecurityTools(),
+            "Text Utility Tools" => ToolDataService.GetTextUtilityTools(),
+            _ => ToolDataService.GetAllTools()
+        };
+    }
+}
